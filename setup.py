@@ -5,8 +5,8 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     package_data={
-    '': ['*.csv', '*.npy'],
-    },      
+        '': ['*.json'],
+    },
     version='0.0.1',
     install_requires=['gym', 'pybullet', 'numpy']
 )
