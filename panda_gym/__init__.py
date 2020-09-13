@@ -1,11 +1,5 @@
 from gym.envs.registration import register
 
-# register(
-#     id='PandaReach-v0',
-#     entry_point='panda_gym.envs:PandaReachEnv',
-# )
-
-
 for reward_type in ['sparse', 'dense']:
     suffix = 'Dense' if reward_type == 'dense' else ''
     kwargs = {

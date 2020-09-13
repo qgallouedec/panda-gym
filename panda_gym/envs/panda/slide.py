@@ -1,8 +1,6 @@
-import os
 import numpy as np
 from gym import utils
 from panda_gym.envs import panda_env
-
 
 MODEL_JSON_PATH = 'slide.json'
 
@@ -18,4 +16,3 @@ class PandaSlideEnv(panda_env.PandaEnv, utils.EzPickle):
             obj_range=0.1, target_range=0.3, distance_threshold=0.05,
             initial_qpos=initial_qpos, reward_type=reward_type, render=render)
         utils.EzPickle.__init__(self)
-

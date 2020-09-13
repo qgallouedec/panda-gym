@@ -12,11 +12,10 @@ class PandaEnv(robot_env.RobotEnv):
     """Superclass for all Panda environments.
     """
 
-    def __init__(
-        self, model_path, n_substeps, gripper_extra_height, block_gripper,
-        has_object, target_in_the_air, target_offset, obj_range, target_range,
-        distance_threshold, initial_qpos, reward_type, render
-    ):
+    def __init__(self, model_path, n_substeps, gripper_extra_height,
+                 block_gripper, has_object, target_in_the_air, target_offset,
+                 obj_range, target_range, distance_threshold, initial_qpos,
+                 reward_type, render):
         """Initializes a new Panda environment.
 
         Args:
@@ -44,9 +43,11 @@ class PandaEnv(robot_env.RobotEnv):
         self.distance_threshold = distance_threshold
         self.reward_type = reward_type
 
-        super(PandaEnv, self).__init__(
-            model_path=model_path, n_substeps=n_substeps, n_actions=4,
-            initial_qpos=initial_qpos, render=render)
+        super(PandaEnv, self).__init__(model_path=model_path,
+                                       n_substeps=n_substeps,
+                                       n_actions=4,
+                                       initial_qpos=initial_qpos,
+                                       render=render)
 
     # GoalEnv methods
     # ----------------------------
@@ -64,16 +65,15 @@ class PandaEnv(robot_env.RobotEnv):
 
     def _step_callback(self):
         if self.block_gripper:
-            self.reset_joint_states(
-                self.model['panda'],
-                np.array([9, 10]),
-                np.zeros(2))
-
+            self.reset_joint_states(obj_id=self.model['panda'],
+                                    joint_indices=np.array([9, 10]),
+                                    target_values=np.zeros(2))
 
     def _set_action(self, action):
-        assert action.shape == (4,)
+        assert action.shape == (4, )
         p.configureDebugVisualizer(p.COV_ENABLE_SINGLE_STEP_RENDERING)
-        action = action.copy()  # ensure that we don't change the action outside of this scope
+        action = action.copy(
+        )  # ensure that we don't change the action outside of this scope
         pos_ctrl, gripper_ctrl = action[:3], action[3]
         pos_ctrl *= 0.05  # limit maximum change in position
 
@@ -83,7 +83,7 @@ class PandaEnv(robot_env.RobotEnv):
 
         # fingers
         gripper_ctrl = np.array([gripper_ctrl, gripper_ctrl])
-        assert gripper_ctrl.shape == (2,)
+        assert gripper_ctrl.shape == (2, )
         if self.block_gripper:
             gripper_ctrl = np.zeros_like(gripper_ctrl)
 
@@ -92,20 +92,20 @@ class PandaEnv(robot_env.RobotEnv):
         target_position = current_pos + pos_ctrl
 
         # compute the new joint angles
-        joint_poses = np.array(p.calculateInverseKinematics(
-            self.model['panda'],
-            endEffectorLinkIndex=11,
-            targetPosition=target_position,
-            targetOrientation=target_orientation)[0:7])
+        joint_poses = np.array(
+            p.calculateInverseKinematics(
+                self.model['panda'],
+                endEffectorLinkIndex=11,
+                targetPosition=target_position,
+                targetOrientation=target_orientation)[0:7])
 
         # set the new position target
         jointIndices = np.array([0, 1, 2, 3, 4, 5, 6, 9, 10])
         target_positions = np.concatenate((joint_poses, gripper_ctrl))
-        p.setJointMotorControlArray(
-            self.model['panda'],
-            jointIndices=jointIndices,
-            controlMode=p.POSITION_CONTROL,
-            targetPositions=target_positions)
+        p.setJointMotorControlArray(self.model['panda'],
+                                    jointIndices=jointIndices,
+                                    controlMode=p.POSITION_CONTROL,
+                                    targetPositions=target_positions)
 
     def _get_obs(self):
         dt = self.n_substeps * self.timestep
@@ -159,10 +159,15 @@ class PandaEnv(robot_env.RobotEnv):
             achieved_goal = np.squeeze(object_pos.copy())
 
         obs = np.concatenate([
-            grip_pos, object_pos.ravel(), object_rel_pos.ravel(
-            ), gripper_state, object_rot.ravel(),
-            object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel,
-        ])
+            grip_pos,
+            object_pos.ravel(),
+            object_rel_pos.ravel(),
+            gripper_state,
+            object_rot.ravel(),
+            object_velp.ravel(),
+            object_velr.ravel(),
+            grip_velp,
+            gripper_vel])
 
         return {
             'observation': obs.copy(),
@@ -173,11 +178,10 @@ class PandaEnv(robot_env.RobotEnv):
     def _viewer_setup(self):
         # camera directed to the gripper position
         cameraTargetPosition = p.getLinkState(self.model['panda'], 11)[0]
-        p.resetDebugVisualizerCamera(
-            cameraDistance=1.1,
-            cameraYaw=48.,
-            cameraPitch=-14.,
-            cameraTargetPosition=cameraTargetPosition)
+        p.resetDebugVisualizerCamera(cameraDistance=1.1,
+                                     cameraYaw=48.,
+                                     cameraPitch=-14.,
+                                     cameraTargetPosition=cameraTargetPosition)
 
     def _render_callback(self):
         # visualize the target
@@ -189,13 +193,14 @@ class PandaEnv(robot_env.RobotEnv):
         # Randomize start position of object.
         if self.has_object:
             object_xpos = self.initial_gripper_xpos[:2]  # [x_obj, y_obj]
-            while np.linalg.norm(object_xpos - self.initial_gripper_xpos[:2]) < 0.1:
+            while np.linalg.norm(object_xpos -
+                                 self.initial_gripper_xpos[:2]) < 0.1:
                 object_xpos = self.initial_gripper_xpos[:2] + \
                     self.np_random.uniform(-self.obj_range,
                                            self.obj_range, size=2)
             posObj = self.get_pos('object')
 
-            assert posObj.shape == (7,)
+            assert posObj.shape == (7, )
             posObj[:2] = object_xpos
 
             self.reset_pos('object', posObj)
@@ -225,7 +230,9 @@ class PandaEnv(robot_env.RobotEnv):
         gripper_ctrl = np.array([0.0, 0.0])
         targetValues = np.concatenate((joint_ctrl, gripper_ctrl))
 
-        self.reset_joint_states(self.model['panda'], jointIndices, targetValues)
+        self.reset_joint_states(obj_id=self.model['panda'],
+                                joint_indices=jointIndices,
+                                target_values=targetValues)
 
         # compute the initial position with extra_height
         targetPosition = np.array(p.getLinkState(self.model['panda'], 11)[0])
@@ -233,16 +240,19 @@ class PandaEnv(robot_env.RobotEnv):
         targetOrientation = np.array([1., -1., 0., 0.])
 
         # compute the new joint angles
-        jointPoses = np.array(p.calculateInverseKinematics(
-            self.model['panda'],
-            endEffectorLinkIndex=11,
-            targetPosition=targetPosition,
-            targetOrientation=targetOrientation)[0:7])
+        jointPoses = np.array(
+            p.calculateInverseKinematics(
+                self.model['panda'],
+                endEffectorLinkIndex=11,
+                targetPosition=targetPosition,
+                targetOrientation=targetOrientation)[0:7])
 
         # set the new position target
         targetValues = np.concatenate((jointPoses, gripper_ctrl))
 
-        self.reset_joint_states(self.model['panda'], jointIndices, targetValues)
+        self.reset_joint_states(obj_id=self.model['panda'],
+                                joint_indices=jointIndices,
+                                target_values=targetValues)
 
         # Extract information for sampling goals.
         self.initial_gripper_xpos = np.array(
@@ -260,8 +270,9 @@ class PandaEnv(robot_env.RobotEnv):
 
     def render(self, mode='human', width=960, height=720):
         # camera directed to the gripper position
-        target_position = [1.3, 0.75,0.4]
-        distance=1.4
-        yaw=48.
-        pitch=-14.
-        return super(PandaEnv, self).render(mode, width, height, target_position, distance, yaw, pitch)
+        target_position = [1.3, 0.75, 0.4]
+        distance = 1.4
+        yaw = 48.
+        pitch = -14.
+        return super(PandaEnv, self).render(mode, width, height, target_position,
+                                            distance, yaw, pitch)

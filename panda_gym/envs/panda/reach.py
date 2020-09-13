@@ -1,12 +1,8 @@
-import os
 from gym import utils
-
 from panda_gym.envs import panda_env
 
-
-# Ensu
-#  we get the path separator correct on windows
 MODEL_JSON_PATH = 'reach.json'
+
 
 class PandaReachEnv(panda_env.PandaEnv, utils.EzPickle):
     # position of the robot base along the three axis

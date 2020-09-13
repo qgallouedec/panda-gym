@@ -49,7 +49,8 @@ def load_model_from_path(path):
             except KeyError:
                 pass
 
-            baseVisualShapeIndex = p.createVisualShape(shapeType, **obj_args['shape'], **obj_args['visual'])
+            baseVisualShapeIndex = p.createVisualShape(
+                shapeType, **obj_args['shape'], **obj_args['visual'])
 
             model[obj_name] = p.createMultiBody(
                 baseVisualShapeIndex=baseVisualShapeIndex,
@@ -101,9 +102,12 @@ class RobotEnv(gym.GoalEnv):
         self.action_space = spaces.Box(-1., 1.,
                                        shape=(n_actions,), dtype='float32')
         self.observation_space = spaces.Dict(dict(
-            desired_goal=spaces.Box(-np.inf, np.inf, shape=obs['achieved_goal'].shape, dtype='float32'),
-            achieved_goal=spaces.Box(-np.inf, np.inf, shape=obs['achieved_goal'].shape, dtype='float32'),
-            observation=spaces.Box(-np.inf, np.inf, shape=obs['observation'].shape, dtype='float32'),
+            desired_goal=spaces.Box(-np.inf, np.inf,
+                                    shape=obs['achieved_goal'].shape, dtype='float32'),
+            achieved_goal=spaces.Box(-np.inf, np.inf,
+                                     shape=obs['achieved_goal'].shape, dtype='float32'),
+            observation=spaces.Box(-np.inf, np.inf,
+                                   shape=obs['observation'].shape, dtype='float32'),
         ))
 
     @property
@@ -157,11 +161,11 @@ class RobotEnv(gym.GoalEnv):
         #     self.viewer = None
         #     self._viewers = {}
 
-    def render(self, mode='human', width=720, height=960, target_position = [0., 0., 0.], distance = 2., yaw=45., pitch=-15., roll = 0.):
+    def render(self, mode='human', width=720, height=960, target_position=[0., 0., 0.], distance=2., yaw=45., pitch=-15., roll=0.):
         self._render_callback()
         if mode == 'rgb_array':
             view_matrix = p.computeViewMatrixFromYawPitchRoll(
-                cameraTargetPosition=target_position,distance=distance,
+                cameraTargetPosition=target_position, distance=distance,
                 yaw=yaw, pitch=pitch, roll=roll, upAxisIndex=2)
             proj_matrix = p.computeProjectionMatrixFOV(
                 fov=60, aspect=float(width) / height,
@@ -223,7 +227,7 @@ class RobotEnv(gym.GoalEnv):
                 obj_id=obj_id,
                 joint_index=joint_index,
                 target_value=target_value)
-    
+
     def reset_joint_state(self, obj_id, joint_index, target_value):
         """Reset the joint values
         joint_indices is a numpy.ndarray of indices of joints 
@@ -277,10 +281,3 @@ class RobotEnv(gym.GoalEnv):
         to enforce additional constraints on the simulation state.
         """
         pass
-
-
-if __name__ == '__main__':
-    import os
-    fullpath = os.path.join(os.path.dirname(__file__), 'assets', 'reach.json')
-    print(fullpath)
-    load_model_from_path(fullpath)
