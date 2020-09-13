@@ -1,0 +1,87 @@
+[
+    {
+        "name":"plane",
+        "type":"geom",
+        "args":{
+            "ghost":false,
+            "type":"box",
+            "body":{
+                "baseMass":0,
+                "basePosition":[0.8, 0.75, -0.01]
+            },
+            "shape":{
+                "halfExtents":[0.85, 0.7, 0.01]
+            },
+            "visual":{
+                "specularColor":[0.0, 0.0, 0.0],
+                "rgbaColor":[0.2, 0.2, 0.2, 1.0]
+            }
+        }
+    },
+    {
+        "name":"panda",
+        "type":"urdf",
+        "args":{
+            "fileName":"franka_panda/panda.urdf",
+            "basePosition":[0.6919, 0.7441, 0.3],
+            "useFixedBase":true
+        }
+    },
+    {
+        "name":"table",
+        "type":"geom",
+        "args":{
+            "type":"box",
+            "ghost":false,
+            "body":{
+                "baseMass":0,
+                "basePosition":[1.3, 0.75, 0.2]
+            },
+            "shape":{
+                "halfExtents":[0.25, 0.35, 0.2]
+            },
+            "visual":{
+                "specularColor":[0.0, 0.0, 0.0],
+                "rgbaColor":[0.93, 0.93, 0.93, 1]
+            }
+        }
+    },
+    {
+        "name":"target",
+        "type":"geom",
+        "args":{
+            "type":"sphere",
+            "ghost":true,
+            "body":{
+                "baseMass":0,
+                "basePosition":[1.0, 1.0, 1.0]
+            },
+            "shape":{
+                "radius": 0.02
+            },
+            "visual":{
+                "specularColor":[0.0, 0.0, 0.0],
+                "rgbaColor":[1, 0, 0, 1]
+            }
+        }
+    },
+    {
+        "name":"object",
+        "type":"geom",
+        "args":{
+            "type":"box",
+            "ghost":false,
+            "body":{
+                "baseMass":2,
+                "basePosition":[0.025, 0.025, 0.4]
+            },
+            "shape":{
+                "halfExtents":[0.025, 0.025, 0.025]
+            },
+            "visual":{
+                "specularColor":[0.0, 0.0, 0.0],
+                "rgbaColor":[0.2, 0.2, 0.2, 1]
+            }
+        }
+    }
+]
