@@ -9,6 +9,8 @@ from gym.utils import seeding
 import pybullet as p
 import pybullet_data
 
+import time
+
 import json
 
 GEOM_TYPE = {
@@ -157,13 +159,11 @@ class RobotEnv(gym.GoalEnv):
 
     def close(self):
         p.disconnect()
-        # if self.viewer is not None:
-        #     # self.viewer.finish()
-        #     self.viewer = None
-        #     self._viewers = {}
 
     def render(self, mode='human', width=960, height=720, target_position=[0., 0., 0.], distance=2., yaw=45., pitch=-15., roll=0.):
         self._render_callback()
+        if mode == 'human':
+            time.sleep(self.dt) # wait to seems like real speed
         if mode == 'rgb_array':
             view_matrix = p.computeViewMatrixFromYawPitchRoll(
                 cameraTargetPosition=target_position, distance=distance,
