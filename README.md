@@ -32,7 +32,7 @@ env.close()
 
 ## Environments
 
-Environnement are widely inspired from [OpenAI Fetch environnements](https://openai.com/blog/ingredients-for-robotics-research/).
+Following environments are widely inspired from [OpenAI Fetch environments](https://openai.com/blog/ingredients-for-robotics-research/).
 
 `PandaReach-v0`: Panda has to move its end-effector to the desired goal position.
 ![](https://raw.githubusercontent.com/quenting44/panda-gym/master/docs/Reach.png)
