@@ -23,7 +23,7 @@
         "type":"urdf",
         "args":{
             "fileName":"franka_panda/panda.urdf",
-            "basePosition":[0.6919, 0.7441, 0.3],
+            "basePosition":[0.6919, 0.7441, 0.4],
             "useFixedBase":true
         }
     },
@@ -35,7 +35,7 @@
             "ghost":false,
             "body":{
                 "baseMass":0,
-                "basePosition":[1.3, 0.75, 0.2]
+                "basePosition":[1.325, 0.75, 0.2]
             },
             "shape":{
                 "halfExtents":[0.625, 0.45, 0.2]

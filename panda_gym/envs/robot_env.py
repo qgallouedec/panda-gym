@@ -24,8 +24,6 @@ def load_model_from_path(path):
 
     model = {}
     p.resetSimulation()
-    # we will enable rendering after we loaded everything
-    p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 0)
 
     p.setAdditionalSearchPath(pybullet_data.getDataPath())
     p.setGravity(0, 0, -9.81)
@@ -74,9 +72,11 @@ class RobotEnv(gym.GoalEnv):
             raise IOError('File {} does not exist'.format(fullpath))
 
         if render:
-            p.connect(p.GUI)
+            options = '--background_color_red={} --background_color_green={} --background_color_blue={}'.format(116./255., 220./255., 146./255.)
+            p.connect(p.GUI, options=options)
             p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
             p.configureDebugVisualizer(p.COV_ENABLE_MOUSE_PICKING, 0)
+            p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 0)
         else:
             p.connect(p.DIRECT)
 
@@ -150,6 +150,7 @@ class RobotEnv(gym.GoalEnv):
         did_reset_sim = False
         while not did_reset_sim:
             did_reset_sim = self._reset_sim()
+        p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 1)
         self.goal = self._sample_goal().copy()
         obs = self._get_obs()
         return obs
@@ -161,7 +162,7 @@ class RobotEnv(gym.GoalEnv):
         #     self.viewer = None
         #     self._viewers = {}
 
-    def render(self, mode='human', width=720, height=960, target_position=[0., 0., 0.], distance=2., yaw=45., pitch=-15., roll=0.):
+    def render(self, mode='human', width=960, height=720, target_position=[0., 0., 0.], distance=2., yaw=45., pitch=-15., roll=0.):
         self._render_callback()
         if mode == 'rgb_array':
             view_matrix = p.computeViewMatrixFromYawPitchRoll(
@@ -170,11 +171,24 @@ class RobotEnv(gym.GoalEnv):
             proj_matrix = p.computeProjectionMatrixFOV(
                 fov=60, aspect=float(width) / height,
                 nearVal=0.1, farVal=100.0)
-            (_, _, px, _, _) = p.getCameraImage(
+            (_, _, px, depth, _) = p.getCameraImage(
                 width=width, height=height,
                 viewMatrix=view_matrix,
                 projectionMatrix=proj_matrix,
-                renderer=p.ER_BULLET_HARDWARE_OPENGL)
+                # renderer=p.ER_TINY_RENDERER,
+                lightDirection=[1., -0.9, 2.],
+                lightColor=[1., 1., 1.],
+                lightDistance=1,
+                lightAmbientCoeff=0.3,
+                lightDiffuseCoeff=0.7,
+                lightSpecularCoeff=0.7
+                )
+            
+            # configure background color
+            for ix in range(len(px)):
+                for iy in range(len(px[ix])):
+                    if depth[ix][iy] > 0.99:
+                        px[ix][iy][:] = [116., 220., 146., 255.]
 
             rgb_array = np.array(px, dtype=np.uint8)
             rgb_array = np.reshape(rgb_array, (height, width, 4))
