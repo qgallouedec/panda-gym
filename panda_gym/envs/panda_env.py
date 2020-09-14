@@ -75,21 +75,27 @@ class PandaEnv(robot_env.RobotEnv):
         action = action.copy(
         )  # ensure that we don't change the action outside of this scope
         pos_ctrl, gripper_ctrl = action[:3], action[3]
+        gripper_ctrl = np.array([gripper_ctrl, gripper_ctrl])
         pos_ctrl *= 0.05  # limit maximum change in position
+        gripper_ctrl *= 0.5
 
         # orientation of the effector
         # fixed rotation of the end effector, expressed as a quaternion
         target_orientation = [1, -1, 0, 0]
 
-        # fingers
-        gripper_ctrl = np.array([gripper_ctrl, gripper_ctrl])
-        assert gripper_ctrl.shape == (2, )
-        if self.block_gripper:
-            gripper_ctrl = np.zeros_like(gripper_ctrl)
-
         # get the current position and the target position
         current_pos = p.getLinkState(self.model['panda'], 11)[0]
+        gripper_pos = np.array([
+            p.getJointState(self.model['panda'], 9)[0],
+            p.getJointState(self.model['panda'], 10)[0]])
         target_position = current_pos + pos_ctrl
+    
+        # fingers
+        assert gripper_ctrl.shape == (2,)
+        gripper_target = gripper_pos + gripper_ctrl
+        if self.block_gripper:
+            gripper_target = np.zeros_like(gripper_target)
+
 
         # compute the new joint angles
         joint_poses = np.array(
@@ -101,7 +107,7 @@ class PandaEnv(robot_env.RobotEnv):
 
         # set the new position target
         jointIndices = np.array([0, 1, 2, 3, 4, 5, 6, 9, 10])
-        target_positions = np.concatenate((joint_poses, gripper_ctrl))
+        target_positions = np.concatenate((joint_poses, gripper_target))
         p.setJointMotorControlArray(self.model['panda'],
                                     jointIndices=jointIndices,
                                     controlMode=p.POSITION_CONTROL,
