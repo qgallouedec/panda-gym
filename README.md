@@ -11,7 +11,7 @@ Using PyPI:
 From source:
 
     git clone https://github.com/quenting44/panda-gym.git
-    pip install -e panda_gym
+    pip install -e panda-gym
 
 ## Usage
 
@@ -35,13 +35,13 @@ env.close()
 Environnement are widely inspired from [OpenAI Fetch environnements](https://openai.com/blog/ingredients-for-robotics-research/).
 
 `PandaReach-v0`: Panda has to move its end-effector to the desired goal position.
-![](docs/Reach.png)
+![](https://raw.githubusercontent.com/quenting44/panda-gym/master/docs/Reach.png)
 
 `PandaSlide-v0`: Panda has to hit a puck across a long table such that it slides and comes to rest on the desired goal.
-![](docs/Slide.png)
+![](https://raw.githubusercontent.com/quenting44/panda-gym/master/docs/Slide.png)
 
 `PandaPush-v0`: Panda has to move a box by pushing it until it reaches a desired goal position.
-![](docs/Push.png)
+![](https://raw.githubusercontent.com/quenting44/panda-gym/master/docs/Push.png)
 
 `PandaPickAndPlace-v0`: Panda has to pick up a box from a table using its gripper and move it to a desired goal above the table.
-![](docs/PickAndPlace.png)
+![](https://raw.githubusercontent.com/quenting44/panda-gym/master/docs/PickAndPlace.png)
