@@ -81,7 +81,7 @@ class PandaEnv(robot_env.RobotEnv):
 
         # orientation of the effector
         # fixed rotation of the end effector, expressed as a quaternion
-        target_orientation = [1, -1, 0, 0]
+        target_orientation = [1, 0, 0, 0]
 
         # get the current position and the target position
         current_pos = p.getLinkState(self.model['panda'], 11)[0]
@@ -106,12 +106,14 @@ class PandaEnv(robot_env.RobotEnv):
                 targetOrientation=target_orientation)[0:7])
 
         # set the new position target
-        jointIndices = np.array([0, 1, 2, 3, 4, 5, 6, 9, 10])
+        joint_indices = np.array([0, 1, 2, 3, 4, 5, 6, 9, 10])
         target_positions = np.concatenate((joint_poses, gripper_target))
+        forces = np.array([87, 87, 87, 87, 12, 12, 12, 140, 140])
         p.setJointMotorControlArray(self.model['panda'],
-                                    jointIndices=jointIndices,
+                                    jointIndices=joint_indices,
                                     controlMode=p.POSITION_CONTROL,
-                                    targetPositions=target_positions)
+                                    targetPositions=target_positions,
+                                    forces=forces)
 
     def _get_obs(self):
         dt = self.n_substeps * self.timestep
@@ -183,11 +185,11 @@ class PandaEnv(robot_env.RobotEnv):
 
     def _viewer_setup(self):
         # camera directed to the gripper position
-        cameraTargetPosition = p.getLinkState(self.model['panda'], 11)[0]
+        camera_target_position = p.getLinkState(self.model['panda'], 11)[0]
         p.resetDebugVisualizerCamera(cameraDistance=1.1,
                                      cameraYaw=48.,
                                      cameraPitch=-14.,
-                                     cameraTargetPosition=cameraTargetPosition)
+                                     cameraTargetPosition=camera_target_position)
 
     def _render_callback(self):
         # visualize the target
@@ -231,47 +233,47 @@ class PandaEnv(robot_env.RobotEnv):
         return (d < self.distance_threshold).astype(np.float32)
 
     def _env_setup(self, initial_qpos):
-        jointIndices = np.array([0, 1, 2, 3, 4, 5, 6, 9, 10])
-        joint_ctrl = np.array([0.0, 0.5, 0.0, -2.0, 0.0, 2.5, 2.37])
+        joint_indices = np.array([0, 1, 2, 3, 4, 5, 6, 9, 10])
+        joint_ctrl = np.array([0.0, 0.5, 0.0, -2.0, 0.0, 2.5, 0.8])
         gripper_ctrl = np.array([0.0, 0.0])
-        targetValues = np.concatenate((joint_ctrl, gripper_ctrl))
+        target_values = np.concatenate((joint_ctrl, gripper_ctrl))
 
         self.reset_joint_states(obj_id=self.model['panda'],
-                                joint_indices=jointIndices,
-                                target_values=targetValues)
+                                joint_indices=joint_indices,
+                                target_values=target_values)
 
         # compute the initial position with extra_height
-        targetPosition = np.array(p.getLinkState(self.model['panda'], 11)[0])
-        targetPosition[2] += self.gripper_extra_height
-        targetOrientation = np.array([1., -1., 0., 0.])
+        target_position = np.array(p.getLinkState(self.model['panda'], 11)[0])
+        target_position[2] += self.gripper_extra_height
+        target_orientation = np.array([1., 0., 0., 0.])
 
         # compute the new joint angles
         jointPoses = np.array(
             p.calculateInverseKinematics(
                 self.model['panda'],
                 endEffectorLinkIndex=11,
-                targetPosition=targetPosition,
-                targetOrientation=targetOrientation)[0:7])
+                targetPosition=target_position,
+                targetOrientation=target_orientation)[0:7])
 
         # set the new position target
-        targetValues = np.concatenate((jointPoses, gripper_ctrl))
+        target_values = np.concatenate((jointPoses, gripper_ctrl))
 
         self.reset_joint_states(obj_id=self.model['panda'],
-                                joint_indices=jointIndices,
-                                target_values=targetValues)
+                                joint_indices=joint_indices,
+                                target_values=target_values)
 
         # Extract information for sampling goals.
         self.initial_gripper_xpos = np.array(
             p.getLinkState(self.model['panda'], 11)[0]).copy()
 
         if self.has_object:
-            obj_target_pos = self.get_pos('object')
-
             # move the object if a new position is given in initial_qpos
-            objectTargetPositionAndOrientation = initial_qpos.get('object')
-            if objectTargetPositionAndOrientation:
-                obj_target_pos[:] = objectTargetPositionAndOrientation
-            self.reset_pos('object', obj_target_pos)
+            if initial_qpos.get('object') is not None:
+                obj_target_pos = initial_qpos.get('object')
+                self.reset_pos('object', obj_target_pos)
+            else:
+                obj_target_pos = self.get_pos('object')
+
             self.height_offset = obj_target_pos[2]
 
     def render(self, mode='human', width=960, height=720):

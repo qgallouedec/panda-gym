@@ -1,3 +1,4 @@
+import numpy as np
 from gym import utils
 from panda_gym.envs import panda_env
 
@@ -7,7 +8,7 @@ MODEL_JSON_PATH = 'push.json'
 class PandaPushEnv(panda_env.PandaEnv, utils.EzPickle):
     def __init__(self, render=False, reward_type='sparse'):
         initial_qpos = {
-            'object': [1.7, 1.1, 0.425, 1., 0., 0., 0.],
+            'object': np.array([1.7, 1.1, 0.425, 1., 0., 0., 0.]),
         }
         panda_env.PandaEnv.__init__(
             self, MODEL_JSON_PATH, has_object=True, block_gripper=True, n_substeps=20,
