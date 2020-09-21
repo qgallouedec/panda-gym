@@ -2,6 +2,8 @@
 
 OpenaAI Gym Franka Emika Panda robot environment based on PyBullet.
 
+![](https://raw.githubusercontent.com/quenting44/panda-gym/master/docs/demo.gif)
+
 ## Installation
 
 Using PyPI:
