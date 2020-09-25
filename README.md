@@ -1,7 +1,7 @@
 # panda-gym
 
 [![PyPI version](https://img.shields.io/pypi/v/panda-gym.svg?logo=pypi&logoColor=FFE873)](https://pypi.org/project/panda-gym/)
-[![PyPI downloads](https://img.shields.io/pypi/dm/panda-gym.svg)](https://pypistats.org/packages/panda-gym)
+[![PyPI downloads](https://static.pepy.tech/badge/panda-gym)](https://pypistats.org/packages/panda-gym)
 [![GitHub](https://img.shields.io/github/license/quenting44/panda-gym.svg)](LICENSE.txt)
 
 OpenaAI Gym Franka Emika Panda robot environment based on PyBullet.
