@@ -1,3 +1,4 @@
 language: python
 script:
     - pytest
+install: "" # so travis doesn't do pip install requirements.txt
