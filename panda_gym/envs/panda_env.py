@@ -193,8 +193,8 @@ class PandaEnv(robot_env.RobotEnv):
 
     def _render_callback(self):
         # visualize the target
-        obj_pos = np.concatenate((self.goal, np.array([0, 0, 0, 1])))
-        self.reset_pos('target', obj_pos)
+        target_pos = np.concatenate((self.goal, np.array([0, 0, 0, 1])))
+        self.reset_pos('target', target_pos)
 
     def _reset_sim(self):
         p.restoreState(self.initial_state)
@@ -212,6 +212,9 @@ class PandaEnv(robot_env.RobotEnv):
             posObj[:2] = object_xpos
 
             self.reset_pos('object', posObj)
+
+        target_pos = np.concatenate((self.goal, np.array([0, 0, 0, 1])))
+        self.reset_pos('target', target_pos)
         return True
 
     def _sample_goal(self):

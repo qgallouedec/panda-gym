@@ -72,7 +72,8 @@ class RobotEnv(gym.GoalEnv):
                 __file__), 'assets', model_path)
         if not os.path.exists(fullpath):
             raise IOError('File {} does not exist'.format(fullpath))
-
+        
+        self.render_enabled = render
         if render:
             options = '--background_color_red={} --background_color_green={} --background_color_blue={}'.format(116./255., 220./255., 146./255.)
             p.connect(p.GUI, options=options)
@@ -141,6 +142,8 @@ class RobotEnv(gym.GoalEnv):
     def _sim_step(self):
         for _ in range(self.n_substeps):
             p.stepSimulation()
+        if self.render_enabled:
+            self._render_callback()
 
     def reset(self):
         # Attempt to reset the simulator. Since we randomize initial conditions, it
@@ -150,10 +153,10 @@ class RobotEnv(gym.GoalEnv):
         # configuration.
         super(RobotEnv, self).reset()
         did_reset_sim = False
+        self.goal = self._sample_goal().copy()
         while not did_reset_sim:
             did_reset_sim = self._reset_sim()
         p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 1)
-        self.goal = self._sample_goal().copy()
         obs = self._get_obs()
         return obs
 
