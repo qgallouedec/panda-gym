@@ -16,6 +16,6 @@ setup(
     package_data={
         'panda_gym': ['envs/assets/*.json']
     },
-    version='0.0.4',
+    version='0.1.1',
     install_requires=['gym', 'pybullet', 'numpy']
 )
