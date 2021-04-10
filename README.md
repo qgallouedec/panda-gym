@@ -1,5 +1,7 @@
 # panda-gym
 
+**Under development**
+
 [![PyPI version](https://img.shields.io/pypi/v/panda-gym.svg?logo=pypi&logoColor=FFE873)](https://pypi.org/project/panda-gym/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/panda-gym)](https://pypistats.org/packages/panda-gym)
 [![GitHub](https://img.shields.io/github/license/qgallouedec/panda-gym.svg)](LICENSE.txt)

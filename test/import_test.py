@@ -9,7 +9,7 @@ def main():
     Tests importing of gym envs
     """
     try:
-        spec = gym.spec('PandaReach-v0')
+        spec = gym.spec('PandaReach-v1')
     except:
         return False
     return True
