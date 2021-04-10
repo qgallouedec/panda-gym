@@ -30,5 +30,3 @@ def test_stack():
     env = gym.make('PandaStack-v1')
     run_env(env)
 
-if __name__ == '__main__':
-    main()
