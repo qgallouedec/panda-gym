@@ -7,7 +7,7 @@ from panda_gym.pybullet import PyBullet
 
 
 class PandaPickAndPlaceEnv(PandaEnv, PickAndPlaceEnv):
-    """Pick and Place task wih Panda robot
+    """Pick and Place task wih Panda robot.
 
     Args:
         render (bool, optional): Activate rendering. Defaults to False.
@@ -17,7 +17,9 @@ class PandaPickAndPlaceEnv(PandaEnv, PickAndPlaceEnv):
     def __init__(self, render=False, reward_type="sparse"):
         sim = PyBullet(render=render, n_substeps=20)
         PickAndPlaceEnv.__init__(self, sim, reward_type=reward_type)
-        PandaEnv.__init__(self, sim, block_gripper=False)
+        PandaEnv.__init__(
+            self, sim, block_gripper=False, base_position=[-0.6, 0.0, 0.0]
+        )
         self.observation_space = spaces.Dict(
             dict(
                 observation=spaces.Box(-np.inf, np.inf, shape=(19,)),
@@ -30,16 +32,13 @@ class PandaPickAndPlaceEnv(PandaEnv, PickAndPlaceEnv):
         # end-effector position and velocity
         ee_position = np.array(self.get_ee_position())
         ee_velocity = np.array(self.get_ee_velocity())
-
         # fingers opening
         fingers_width = self.get_fingers_width()
-
         # position, rotation of the object
         object_position = np.array(self.sim.get_base_position("object"))
         object_rotation = np.array(self.sim.get_base_rotation("object"))
         object_velocity = np.array(self.sim.get_base_velocity("object"))
         object_angular_velocity = np.array(self.sim.get_base_angular_velocity("object"))
-
         observation = np.concatenate(
             [
                 ee_position,
@@ -51,9 +50,7 @@ class PandaPickAndPlaceEnv(PandaEnv, PickAndPlaceEnv):
                 object_angular_velocity,
             ]
         )
-
         achieved_goal = np.squeeze(object_position.copy())
-
         return {
             "observation": observation,
             "achieved_goal": achieved_goal,
@@ -75,5 +72,4 @@ class PandaPickAndPlaceEnv(PandaEnv, PickAndPlaceEnv):
             "is_success": self._is_success(obs["achieved_goal"], self.goal),
         }
         reward = self.compute_reward(obs["achieved_goal"], self.goal, info)
-
         return obs, reward, done, info

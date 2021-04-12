@@ -7,6 +7,13 @@ from panda_gym.pybullet import PyBullet
 
 
 class PandaReachEnv(PandaEnv, ReachEnv):
+    """Reach task wih Panda robot.
+
+    Args:
+        render (bool, optional): Activate rendering. Defaults to False.
+        reward_type (str, optional): "sparse" or "dense". Defaults to "sparse".
+    """
+
     def __init__(self, render=False, reward_type="sparse"):
         sim = PyBullet(render=render, n_substeps=20)
         ReachEnv.__init__(self, sim, reward_type=reward_type)
@@ -23,11 +30,8 @@ class PandaReachEnv(PandaEnv, ReachEnv):
         # end-effector position and velocity
         ee_position = np.array(self.get_ee_position())
         ee_velocity = np.array(self.get_ee_velocity())
-
         observation = np.concatenate([ee_position, ee_velocity])
-
         achieved_goal = np.squeeze(ee_position.copy())
-
         return {
             "observation": observation,
             "achieved_goal": achieved_goal,
@@ -50,5 +54,4 @@ class PandaReachEnv(PandaEnv, ReachEnv):
             "is_success": self._is_success(obs["achieved_goal"], self.goal),
         }
         reward = self.compute_reward(obs["achieved_goal"], self.goal, info)
-
         return obs, reward, done, info

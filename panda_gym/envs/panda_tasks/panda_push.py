@@ -7,6 +7,13 @@ from panda_gym.pybullet import PyBullet
 
 
 class PandaPushEnv(PandaEnv, PushEnv):
+    """Push task wih Panda robot
+
+    Args:
+        render (bool, optional): Activate rendering. Defaults to False.
+        reward_type (str, optional): "sparse" or "dense". Defaults to "sparse".
+    """
+
     def __init__(self, render=False, reward_type="sparse"):
         sim = PyBullet(render=render, n_substeps=20)
         PushEnv.__init__(self, sim, reward_type=reward_type)
@@ -23,13 +30,11 @@ class PandaPushEnv(PandaEnv, PushEnv):
         # end-effector position and velocity
         ee_position = np.array(self.get_ee_position())
         ee_velocity = np.array(self.get_ee_velocity())
-
         # position, rotation of the object
         object_position = np.array(self.sim.get_base_position("object"))
         object_rotation = np.array(self.sim.get_base_rotation("object"))
         object_velocity = np.array(self.sim.get_base_velocity("object"))
         object_angular_velocity = np.array(self.sim.get_base_angular_velocity("object"))
-
         observation = np.concatenate(
             [
                 ee_position,
@@ -40,9 +45,7 @@ class PandaPushEnv(PandaEnv, PushEnv):
                 object_angular_velocity,
             ]
         )
-
         achieved_goal = np.squeeze(object_position.copy())
-
         return {
             "observation": observation,
             "achieved_goal": achieved_goal,
@@ -65,5 +68,4 @@ class PandaPushEnv(PandaEnv, PushEnv):
             "is_success": self._is_success(obs["achieved_goal"], self.goal),
         }
         reward = self.compute_reward(obs["achieved_goal"], self.goal, info)
-
         return obs, reward, done, info
