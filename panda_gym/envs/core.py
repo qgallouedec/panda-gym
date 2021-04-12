@@ -78,6 +78,15 @@ class RobotEnv(gym.Env):
         """Returns the velocity of the end-effector as (vx, vy, vz)"""
         return self.get_link_velocity(self.ee_link)
 
+    def control_joints(self, target_angles):
+        """Control the joints of the robot."""
+        self.sim.control_joints(
+            body=self.body_name,
+            joints=self.JOINT_INDICES,
+            target_angles=target_angles,
+            forces=self.JOINT_FORCES,
+        )
+
 
 class TaskEnv(gym.GoalEnv):
     def seed(self, seed=None):
