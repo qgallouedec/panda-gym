@@ -30,3 +30,23 @@ def test_stack():
     env = gym.make('PandaStack-v1')
     run_env(env)
 
+def test_dense_reach():
+    env = gym.make('PandaReachDense-v1')
+    run_env(env)
+    
+def test_dense_slide():
+    env = gym.make('PandaSlideDense-v1')
+    run_env(env)
+
+def test_dense_push():
+    env = gym.make('PandaPushDense-v1')
+    run_env(env)
+
+def test_dense_pickandplace():
+    env = gym.make('PandaPickAndPlaceDense-v1')
+    run_env(env)
+
+def test_dense_stack():
+    env = gym.make('PandaStackDense-v1')
+    run_env(env)
+
