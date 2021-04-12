@@ -7,4 +7,4 @@ obs = env.reset()
 for _ in range(50):
     env.render()
     action = env.action_space.sample()
-    env.step()
+    env.step(action)
