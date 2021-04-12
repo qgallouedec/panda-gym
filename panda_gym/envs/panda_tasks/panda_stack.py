@@ -7,10 +7,17 @@ from panda_gym.pybullet import PyBullet
 
 
 class PandaStackEnv(PandaEnv, StackEnv):
+    """Stack task wih Panda robot.
+
+    Args:
+        render (bool, optional): Activate rendering. Defaults to False.
+        reward_type (str, optional): "sparse" or "dense". Defaults to "sparse".
+    """
+
     def __init__(self, render=False, reward_type="sparse"):
         sim = PyBullet(render=render, n_substeps=20)
         StackEnv.__init__(self, sim, reward_type=reward_type)
-        PandaEnv.__init__(self, sim, block_gripper=False)
+        PandaEnv.__init__(self, sim, block_gripper=False, base_position=[-0.6, 0.0, 0.0])
         self.observation_space = spaces.Dict(
             dict(
                 observation=spaces.Box(-np.inf, np.inf, shape=(31,)),
@@ -34,14 +41,12 @@ class PandaStackEnv(PandaEnv, StackEnv):
         object1_angular_velocity = np.array(
             self.sim.get_base_angular_velocity("object1")
         )
-
         object2_position = np.array(self.sim.get_base_position("object2"))
         object2_rotation = np.array(self.sim.get_base_rotation("object2"))
         object2_velocity = np.array(self.sim.get_base_velocity("object2"))
         object2_angular_velocity = np.array(
             self.sim.get_base_angular_velocity("object2")
         )
-
         observation = np.concatenate(
             [
                 ee_position,
@@ -57,9 +62,7 @@ class PandaStackEnv(PandaEnv, StackEnv):
                 object2_angular_velocity,
             ]
         )
-
         achieved_goal = np.concatenate((object1_position, object2_position))
-
         return {
             "observation": observation,
             "achieved_goal": achieved_goal,
