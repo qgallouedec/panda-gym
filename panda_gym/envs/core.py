@@ -1,11 +1,9 @@
-from typing import Any
-
 import gym
-from gym import utils
+from gym import utils, spaces
 import numpy as np
 
 
-class RobotEnv(gym.Env):
+class PyBulletRobot:
     """Base class for robot env.
 
     Args:
@@ -17,25 +15,14 @@ class RobotEnv(gym.Env):
         seed (int, optional): Seed. Defaults to None.
     """
 
-    def __init__(self, sim, body_name, ee_link, file_name, base_position, seed=None):
+    def __init__(self, sim, body_name, ee_link, file_name, base_position):
 
         self.sim = sim  # sim engine
-        self.metadata = {
-            "render.modes": ["human", "rgb_array"],
-            "video.frames_per_second": int(round(1.0 / self.sim.dt)),
-        }
         self.ee_link = ee_link
         self.body_name = body_name
-        self.seed(seed)
         with self.sim.no_rendering():
             self._load_robot(file_name, base_position)
-            self._env_setup()
-            self._viewer_setup()
-
-    def seed(self, seed=None):
-        """Seed setup."""
-        self.np_random, seed = utils.seeding.np_random(seed)
-        return [seed]
+            self._setup()
 
     def _load_robot(self, file_name, base_position):
         """Load the robot.
@@ -51,16 +38,9 @@ class RobotEnv(gym.Env):
             useFixedBase=True,
         )
 
-    def _env_setup(self):
-        """Initial configuration of the environment. Can be used to configure initial state
-        and extract information from the simulation.
-        """
+    def setup(self):
+        """Called once in en constructor."""
         pass
-
-    def _viewer_setup(self):
-        """Direct the camera to the gripper position."""
-        target = self.sim.get_link_position("panda", self.ee_link)
-        self.sim.place_visualizer(target=target, distance=1.1, yaw=48, pitch=-14)
 
     def get_link_position(self, link):
         """Returns the position of a link as (x, y, z)"""
@@ -88,11 +68,93 @@ class RobotEnv(gym.Env):
         )
 
 
-class TaskEnv(gym.GoalEnv):
+class RobotTaskEnv(gym.GoalEnv):
+
+    metadata = {"render.modes": ["human", "rgb_array"]}
+
+    def __init__(self, seed=None):
+        obs = self.reset()
+        observation_shape = obs["observation"].shape
+        achieved_goal_shape = obs["achieved_goal"].shape
+        desired_goal_shape = obs["achieved_goal"].shape
+        self.observation_space = spaces.Dict(
+            dict(
+                observation=spaces.Box(-np.inf, np.inf, shape=observation_shape),
+                desired_goal=spaces.Box(-np.inf, np.inf, shape=achieved_goal_shape),
+                achieved_goal=spaces.Box(-np.inf, np.inf, shape=desired_goal_shape),
+            )
+        )
+        self.action_space = self.robot.action_space
+        self.compute_reward = self.task.compute_reward
+        self.render = self.sim.render
+        self.seed(seed)
+
+    def _get_obs(self):
+        robot_obs = self.robot.get_obs()  # robot state
+        task_obs = self.task.get_obs()  # object position, velococity, etc...
+        observation = np.concatenate([robot_obs, task_obs])
+
+        achieved_goal = self.task.get_achieved_goal()
+
+        return {
+            "observation": observation,
+            "achieved_goal": achieved_goal,
+            "desired_goal": self.task.get_goal(),
+        }
+
+    def reset(self):
+        with self.sim.no_rendering():
+            self.robot.set_joint_neutral()
+            self.task.reset()
+        return self._get_obs()
+
+    def step(self, action):
+        self.robot._set_action(action)
+        self.sim.step()
+        obs = self._get_obs()
+        done = False
+        info = {
+            "is_success": self.task.is_success(
+                obs["achieved_goal"], self.task.get_goal()
+            ),
+        }
+        reward = self.task.compute_reward(
+            obs["achieved_goal"], self.task.get_goal(), info
+        )
+        return obs, reward, done, info
+
     def seed(self, seed=None):
         """Setup the seed."""
         self.np_random, seed = utils.seeding.np_random(seed)
         return [seed]
+    
+    def close(self):
+        self.sim.close()
 
-    def render(self, *args, **kwargs):
-        return self.sim.render(*args, **kwargs)
+
+class Task:
+    """To be completed."""
+
+    def get_goal(self):
+        """Return the current goal."""
+        raise NotImplementedError
+
+    def get_obs(self):
+        """Return the observation associated to the task."""
+        raise NotImplementedError
+
+    def get_achieved_goal(self):
+        """Return the achieved goal."""
+        raise NotImplementedError
+
+    def reset(self):
+        """Reset the task: sample a new goal"""
+        pass
+
+    def is_success(self, achieved_goal, desired_goal):
+        """Returns whether the achieved goal match the desired goal."""
+        raise NotImplementedError
+
+    def compute_reward(self, achieved_goal, desired_goal, info):
+        """Compute reward associated to the achieved and the desired goal."""
+        raise NotImplementedError

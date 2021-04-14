@@ -1,88 +1,123 @@
 import numpy as np
+from gym import utils
 
-from panda_gym.envs.core import TaskEnv
-
-
-def distance(a, b):
-    assert a.shape == b.shape
-    return np.linalg.norm(a - b, axis=-1)
+from panda_gym.envs.core import Task
+from panda_gym.utils import distance
 
 
-class StackEnv(TaskEnv):
+class Stack(Task):
     def __init__(
         self,
         sim,
+        reward_type="sparse",
+        distance_threshold=0.05,
         goal_xy_range=0.3,
         obj_xy_range=0.3,
-        distance_threshold=0.05,
-        reward_type="sparse",
         seed=None,
     ):
         self.sim = sim
+        self.reward_type = reward_type
+        self.distance_threshold = distance_threshold
+        self.object_size = 0.04
+        self.np_random, self.seed = utils.seeding.np_random(seed)
         self.goal_range_low = np.array([-goal_xy_range / 2, -goal_xy_range / 2, 0])
         self.goal_range_high = np.array([goal_xy_range / 2, goal_xy_range / 2, 0])
         self.obj_range_low = np.array([-obj_xy_range / 2, -obj_xy_range / 2, 0])
         self.obj_range_high = np.array([obj_xy_range / 2, obj_xy_range / 2, 0])
-        self.distance_threshold = distance_threshold
-        self.reward_type = reward_type
-        self.seed(seed)
-
         with self.sim.no_rendering():
             self._create_scene()
+            self.sim.place_visualizer(target=[0, 0, 0], distance=0.9, yaw=45, pitch=-30)
 
     def _create_scene(self):
-        self.sim.create_box(
-            body_name="plane",
-            half_extents=[0.85, 0.7, 0.01],
-            mass=0,
-            position=[-0.5, 0.0, -0.41],
-            specular_color=[0.0, 0.0, 0.0],
-            rgba_color=[0.15, 0.15, 0.15, 1.0],
-        )
-        self.sim.create_box(
-            body_name="table",
-            half_extents=[0.25, 0.35, 0.2],
-            mass=0,
-            position=[0.0, 0.0, -0.2],
-            specular_color=[0.0, 0.0, 0.0],
-            rgba_color=[0.8, 0.8, 0.8, 1],
-        )
+        self.sim.create_plane(z_offset=-0.4)
+        self.sim.create_table(length=1.1, width=0.7, height=0.4, x_offset=-0.3)
         self.sim.create_box(
             body_name="object1",
-            half_extents=[0.025, 0.025, 0.025],
+            half_extents=[
+                self.object_size / 2,
+                self.object_size / 2,
+                self.object_size / 2,
+            ],
             mass=0.5,
-            position=[0.0, -0.1, 0.025],
-            specular_color=[0.0, 0.0, 0.0],
-            rgba_color=[0.9, 0.2, 0.2, 1],
+            position=[0.0, 0.0, self.object_size / 2],
+            rgba_color=[0.9, 0.1, 0.1, 1],
+            friction=100,  # increase friction. For some reason, it helps a lot learning
+        )
+        self.sim.create_box(
+            body_name="target1",
+            half_extents=[
+                self.object_size / 2,
+                self.object_size / 2,
+                self.object_size / 2,
+            ],
+            mass=0.0,
+            ghost=True,
+            position=[0.0, 0.0, 0.05],
+            rgba_color=[0.9, 0.1, 0.1, 0.3],
         )
         self.sim.create_box(
             body_name="object2",
-            half_extents=[0.025, 0.025, 0.025],
+            half_extents=[
+                self.object_size / 2,
+                self.object_size / 2,
+                self.object_size / 2,
+            ],
             mass=0.5,
-            position=[0.0, 0.1, 0.025],
-            specular_color=[0.0, 0.0, 0.0],
-            rgba_color=[0.2, 0.9, 0.2, 1],
+            position=[0.5, 0.0, self.object_size / 2],
+            rgba_color=[0.1, 0.9, 0.1, 1],
+            friction=100,  # increase friction. For some reason, it helps a lot learning
         )
-        self.sim.create_sphere(
-            body_name="target1",
-            ghost=True,
-            mass=0,
-            radius=0.02,
-            position=[0.0, -0.1, 0.05],
-            specular_color=[0.0, 0.0, 0.0],
-            rgba_color=[1, 0, 0, 0.7],
-        )
-        self.sim.create_sphere(
+        self.sim.create_box(
             body_name="target2",
+            half_extents=[
+                self.object_size / 2,
+                self.object_size / 2,
+                self.object_size / 2,
+            ],
+            mass=0.0,
             ghost=True,
-            mass=0,
-            radius=0.02,
-            position=[0.0, 0.1, 0.05],
-            specular_color=[0.0, 0.0, 0.0],
-            rgba_color=[0, 1, 0, 0.7],
+            position=[0.5, 0.0, 0.05],
+            rgba_color=[0.1, 0.9, 0.1, 0.3],
         )
 
-    def resample(self):
+    def get_goal(self):
+        return self.goal.copy()
+
+    def get_obs(self):
+        # position, rotation of the object
+        object1_position = np.array(self.sim.get_base_position("object1"))
+        object1_rotation = np.array(self.sim.get_base_rotation("object1"))
+        object1_velocity = np.array(self.sim.get_base_velocity("object1"))
+        object1_angular_velocity = np.array(
+            self.sim.get_base_angular_velocity("object1")
+        )
+        object2_position = np.array(self.sim.get_base_position("object2"))
+        object2_rotation = np.array(self.sim.get_base_rotation("object2"))
+        object2_velocity = np.array(self.sim.get_base_velocity("object2"))
+        object2_angular_velocity = np.array(
+            self.sim.get_base_angular_velocity("object2")
+        )
+        observation = np.concatenate(
+            [
+                object1_position,
+                object1_rotation,
+                object1_velocity,
+                object1_angular_velocity,
+                object2_position,
+                object2_rotation,
+                object2_velocity,
+                object2_angular_velocity,
+            ]
+        )
+        return observation
+
+    def get_achieved_goal(self):
+        object1_position = np.array(self.sim.get_base_position("object1"))
+        object2_position = np.array(self.sim.get_base_position("object2"))
+        achieved_goal = np.concatenate((object1_position, object2_position))
+        return achieved_goal
+
+    def reset(self):
         self.goal = self._sample_goal()
         object1_position, object2_position = self._sample_objects()
         self.sim.set_base_pose("target1", self.goal[:3], [0, 0, 0, 1])
@@ -91,19 +126,17 @@ class StackEnv(TaskEnv):
         self.sim.set_base_pose("object2", object2_position, [0, 0, 0, 1])
 
     def _sample_goal(self):
-        """Randomize goal."""
-        goal1 = [0.0, 0.0, 0.025]  # z offset for the cube center
-        goal2 = [0.0, 0.0, 0.075]  # z offset for the cube center
+        goal1 = [0.0, 0.0, self.object_size / 2]  # z offset for the cube center
+        goal2 = [0.0, 0.0, 3 * self.object_size / 2]  # z offset for the cube center
         noise = self.np_random.uniform(self.goal_range_low, self.goal_range_high)
         goal1 += noise
         goal2 += noise
         return np.concatenate((goal1, goal2))
 
     def _sample_objects(self):
-        """Randomize start position of object."""
-        while True: # make sure that cubes are distant enough
-            object1_position = [0.0, 0.0, 0.025]  # z offset for the cube center
-            object2_position = [0.0, 0.0, 0.025]  # z offset for the cube center
+        while True:  # make sure that cubes are distant enough
+            object1_position = [0.0, 0.0, self.object_size / 2]
+            object2_position = [0.0, 0.0, self.object_size / 2]
             noise1 = self.np_random.uniform(self.obj_range_low, self.obj_range_high)
             noise2 = self.np_random.uniform(self.obj_range_low, self.obj_range_high)
             object1_position += noise1
@@ -111,15 +144,14 @@ class StackEnv(TaskEnv):
             if distance(object1_position, object2_position) > 0.1:
                 return object1_position, object2_position
 
-    def _is_success(self, achieved_goal, desired_goal):
-        """Returns whether the achieved goal match the desired goal."""
+    def is_success(self, achieved_goal, desired_goal):
+        # must be vectorized !!
         d = distance(achieved_goal, desired_goal)
         return (d < self.distance_threshold).astype(np.float32)
 
-    def compute_reward(self, achieved_goal, goal, info):
-        # Compute distance between goal and the achieved goal.
-        d = distance(achieved_goal, goal)
+    def compute_reward(self, achieved_goal, desired_goal, info):
+        d = distance(achieved_goal, desired_goal)
         if self.reward_type == "sparse":
-            return -(d > self.distance_threshold * 2).astype(np.float32)
+            return -(d > self.distance_threshold).astype(np.float32)
         else:
             return -d

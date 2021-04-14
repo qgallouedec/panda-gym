@@ -1,16 +1,17 @@
 import numpy as np
 from gym import spaces
 
-from panda_gym.envs.core import RobotEnv
+from panda_gym.envs.core import PyBulletRobot
 
 
-class PandaEnv(RobotEnv):
-    """Superclass for all Panda environments.
+class Panda(PyBulletRobot):
+    """Panda in PyBullet.
 
     Args:
         sim (Any): Simulation engine.
-        block_gripper (bool, optional): Whetther the gripper is blocked.
+        block_gripper (bool, optional): Whether the gripper is blocked.
             Defaults to False.
+        base_position ((x, y, z), optionnal): Position of the base base of the robot.
     """
 
     JOINT_INDICES = [0, 1, 2, 3, 4, 5, 6, 9, 10]
@@ -19,8 +20,9 @@ class PandaEnv(RobotEnv):
     JOINT_FORCES = [87, 87, 87, 87, 12, 120, 120, 170, 170]
 
     def __init__(self, sim, block_gripper=False, base_position=[0, 0, 0]):
-        self.action_space = spaces.Box(-1.0, 1.0, shape=(4,))
         self.block_gripper = block_gripper
+        n_action = 3 if self.block_gripper else 4
+        self.action_space = spaces.Box(-1.0, 1.0, shape=(n_action,))
 
         super().__init__(
             sim,
@@ -36,8 +38,9 @@ class PandaEnv(RobotEnv):
         finger2 = self.sim.get_joint_angle(self.body_name, self.FINGERS_INDICES[1])
         return finger1 + finger2
 
-    def inverse_kinematics(self, position, orientation):
-        """Compute the inverse kinematics and return the new joint values.
+    def _inverse_kinematics(self, position, orientation):
+        """Compute the inverse kinematics and return the new joint values. The last two
+        coordinates (fingers) are [0, 0].
 
         Args:
             position (x, y, z): Desired position of the end-effector.
@@ -67,7 +70,7 @@ class PandaEnv(RobotEnv):
             position (x, y, z): Desired position of the gripper.
         """
         # compute the new joint angles
-        angles = self.inverse_kinematics(
+        angles = self._inverse_kinematics(
             position=position, orientation=[1.0, 0.0, 0.0, 0.0]
         )
         self.set_joint_values(angles=angles)
@@ -85,10 +88,7 @@ class PandaEnv(RobotEnv):
     def _set_action(self, action):
         action = action.copy()  # ensure action don't change
         action = np.clip(action, self.action_space.low, self.action_space.high)
-        ee_ctrl, fingers_ctrl = action[:3], action[3]
-        # limit maximum change in position
-        ee_ctrl *= 0.05
-        fingers_ctrl *= 0.2
+        ee_ctrl = action[:3] * 0.05  # limit maximum change in position
         # get the current position and the target position
         ee_position = self.get_ee_position()
         target_ee_position = ee_position + ee_ctrl
@@ -96,21 +96,29 @@ class PandaEnv(RobotEnv):
         target_ee_position[2] = max(0, target_ee_position[2])
 
         # compute the new joint angles
-        target_angles = self.inverse_kinematics(
+        target_angles = self._inverse_kinematics(
             position=target_ee_position, orientation=[1, 0, 0, 0]
         )
 
-        fingers_width = self.get_fingers_width()
-        target_fingers_width = fingers_width + fingers_ctrl
+        if not self.block_gripper:
+            fingers_ctrl = action[3] * 0.2  # limit maximum change in position
+            fingers_width = self.get_fingers_width()
+            target_fingers_width = fingers_width + fingers_ctrl
+            target_angles[-2:] = [target_fingers_width / 2, target_fingers_width / 2]
 
-        target_angles[-2:] = [target_fingers_width / 2, target_fingers_width / 2]
         self.control_joints(target_angles=target_angles)
 
-        if self.block_gripper:
-            self.sim.set_joint_angles(
-                self.body_name, joints=self.FINGERS_INDICES, angles=[0, 0]
-            )
-
-    def _env_setup(self):
-        super()._env_setup()
+    def _setup(self):
         self.set_joint_neutral()
+
+    def get_obs(self):
+        # end-effector position and velocity
+        ee_position = np.array(self.get_ee_position())
+        ee_velocity = np.array(self.get_ee_velocity())
+        # fingers opening
+        if not self.block_gripper:
+            fingers_width = self.get_fingers_width()
+            obs = np.concatenate((ee_position, ee_velocity, [fingers_width]))
+        else:
+            obs = np.concatenate((ee_position, ee_velocity))
+        return obs

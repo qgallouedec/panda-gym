@@ -1,4 +1,3 @@
-from typing import Optional, List
 from contextlib import contextmanager
 import time
 
@@ -11,16 +10,19 @@ class PyBullet:
     """Convenient class to use PyBullet physics engine.
 
     Args:
-            render (bool, optional): Enable rendering. Defaults to False.
-            n_substeps (int, optional): Number of sim substep when step() is
-                called. Defaults to 20.
+        render (bool, optional): Enable rendering. Defaults to False.
+        n_substeps (int, optional): Number of sim substep when step() is
+            called. Defaults to 20.
     """
 
-    def __init__(self, render=False, n_substeps=20):
+    def __init__(self, render=False, n_substeps=20, background_color=(116, 160, 216)):
         self.render_enabled = render
+        self.background_color = [val / 255 for val in background_color]
         if render:
-            options = "--background_color_red={} --background_color_green={} --background_color_blue={}".format(
-                116.0 / 255.0, 160.0 / 255.0, 216.0 / 255.0
+            options = "--background_color_red={} \
+                       --background_color_green={} \
+                       --background_color_blue={}".format(
+                *self.background_color
             )
             p.connect(p.GUI, options=options)
             p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
@@ -80,7 +82,7 @@ class PyBullet:
             roll (float, optional): Rool of the camera. Defaults to 0.
 
         Returns:
-            Optional[np.ndarray]: An RGB array if mode is 'rgb_array'.
+            An RGB array if mode is 'rgb_array'.
         """
         if mode == "human":
             p.configureDebugVisualizer(p.COV_ENABLE_SINGLE_STEP_RENDERING)
@@ -110,10 +112,11 @@ class PyBullet:
                 lightSpecularCoeff=0.7,
             )
             # configure background color
+            bg = [val * 255 for val in self.background_color] + [255.0]
             for ix in range(len(px)):
                 for iy in range(len(px[ix])):
                     if depth[ix][iy] > 0.99:
-                        px[ix][iy][:] = [116.0, 160.0, 216.0, 255.0]
+                        px[ix][iy][:] = bg
 
             rgb_array = np.array(px, dtype=np.uint8)
             rgb_array = np.reshape(rgb_array, (height, width, 4))
@@ -316,7 +319,7 @@ class PyBullet:
         """Orient the camera used for rendering.
 
         Args:
-            target ((x, y, z)): Target position.
+            target (x, y, z): Target position.
             distance (float): Distance from the target position.
             yaw (float): Yaw.
             pitch (float): Pitch.
@@ -336,6 +339,11 @@ class PyBullet:
         p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 1)
 
     def loadURDF(self, body_name, **kwargs):
+        """Load URDF file.
+
+        Args:
+            body_name (str): The name of the body. Must be unique in the sim.
+        """
         self._bodies_idx[body_name] = p.loadURDF(**kwargs)
 
     def create_box(
@@ -344,8 +352,8 @@ class PyBullet:
         half_extents,
         mass,
         position,
-        specular_color,
         rgba_color,
+        specular_color=[0, 0, 0, 0],
         ghost=False,
         friction=None,
     ):
@@ -386,8 +394,8 @@ class PyBullet:
         height,
         mass,
         position,
-        specular_color,
         rgba_color,
+        specular_color=[0, 0, 0, 0],
         ghost=False,
         friction=None,
     ):
@@ -398,11 +406,10 @@ class PyBullet:
             radius (float): The radius in meter.
             height (float): The radius in meter.
             mass (float): The mass in kg.
-            position ((x, y, z)): The position of the sphere.
-            specular_color (Tuple[float, float, float]): RGB specular color.
-            rgba_color (Tuple[float, float, float, float]): RGBA color.
-            ghost (bool, optional): Whether the sphere can collide.
-                Defaults to False.
+            position (x, y, z): The position of the sphere.
+            specular_color (r, g, b): RGB specular color.
+            rgba_color (r, g, b, a): RGBA color.
+            ghost (bool, optional): Whether the sphere can collide. Defaults to False.
             friction (float, optionnal): The friction. If None, keep the pybullet default
                 value. Defaults to None.
         """
@@ -430,8 +437,8 @@ class PyBullet:
         radius,
         mass,
         position,
-        specular_color,
         rgba_color,
+        specular_color=[0, 0, 0, 0],
         ghost=False,
         friction=None,
     ):
@@ -441,11 +448,10 @@ class PyBullet:
             body_name (str): The name of the box. Must be unique in the sim.
             radius (float): The radius in meter.
             mass (float): The mass in kg.
-            position ((x, y, z)): The position of the sphere.
-            specular_color (Tuple[float, float, float]): RGB specular color.
-            rgba_color (Tuple[float, float, float, float]): RGBA color.
-            ghost (bool, optional): Whether the sphere can collide.
-                Defaults to False.
+            position (x, y, z): The position of the sphere.
+            specular_color (r, g, b): RGB specular color.
+            rgba_color (r, g, b, a): RGBA color.
+            ghost (bool, optional): Whether the sphere can collide. Defaults to False.
             friction (float, optionnal): The friction. If None, keep the pybullet default
                 value. Defaults to None.
         """
@@ -508,5 +514,31 @@ class PyBullet:
             p.changeDynamics(
                 bodyUniqueId=self._bodies_idx[body_name],
                 linkIndex=-1,
-                lateralFriction=friction
+                lateralFriction=friction,
             )
+
+    def create_plane(self, z_offset):
+        """Create a plane. (Actually it is a thin box)
+
+        Args:
+            z_offset (float): Offset of the plane.
+        """
+        self.create_box(
+            body_name="plane",
+            half_extents=[3.0, 3.0, 0.01],
+            mass=0,
+            position=[0.0, 0.0, z_offset - 0.01],
+            specular_color=[0.0, 0.0, 0.0],
+            rgba_color=[0.15, 0.15, 0.15, 1.0],
+        )
+
+    def create_table(self, length, width, height, x_offset=0):
+        """Create a fixed table. Top is z=0, centered in y"""
+        self.create_box(
+            body_name="table",
+            half_extents=[length / 2, width / 2, height / 2],
+            mass=0,
+            position=[x_offset, 0.0, -height / 2],
+            specular_color=[0.0, 0.0, 0.0],
+            rgba_color=[0.95, 0.95, 0.95, 1],
+        )

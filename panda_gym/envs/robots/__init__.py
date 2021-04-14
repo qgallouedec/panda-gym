@@ -1,1 +1,1 @@
-from panda_gym.envs.robots.panda import PandaEnv
+from panda_gym.envs.robots.panda import Panda

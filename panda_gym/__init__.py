@@ -7,8 +7,15 @@ for reward_type in ["sparse", "dense"]:
     }
 
     register(
-        id="PandaPickAndPlace{}-v1".format(suffix),
-        entry_point="panda_gym.envs:PandaPickAndPlaceEnv",
+        id="PandaReach{}-v1".format(suffix),
+        entry_point="panda_gym.envs:PandaReachEnv",
+        kwargs=kwargs,
+        max_episode_steps=50,
+    )
+
+    register(
+        id="PandaPush{}-v1".format(suffix),
+        entry_point="panda_gym.envs:PandaPushEnv",
         kwargs=kwargs,
         max_episode_steps=50,
     )
@@ -21,15 +28,8 @@ for reward_type in ["sparse", "dense"]:
     )
 
     register(
-        id="PandaReach{}-v1".format(suffix),
-        entry_point="panda_gym.envs:PandaReachEnv",
-        kwargs=kwargs,
-        max_episode_steps=50,
-    )
-
-    register(
-        id="PandaPush{}-v1".format(suffix),
-        entry_point="panda_gym.envs:PandaPushEnv",
+        id="PandaPickAndPlace{}-v1".format(suffix),
+        entry_point="panda_gym.envs:PandaPickAndPlaceEnv",
         kwargs=kwargs,
         max_episode_steps=50,
     )
