@@ -14,8 +14,6 @@ class PandaSlideEnv(RobotTaskEnv):
 
     def __init__(self, render=False, reward_type="sparse"):
         self.sim = PyBullet(render=render)
-        self.robot = Panda(
-            self.sim, block_gripper=True, base_position=[-0.6, 0.0, 0.0]
-        )
+        self.robot = Panda(self.sim, block_gripper=True, base_position=[-0.6, 0.0, 0.0])
         self.task = Slide(self.sim, reward_type=reward_type)
         RobotTaskEnv.__init__(self)

@@ -1,6 +1,7 @@
 import gym
 import panda_gym
 
+
 def run_env(env):
     """Tests running panda gym envs."""
     done = False
@@ -11,42 +12,50 @@ def run_env(env):
 
 
 def test_reach():
-    env = gym.make('PandaReach-v1')
+    env = gym.make("PandaReach-v1")
     run_env(env)
-    
+
+
 def test_slide():
-    env = gym.make('PandaSlide-v1')
+    env = gym.make("PandaSlide-v1")
     run_env(env)
+
 
 def test_push():
-    env = gym.make('PandaPush-v1')
+    env = gym.make("PandaPush-v1")
     run_env(env)
+
 
 def test_pickandplace():
-    env = gym.make('PandaPickAndPlace-v1')
+    env = gym.make("PandaPickAndPlace-v1")
     run_env(env)
+
 
 def test_stack():
-    env = gym.make('PandaStack-v1')
+    env = gym.make("PandaStack-v1")
     run_env(env)
+
 
 def test_dense_reach():
-    env = gym.make('PandaReachDense-v1')
+    env = gym.make("PandaReachDense-v1")
     run_env(env)
-    
+
+
 def test_dense_slide():
-    env = gym.make('PandaSlideDense-v1')
+    env = gym.make("PandaSlideDense-v1")
     run_env(env)
+
 
 def test_dense_push():
-    env = gym.make('PandaPushDense-v1')
+    env = gym.make("PandaPushDense-v1")
     run_env(env)
+
 
 def test_dense_pickandplace():
-    env = gym.make('PandaPickAndPlaceDense-v1')
+    env = gym.make("PandaPickAndPlaceDense-v1")
     run_env(env)
+
 
 def test_dense_stack():
-    env = gym.make('PandaStackDense-v1')
+    env = gym.make("PandaStackDense-v1")
     run_env(env)
-

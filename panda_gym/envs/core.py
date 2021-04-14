@@ -127,7 +127,7 @@ class RobotTaskEnv(gym.GoalEnv):
         """Setup the seed."""
         self.np_random, seed = utils.seeding.np_random(seed)
         return [seed]
-    
+
     def close(self):
         self.sim.close()
 
