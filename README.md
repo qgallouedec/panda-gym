@@ -3,7 +3,7 @@
 **Under development**
 
 [![PyPI version](https://img.shields.io/pypi/v/panda-gym.svg?logo=pypi&logoColor=FFE873)](https://pypi.org/project/panda-gym/)
-[![PyPI downloads](https://img.shields.io/pypi/dm/panda-gym)](https://pypistats.org/packages/panda-gym)
+[![Downloads](https://pepy.tech/badge/panda-gym)](https://pepy.tech/project/panda-gym)
 [![GitHub](https://img.shields.io/github/license/qgallouedec/panda-gym.svg)](LICENSE.txt)
 [![Actions Status](https://github.com/qgallouedec/panda-gym/workflows/build/badge.svg)](https://github.com/qgallouedec/panda-gym/actions)
 
