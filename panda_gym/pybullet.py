@@ -492,7 +492,7 @@ class PyBullet:
             position (x, y, z): The position of the geom. Defaults to (0, 0, 0)
             ghost (bool, optional): Whether the geometry can collide. Defaults
                 to False.
-            friction (float, optionna): The friction coef.
+            friction (float, optionnal): The friction coef.
             visual_kwargs (dict, optional): Visual kwargs. Defaults to {}.
             collision_kwargs (dict, optional): Collision kwargs. Defaults to {}.
         """
@@ -541,4 +541,5 @@ class PyBullet:
             position=[x_offset, 0.0, -height / 2],
             specular_color=[0.0, 0.0, 0.0],
             rgba_color=[0.95, 0.95, 0.95, 1],
+            friction=0.1
         )

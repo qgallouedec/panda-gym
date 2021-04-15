@@ -46,19 +46,13 @@ env.close()
 
 ## Environments
 
-Following environments are widely inspired from [OpenAI Fetch environments](https://openai.com/blog/ingredients-for-robotics-research/). Video [here](https://youtu.be/TbISn3yu0CM). See my [blog post](https://qgallouedec.github.io/posts/2021/02/openai-environment-for-franka-emika-panda-robot/).
+|                                  |                                                |
+| :------------------------------: | :--------------------------------------------: |
+|         `PandaReach-v1`          |                 `PandaPush-v1`                 |
+| ![PandaReach-v1](docs/reach.gif) |         ![PandaPush-v1](docs/push.gif)         |
+|         `PandaSlide-v1`          |             `PandaPickAndPlace-v1`             |
+| ![PandaSlide-v1](docs/slide.gif) | ![PandaPickAndPlace-v1](docs/pickandplace.gif) |
+|         `PandaStack-v1`          |                                                |
+| ![PandaStack-v1](docs/stack.gif) |                                                |
 
-`PandaReach-v1`: Panda has to move its end-effector to the desired goal position.
-![PandaReach-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/reach.gif)
-
-`PandaSlide-v1`: Panda has to hit a puck across a long table such that it slides and comes to rest on the desired goal.
-![PandaSlide-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/slide.gif)
-
-`PandaPush-v1`: Panda has to move a box by pushing it until it reaches a desired goal position.
-![PandaPush-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/push.gif)
-
-`PandaPickAndPlace-v1`: Panda has to pick up a box from a table using its gripper and move it to a desired goal above the table.
-![PandaPickAndPlace-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/pickandplace.gif)
-
-`PandaStack-v1`: Panda has to pick up a box from a table using its gripper and move it to a desired goal above the table.
-![PandaStack-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/pickandplace.gif)
+Environments are widely inspired from [OpenAI Fetch environments](https://openai.com/blog/ingredients-for-robotics-research/). 
