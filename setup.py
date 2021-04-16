@@ -13,7 +13,15 @@ setup(
     url="https://github.com/qgallouedec/panda-gym",
     packages=find_packages(),
     include_package_data=True,
-    package_data={"panda_gym": ["envs/assets/*.json"]},
+    package_data={},
     version="1.0.0",
     install_requires=["gym", "pybullet", "numpy"],
+    classifiers=[
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+    ],
 )
