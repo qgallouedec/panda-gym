@@ -15,14 +15,12 @@ class PyBulletRobot:
         seed (int, optional): Seed. Defaults to None.
     """
 
-    def __init__(self, sim, body_name, ee_link, file_name, base_position):
-
+    def __init__(self, sim, body_name, file_name, base_position):
         self.sim = sim  # sim engine
-        self.ee_link = ee_link
         self.body_name = body_name
         with self.sim.no_rendering():
             self._load_robot(file_name, base_position)
-            self._setup()
+            self.setup()
 
     def _load_robot(self, file_name, base_position):
         """Load the robot.
@@ -42,21 +40,25 @@ class PyBulletRobot:
         """Called once in en constructor."""
         pass
 
+    def set_action(self, action):
+        """Perform the action."""
+        raise NotImplementedError
+    
+    def get_obs(self):
+        """Return the observation associated to the robot."""
+        raise NotImplementedError
+
+    def reset(self):
+        """Reset the robot."""
+        raise NotImplementedError
+
     def get_link_position(self, link):
         """Returns the position of a link as (x, y, z)"""
         return self.sim.get_link_position(self.body_name, link)
 
-    def get_ee_position(self):
-        """Returns the position of the ned-effector as (x, y, z)"""
-        return self.get_link_position(self.ee_link)
-
     def get_link_velocity(self, link):
         """Returns the velocity of a link as (vx, vy, vz)"""
         return self.sim.get_link_velocity(self.body_name, link)
-
-    def get_ee_velocity(self):
-        """Returns the velocity of the end-effector as (vx, vy, vz)"""
-        return self.get_link_velocity(self.ee_link)
 
     def control_joints(self, target_angles):
         """Control the joints of the robot."""
@@ -104,12 +106,12 @@ class RobotTaskEnv(gym.GoalEnv):
 
     def reset(self):
         with self.sim.no_rendering():
-            self.robot.set_joint_neutral()
+            self.robot.reset()
             self.task.reset()
         return self._get_obs()
 
     def step(self, action):
-        self.robot._set_action(action)
+        self.robot.set_action(action)
         self.sim.step()
         obs = self._get_obs()
         done = False
