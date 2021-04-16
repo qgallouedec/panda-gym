@@ -38,10 +38,10 @@ class Push(Task):
                 self.object_size / 2,
                 self.object_size / 2,
             ],
-            mass=0.5,
+            mass=2,
             position=[0.0, 0.0, self.object_size / 2],
             rgba_color=[0.9, 0.1, 0.1, 1],
-            friction=1,  # increase friction. For some reason, it helps a lot learning
+            friction=0.5,  # increase friction. For some reason, it helps a lot learning
         )
         self.sim.create_box(
             body_name="target",

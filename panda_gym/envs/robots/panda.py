@@ -31,6 +31,8 @@ class Panda(PyBulletRobot):
             file_name="franka_panda/panda.urdf",
             base_position=base_position,
         )
+        self.sim.set_friction(self.body_name, self.FINGERS_INDICES[0], 5)
+        self.sim.set_friction(self.body_name, self.FINGERS_INDICES[1], 5)
 
     def get_fingers_width(self):
         """Get the distance between the fingers."""
