@@ -10,7 +10,7 @@ class Stack(Task):
         self,
         sim,
         reward_type="sparse",
-        distance_threshold=0.05,
+        distance_threshold=0.1,
         goal_xy_range=0.3,
         obj_xy_range=0.3,
         seed=None,

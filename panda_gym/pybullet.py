@@ -555,5 +555,5 @@ class PyBullet:
         p.changeDynamics(
             bodyUniqueId=self._bodies_idx[body],
             linkIndex=link,
-            lateralFriction=friction
+            lateralFriction=friction,
         )

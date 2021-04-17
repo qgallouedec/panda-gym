@@ -43,7 +43,7 @@ class PyBulletRobot:
     def set_action(self, action):
         """Perform the action."""
         raise NotImplementedError
-    
+
     def get_obs(self):
         """Return the observation associated to the robot."""
         raise NotImplementedError

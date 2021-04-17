@@ -15,7 +15,10 @@ class PandaStackEnv(RobotTaskEnv):
     def __init__(self, render=False, reward_type="sparse"):
         self.sim = PyBullet(render=render)
         self.robot = Panda(
-            self.sim, block_gripper=False, base_position=[-0.6, 0.0, 0.0]
+            self.sim,
+            block_gripper=False,
+            base_position=[-0.6, 0.0, 0.0],
+            fingers_friction=5.0,
         )
         self.task = Stack(self.sim, reward_type=reward_type)
         RobotTaskEnv.__init__(self)

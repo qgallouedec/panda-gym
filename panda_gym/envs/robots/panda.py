@@ -19,7 +19,9 @@ class Panda(PyBulletRobot):
     NEUTRAL_JOINT_VALUES = [0.00, 0.41, 0.00, -1.85, -0.00, 2.26, 0.79, 0, 0]
     JOINT_FORCES = [87, 87, 87, 87, 12, 120, 120, 170, 170]
 
-    def __init__(self, sim, block_gripper=False, base_position=[0, 0, 0]):
+    def __init__(
+        self, sim, block_gripper=False, base_position=[0, 0, 0], fingers_friction=1.0
+    ):
         self.block_gripper = block_gripper
         n_action = 3 if self.block_gripper else 4
         self.action_space = spaces.Box(-1.0, 1.0, shape=(n_action,))
@@ -30,8 +32,8 @@ class Panda(PyBulletRobot):
             file_name="franka_panda/panda.urdf",
             base_position=base_position,
         )
-        # self.sim.set_friction(self.body_name, self.FINGERS_INDICES[0], 5)
-        # self.sim.set_friction(self.body_name, self.FINGERS_INDICES[1], 5)
+        self.sim.set_friction(self.body_name, self.FINGERS_INDICES[0], fingers_friction)
+        self.sim.set_friction(self.body_name, self.FINGERS_INDICES[1], fingers_friction)
 
     def set_action(self, action):
         action = action.copy()  # ensure action don't change
@@ -77,7 +79,6 @@ class Panda(PyBulletRobot):
         finger2 = self.sim.get_joint_angle(self.body_name, self.FINGERS_INDICES[1])
         return finger1 + finger2
 
-    
     def get_ee_position(self):
         """Returns the position of the ned-effector as (x, y, z)"""
         return self.get_link_position(self.ee_link)
