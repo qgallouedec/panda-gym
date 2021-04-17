@@ -8,9 +8,8 @@ OpenaAI Gym Franka Emika Panda robot environment based on PyBullet.
 [![Downloads](https://pepy.tech/badge/panda-gym)](https://pepy.tech/project/panda-gym)
 [![GitHub](https://img.shields.io/github/license/qgallouedec/panda-gym.svg)](LICENSE.txt)
 [![build](https://github.com/qgallouedec/panda-gym/actions/workflows/build.yml/badge.svg?branch=v1.0)](https://github.com/qgallouedec/panda-gym/actions/workflows/build.yml)
+[![codecov](https://codecov.io/gh/qgallouedec/panda-gym/branch/v1.0/graph/badge.svg?token=pv0VdsXByP)](https://codecov.io/gh/qgallouedec/panda-gym)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-
-
 
 ## Installation
 
