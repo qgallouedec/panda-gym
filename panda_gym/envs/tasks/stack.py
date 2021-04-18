@@ -134,15 +134,15 @@ class Stack(Task):
         return np.concatenate((goal1, goal2))
 
     def _sample_objects(self):
-        while True:  # make sure that cubes are distant enough
-            object1_position = [0.0, 0.0, self.object_size / 2]
-            object2_position = [0.0, 0.0, self.object_size / 2]
-            noise1 = self.np_random.uniform(self.obj_range_low, self.obj_range_high)
-            noise2 = self.np_random.uniform(self.obj_range_low, self.obj_range_high)
-            object1_position += noise1
-            object2_position += noise2
-            if distance(object1_position, object2_position) > 0.1:
-                return object1_position, object2_position
+        # while True:  # make sure that cubes are distant enough
+        object1_position = [0.0, 0.0, self.object_size / 2]
+        object2_position = [0.0, 0.0, 3*self.object_size / 2]
+        noise1 = self.np_random.uniform(self.obj_range_low, self.obj_range_high)
+        noise2 = self.np_random.uniform(self.obj_range_low, self.obj_range_high)
+        object1_position += noise1
+        object2_position += noise2
+            # if distance(object1_position, object2_position) > 0.1:
+        return object1_position, object2_position
 
     def is_success(self, achieved_goal, desired_goal):
         # must be vectorized !!
