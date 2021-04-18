@@ -14,7 +14,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     package_data={},
-    version="1.0.0",
+    version="1.0.1",
     install_requires=["gym", "pybullet", "numpy"],
     classifiers=[
         "License :: OSI Approved :: MIT License",

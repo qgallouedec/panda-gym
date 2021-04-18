@@ -46,10 +46,10 @@ env.close()
 |                                  |                                                |
 | :------------------------------: | :--------------------------------------------: |
 |         `PandaReach-v1`          |                 `PandaPush-v1`                 |
-| ![PandaReach-v1](docs/reach.gif) |         ![PandaPush-v1](docs/push.gif)         |
+| ![PandaReach-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/reach.gif) |         ![PandaPush-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/push.gif)         |
 |         `PandaSlide-v1`          |             `PandaPickAndPlace-v1`             |
-| ![PandaSlide-v1](docs/slide.gif) | ![PandaPickAndPlace-v1](docs/pickandplace.gif) |
+| ![PandaSlide-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/slide.gif) | ![PandaPickAndPlace-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/pickandplace.gif) |
 |         `PandaStack-v1`          |                                                |
-| ![PandaStack-v1](docs/stack.gif) |                                                |
+| ![PandaStack-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/stack.gif) |                                                |
 
 Environments are widely inspired from [OpenAI Fetch environments](https://openai.com/blog/ingredients-for-robotics-research/). 
