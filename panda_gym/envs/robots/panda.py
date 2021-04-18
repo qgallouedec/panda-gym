@@ -12,6 +12,7 @@ class Panda(PyBulletRobot):
         block_gripper (bool, optional): Whether the gripper is blocked.
             Defaults to False.
         base_position ((x, y, z), optionnal): Position of the base base of the robot.
+        fingers_friction (float, optional): Lateral friction of the fingers. Defaults to 1.0.
     """
 
     JOINT_INDICES = [0, 1, 2, 3, 4, 5, 6, 9, 10]
