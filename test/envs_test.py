@@ -9,6 +9,7 @@ def run_env(env):
     while not done:
         action = env.action_space.sample()
         _, _, done, _ = env.step(action)
+    env.close()
 
 
 def test_reach():
