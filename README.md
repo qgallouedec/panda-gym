@@ -52,4 +52,19 @@ env.close()
 |         `PandaStack-v1`          |                                                |
 | ![PandaStack-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/stack.gif) |                                                |
 
+## Citation
+
+Cite as
+
+```
+@misc{panda_gym,
+  author = {Gallou\'{e}dec, Quentin},
+  title = {Multi-goal reinforcement learning environments for Franka Emika Panda robot},
+  year = {2021},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/qgallouedec/panda-gym}},
+}
+```
+
 Environments are widely inspired from [OpenAI Fetch environments](https://openai.com/blog/ingredients-for-robotics-research/). 
