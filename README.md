@@ -57,7 +57,7 @@ env.close()
 Cite as
 
 ```
-@misc{panda_gym,
+@misc{gallouedec2021multi,
   author = {Gallou\'{e}dec, Quentin},
   title = {Multi-goal reinforcement learning environments for Franka Emika Panda robot},
   year = {2021},
