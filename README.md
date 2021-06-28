@@ -8,6 +8,7 @@ OpenaAI Gym Franka Emika Panda robot environment based on PyBullet.
 [![build](https://github.com/qgallouedec/panda-gym/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/qgallouedec/panda-gym/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/qgallouedec/panda-gym/branch/master/graph/badge.svg?token=pv0VdsXByP)](https://codecov.io/gh/qgallouedec/panda-gym)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![arXiv](https://img.shields.io/badge/cs.LG-arXiv%3A2106.13687-B31B1B.svg)](https://arxiv.org/abs/2106.13687)
 
 ## Installation
 
@@ -57,13 +58,13 @@ env.close()
 Cite as
 
 ```
-@misc{gallouedec2021multi,
-  author = {Gallou\'{e}dec, Quentin},
-  title = {Multi-goal reinforcement learning environments for Franka Emika Panda robot},
-  year = {2021},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/qgallouedec/panda-gym}},
+@misc{gallouédec2021multigoal,
+      title={Multi-Goal Reinforcement Learning environments for simulated Franka Emika Panda robot}, 
+      author={Quentin Gallouédec and Nicolas Cazin and Emmanuel Dellandréa and Liming Chen},
+      year={2021},
+      eprint={2106.13687},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
 }
 ```
 
