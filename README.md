@@ -60,7 +60,7 @@ Cite as
 ```
 @misc{gallouédec2021multigoal,
       title={Multi-Goal Reinforcement Learning environments for simulated Franka Emika Panda robot}, 
-      author={Quentin Gallouédec and Nicolas Cazin and Emmanuel Dellandréa and Liming Chen},
+      author={Quentin Gallou{\'e}dec and Nicolas Cazin and Emmanuel Dellandr{\'e}a and Liming Chen},
       year={2021},
       eprint={2106.13687},
       archivePrefix={arXiv},
