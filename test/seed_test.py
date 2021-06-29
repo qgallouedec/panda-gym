@@ -18,9 +18,10 @@ def test_seed_reach():
     for action in actions:
         state, _, _, _ = env.step(action)
     # check somes values from the final state
-    assert state["observation"][2] == 0.10261139602330989
-    assert state["achieved_goal"][1] == 0.13984260601763496
-    assert state["desired_goal"][0] == 0.006393300281407527
+    # value are rounded : depending on the os, the result is not stricly the same
+    assert round(state["observation"][2], 8) == 0.1026114
+    assert round(state["achieved_goal"][1], 8) == 0.13984261
+    assert round(state["desired_goal"][0], 8) == 0.0063933
 
 
 def test_seed_push():
@@ -38,9 +39,9 @@ def test_seed_push():
     for action in actions:
         state, _, _, _ = env.step(action)
     # check somes values from the final state
-    assert state["observation"][2] == 0.07347989437569474
-    assert state["achieved_goal"][1] == 0.06545984927027101
-    assert state["desired_goal"][0] == 0.04850898672097903
+    assert round(state["observation"][2], 8) == 0.07347989
+    assert round(state["achieved_goal"][1], 8) == 0.06545985
+    assert round(state["desired_goal"][0], 8) == 0.04850899
 
 
 def test_seed_slide():
@@ -58,9 +59,9 @@ def test_seed_slide():
     for action in actions:
         state, _, _, _ = env.step(action)
     # check somes values from the final state
-    assert state["observation"][2] == 0.02201876710050804
-    assert state["achieved_goal"][1] == 0.02719424543671162
-    assert state["desired_goal"][0] == 0.4518336277440088
+    assert round(state["observation"][2], 8) == 0.02201877
+    assert round(state["achieved_goal"][1], 8) == 0.02719425
+    assert round(state["desired_goal"][0], 8) == 0.45183363
 
 
 def test_seed_pick_and_place():
@@ -78,9 +79,9 @@ def test_seed_pick_and_place():
     for action in actions:
         state, _, _, _ = env.step(action)
     # check somes values from the final state
-    assert state["observation"][2] == 0.09952820768754468
-    assert state["achieved_goal"][1] == -0.04404695023965532
-    assert state["desired_goal"][0] == -0.07605634245602978
+    assert round(state["observation"][2], 8) == 0.09952821
+    assert round(state["achieved_goal"][1], 8) == -0.04404695
+    assert round(state["desired_goal"][0], 8) == -0.07605634
 
 
 def test_seed_stack():
@@ -98,6 +99,6 @@ def test_seed_stack():
     for action in actions:
         state, _, _, _ = env.step(action)
     # check somes values from the final state
-    assert state["observation"][2] == 0.03127797734509673
-    assert state["achieved_goal"][1] == -0.010945185098696963
-    assert state["desired_goal"][0] == 0.05333860128652357
+    assert round(state["observation"][2], 8) == 0.03127798
+    assert round(state["achieved_goal"][1], 8) == -0.01094519
+    assert round(state["desired_goal"][0], 8) == 0.0533386
