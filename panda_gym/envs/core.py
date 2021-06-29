@@ -12,7 +12,6 @@ class PyBulletRobot:
         ee_link (int): Link index of the end-effector
         file_name (str): Path of the urdf file.
         base_position (x, y, z): Position of the base of the robot.
-        seed (int, optional): Seed. Defaults to None.
     """
 
     def __init__(self, sim, body_name, file_name, base_position):
@@ -74,7 +73,8 @@ class RobotTaskEnv(gym.GoalEnv):
 
     metadata = {"render.modes": ["human", "rgb_array"]}
 
-    def __init__(self, seed=None):
+    def __init__(self):
+        self.seed()  # required for init for can be changer later
         obs = self.reset()
         observation_shape = obs["observation"].shape
         achieved_goal_shape = obs["achieved_goal"].shape
@@ -89,7 +89,6 @@ class RobotTaskEnv(gym.GoalEnv):
         self.action_space = self.robot.action_space
         self.compute_reward = self.task.compute_reward
         self.render = self.sim.render
-        self.seed(seed)
 
     def _get_obs(self):
         robot_obs = self.robot.get_obs()  # robot state
@@ -116,19 +115,14 @@ class RobotTaskEnv(gym.GoalEnv):
         obs = self._get_obs()
         done = False
         info = {
-            "is_success": self.task.is_success(
-                obs["achieved_goal"], self.task.get_goal()
-            ),
+            "is_success": self.task.is_success(obs["achieved_goal"], self.task.get_goal()),
         }
-        reward = self.task.compute_reward(
-            obs["achieved_goal"], self.task.get_goal(), info
-        )
+        reward = self.task.compute_reward(obs["achieved_goal"], self.task.get_goal(), info)
         return obs, reward, done, info
 
     def seed(self, seed=None):
         """Setup the seed."""
-        self.np_random, seed = utils.seeding.np_random(seed)
-        return [seed]
+        return self.task.seed(seed)
 
     def close(self):
         self.sim.close()
@@ -152,6 +146,11 @@ class Task:
     def reset(self):
         """Reset the task: sample a new goal"""
         pass
+
+    def seed(self, seed):
+        """Sets the seed for this env's random number."""
+        self.np_random, seed = utils.seeding.np_random(seed)
+        return seed
 
     def is_success(self, achieved_goal, desired_goal):
         """Returns whether the achieved goal match the desired goal."""

@@ -96,9 +96,7 @@ class PyBullet:
                 roll=roll,
                 upAxisIndex=2,
             )
-            proj_matrix = p.computeProjectionMatrixFOV(
-                fov=60, aspect=float(width) / height, nearVal=0.1, farVal=100.0
-            )
+            proj_matrix = p.computeProjectionMatrixFOV(fov=60, aspect=float(width) / height, nearVal=0.1, farVal=100.0)
             (_, _, px, depth, _) = p.getCameraImage(
                 width=width,
                 height=height,
@@ -246,9 +244,7 @@ class PyBullet:
             position (x, y, z): The target cartesian position.
             orientation (x, y, z, w): The target orientation as quaternion.
         """
-        p.resetBasePositionAndOrientation(
-            bodyUniqueId=self._bodies_idx[body], posObj=position, ornObj=orientation
-        )
+        p.resetBasePositionAndOrientation(bodyUniqueId=self._bodies_idx[body], posObj=position, ornObj=orientation)
 
     def set_joint_angles(self, body, joints, angles):
         """Set the angles of the joints of the body.
@@ -269,9 +265,7 @@ class PyBullet:
             joint (int): Joint index in the body.
             angle (float): Target angle.
         """
-        p.resetJointState(
-            bodyUniqueId=self._bodies_idx[body], jointIndex=joint, targetValue=angle
-        )
+        p.resetJointState(bodyUniqueId=self._bodies_idx[body], jointIndex=joint, targetValue=angle)
 
     def control_joints(
         self,
@@ -498,9 +492,7 @@ class PyBullet:
         """
         baseVisualShapeIndex = p.createVisualShape(geom_type, **visual_kwargs)
         if not ghost:
-            baseCollisionShapeIndex = p.createCollisionShape(
-                geom_type, **collision_kwargs
-            )
+            baseCollisionShapeIndex = p.createCollisionShape(geom_type, **collision_kwargs)
         else:
             baseCollisionShapeIndex = -1
         self._bodies_idx[body_name] = p.createMultiBody(

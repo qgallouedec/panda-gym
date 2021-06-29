@@ -14,17 +14,13 @@ class PickAndPlace(Task):
         goal_xy_range=0.3,
         goal_z_range=0.2,
         obj_xy_range=0.3,
-        seed=None,
     ):
         self.sim = sim
         self.reward_type = reward_type
         self.distance_threshold = distance_threshold
         self.object_size = 0.04
-        self.np_random, self.seed = utils.seeding.np_random(seed)
         self.goal_range_low = np.array([-goal_xy_range / 2, -goal_xy_range / 2, 0])
-        self.goal_range_high = np.array(
-            [goal_xy_range / 2, goal_xy_range / 2, goal_z_range]
-        )
+        self.goal_range_high = np.array([goal_xy_range / 2, goal_xy_range / 2, goal_z_range])
         self.obj_range_low = np.array([-obj_xy_range / 2, -obj_xy_range / 2, 0])
         self.obj_range_high = np.array([obj_xy_range / 2, obj_xy_range / 2, 0])
         with self.sim.no_rendering():
@@ -92,7 +88,7 @@ class PickAndPlace(Task):
         """Randomize goal."""
         goal = [0.0, 0.0, self.object_size / 2]  # z offset for the cube center
         noise = self.np_random.uniform(self.goal_range_low, self.goal_range_high)
-        if np.random.random() < 0.3:
+        if self.np_random.random() < 0.3:
             noise[2] = 0.0
         goal += noise
         return goal

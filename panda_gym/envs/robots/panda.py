@@ -20,9 +20,7 @@ class Panda(PyBulletRobot):
     NEUTRAL_JOINT_VALUES = [0.00, 0.41, 0.00, -1.85, -0.00, 2.26, 0.79, 0, 0]
     JOINT_FORCES = [87, 87, 87, 87, 12, 120, 120, 170, 170]
 
-    def __init__(
-        self, sim, block_gripper=False, base_position=[0, 0, 0], fingers_friction=1.0
-    ):
+    def __init__(self, sim, block_gripper=False, base_position=[0, 0, 0], fingers_friction=1.0):
         self.block_gripper = block_gripper
         n_action = 3 if self.block_gripper else 4
         self.action_space = spaces.Box(-1.0, 1.0, shape=(n_action,))
@@ -47,9 +45,7 @@ class Panda(PyBulletRobot):
         target_ee_position[2] = max(0, target_ee_position[2])
 
         # compute the new joint angles
-        target_angles = self._inverse_kinematics(
-            position=target_ee_position, orientation=[1, 0, 0, 0]
-        )
+        target_angles = self._inverse_kinematics(position=target_ee_position, orientation=[1, 0, 0, 0])
 
         if not self.block_gripper:
             fingers_ctrl = action[3] * 0.2  # limit maximum change in position
@@ -120,9 +116,7 @@ class Panda(PyBulletRobot):
             position (x, y, z): Desired position of the gripper.
         """
         # compute the new joint angles
-        angles = self._inverse_kinematics(
-            position=position, orientation=[1.0, 0.0, 0.0, 0.0]
-        )
+        angles = self._inverse_kinematics(position=position, orientation=[1.0, 0.0, 0.0, 0.0])
         self.set_joint_values(angles=angles)
 
     def set_joint_values(self, angles):
@@ -131,6 +125,4 @@ class Panda(PyBulletRobot):
         Args:
             angles (list): Joint angles.
         """
-        self.sim.set_joint_angles(
-            self.body_name, joints=self.JOINT_INDICES, angles=angles
-        )
+        self.sim.set_joint_angles(self.body_name, joints=self.JOINT_INDICES, angles=angles)

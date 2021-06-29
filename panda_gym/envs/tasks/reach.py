@@ -13,13 +13,11 @@ class Reach(Task):
         reward_type="sparse",
         distance_threshold=0.05,
         goal_range=0.3,
-        seed=None,
     ):
         self.sim = sim
         self.reward_type = reward_type
         self.distance_threshold = distance_threshold
         self.get_ee_position = get_ee_position
-        self.np_random, self.seed = utils.seeding.np_random(seed)
         self.goal_range_low = np.array([-goal_range / 2, -goal_range / 2, 0])
         self.goal_range_high = np.array([goal_range / 2, goal_range / 2, goal_range])
         with self.sim.no_rendering():
@@ -54,6 +52,7 @@ class Reach(Task):
 
     def _sample_goal(self):
         """Randomize goal."""
+        # print(self.np_random.get_seed())
         goal = self.np_random.uniform(self.goal_range_low, self.goal_range_high)
         return goal
 

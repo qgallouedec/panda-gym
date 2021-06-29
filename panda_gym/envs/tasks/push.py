@@ -13,13 +13,11 @@ class Push(Task):
         distance_threshold=0.05,
         goal_xy_range=0.3,
         obj_xy_range=0.3,
-        seed=None,
     ):
         self.sim = sim
         self.reward_type = reward_type
         self.distance_threshold = distance_threshold
         self.object_size = 0.04
-        self.np_random, self.seed = utils.seeding.np_random(seed)
         self.goal_range_low = np.array([-goal_xy_range / 2, -goal_xy_range / 2, 0])
         self.goal_range_high = np.array([goal_xy_range / 2, goal_xy_range / 2, 0])
         self.obj_range_low = np.array([-obj_xy_range / 2, -obj_xy_range / 2, 0])
