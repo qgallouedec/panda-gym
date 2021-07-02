@@ -44,7 +44,6 @@ env.close()
 
 You can also [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/qgallouedec/panda-gym/blob/master/examples/PickAndPlace.ipynb)
 
-
 ## Environments
 
 |                                  |                                                |
@@ -60,7 +59,7 @@ You can also [![Open in Colab](https://colab.research.google.com/assets/colab-ba
 
 Cite as
 
-```
+```text
 @misc{gallouédec2021multigoal,
       title={Multi-Goal Reinforcement Learning environments for simulated Franka Emika Panda robot}, 
       author={Quentin Gallou{\'e}dec and Nicolas Cazin and Emmanuel Dellandr{\'e}a and Liming Chen},
