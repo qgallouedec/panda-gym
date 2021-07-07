@@ -55,6 +55,10 @@ You can also [![Open in Colab](https://colab.research.google.com/assets/colab-ba
 |         `PandaStack-v1`          |                                                |
 | ![PandaStack-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/stack.gif) |                                                |
 
+## Baselines results
+
+Baselines results and pre-trained agents available in [rl-baselines3-zoo](https://github.com/DLR-RM/rl-baselines3-zoo).
+
 ## Citation
 
 Cite as
