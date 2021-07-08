@@ -88,7 +88,6 @@ class RobotTaskEnv(gym.GoalEnv):
         )
         self.action_space = self.robot.action_space
         self.compute_reward = self.task.compute_reward
-        self.render = self.sim.render
 
     def _get_obs(self):
         robot_obs = self.robot.get_obs()  # robot state
@@ -126,6 +125,18 @@ class RobotTaskEnv(gym.GoalEnv):
 
     def close(self):
         self.sim.close()
+
+    def render(self, mode, width=720, height=480, target_position=(0.0, 0.0, 0.0), distance=1.4, yaw=45, pitch=-30, roll=0):
+        return self.sim.render(
+            mode,
+            width=width,
+            height=height,
+            target_position=target_position,
+            distance=distance,
+            yaw=yaw,
+            pitch=pitch,
+            roll=roll,
+        )
 
 
 class Task:

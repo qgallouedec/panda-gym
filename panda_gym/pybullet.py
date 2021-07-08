@@ -55,12 +55,12 @@ class PyBullet:
     def render(
         self,
         mode="human",
-        width=960,
-        height=720,
+        width=720,
+        height=480,
         target_position=(0.0, 0.0, 0.0),
-        distance=2,
+        distance=1.4,
         yaw=45,
-        pitch=-15,
+        pitch=-30,
         roll=0,
     ):
         """Render.
@@ -307,7 +307,7 @@ class PyBullet:
             targetOrientation=orientation,
         )
 
-    def place_visualizer(self, target, distance, yaw, pitch):
+    def place_visualizer(self, target_position, distance, yaw, pitch):
         """Orient the camera used for rendering.
 
         Args:
@@ -320,7 +320,7 @@ class PyBullet:
             cameraDistance=distance,
             cameraYaw=yaw,
             cameraPitch=pitch,
-            cameraTargetPosition=target,
+            cameraTargetPosition=target_position,
         )
 
     @contextmanager
