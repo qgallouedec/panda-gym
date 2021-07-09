@@ -1,11 +1,13 @@
 from contextlib import contextmanager
 import time
 import warnings
+import os
 
-import numpy as np
 import pybullet as p
 import pybullet_utils.bullet_client as bc
 import pybullet_data
+
+import panda_gym.assets
 
 
 class PyBullet:
@@ -240,6 +242,8 @@ class PyBullet:
             position (x, y, z): The target cartesian position.
             orientation (x, y, z, w): The target orientation as quaternion.
         """
+        if len(orientation) == 3:
+            orientation = self.physics_client.getQuaternionFromEuler(orientation)
         self.physics_client.resetBasePositionAndOrientation(
             bodyUniqueId=self._bodies_idx[body], posObj=position, ornObj=orientation
         )
@@ -344,10 +348,11 @@ class PyBullet:
         half_extents,
         mass,
         position,
-        rgba_color,
+        rgba_color=[1, 1, 1, 1],
         specular_color=[0, 0, 0, 0],
         ghost=False,
         friction=None,
+        texture=None,
     ):
         """Create a box.
 
@@ -368,7 +373,7 @@ class PyBullet:
             "rgbaColor": rgba_color,
         }
         collision_kwargs = {"halfExtents": half_extents}
-        return self._create_geometry(
+        self._create_geometry(
             body_name,
             geom_type=self.physics_client.GEOM_BOX,
             mass=mass,
@@ -378,6 +383,10 @@ class PyBullet:
             visual_kwargs=visual_kwargs,
             collision_kwargs=collision_kwargs,
         )
+        if texture is not None:
+            texture_path = os.path.join(panda_gym.assets.get_data_path(), texture)
+            texture_uid = p.loadTexture(texture_path)
+            p.changeVisualShape(self._bodies_idx[body_name], -1, textureUniqueId=texture_uid)
 
     def create_cylinder(
         self,
