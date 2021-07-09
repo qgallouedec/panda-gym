@@ -18,11 +18,13 @@ class Panda(PyBulletRobot):
     JOINT_INDICES = [0, 1, 2, 3, 4, 5, 6, 9, 10]
     FINGERS_INDICES = [9, 10]
     NEUTRAL_JOINT_VALUES = [0.00, 0.41, 0.00, -1.85, -0.00, 2.26, 0.79, 0, 0]
-    JOINT_FORCES = [87, 87, 87, 87, 12, 120, 120, 170, 170]
+    JOINT_FORCES = [87, 128, 87, 87, 12, 120, 120, 170, 170]
 
-    def __init__(self, sim, block_gripper=False, base_position=[0, 0, 0], fingers_friction=1.0):
+    def __init__(self, sim, block_gripper=False, base_position=[0, 0, 0], control="ee", fingers_friction=1.0):
         self.block_gripper = block_gripper
-        n_action = 3 if self.block_gripper else 4
+        self.control = control
+        n_action = 3 if self.control == "ee" else 7
+        n_action += 0 if self.block_gripper else 1
         self.action_space = spaces.Box(-1.0, 1.0, shape=(n_action,))
         self.ee_link = 11
         super().__init__(
@@ -35,6 +37,12 @@ class Panda(PyBulletRobot):
         self.sim.set_friction(self.body_name, self.FINGERS_INDICES[1], fingers_friction)
 
     def set_action(self, action):
+        if self.control == "ee":
+            return self.set_ee_action(action)
+        else:
+            return self.set_joints_action(action)
+
+    def set_ee_action(self, action):
         action = action.copy()  # ensure action don't change
         action = np.clip(action, self.action_space.low, self.action_space.high)
         ee_ctrl = action[:3] * 0.05  # limit maximum change in position
@@ -52,6 +60,26 @@ class Panda(PyBulletRobot):
             fingers_width = self.get_fingers_width()
             target_fingers_width = fingers_width + fingers_ctrl
             target_angles[-2:] = [target_fingers_width / 2, target_fingers_width / 2]
+
+        self.control_joints(target_angles=target_angles)
+
+    def set_joints_action(self, action):
+        action = action.copy()  # ensure action don't change
+        action = np.clip(action, self.action_space.low, self.action_space.high)
+        joints_ctrl = action[:7] * 0.05  # limit maximum change in position
+        # get the current position and the target position
+        joints_position = [self.sim.get_joint_angle(self.body_name, joint=i) for i in range(7)]
+        target_joints = joints_position + joints_ctrl
+        # Clip the height target. For some reason, it has a great impact on learning
+        # target_joints_position[2] = max(0, target_joints_position[2])
+
+        if not self.block_gripper:
+            fingers_ctrl = action[7] * 0.2  # limit maximum change in position
+            fingers_width = self.get_fingers_width()
+            target_fingers_width = fingers_width + fingers_ctrl
+        else:
+            target_fingers_width = 0
+        target_angles = np.concatenate((target_joints, [target_fingers_width / 2, target_fingers_width / 2]))
 
         self.control_joints(target_angles=target_angles)
 

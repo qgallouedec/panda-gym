@@ -12,9 +12,9 @@ class PandaReachEnv(RobotTaskEnv):
         reward_type (str, optional): "sparse" or "dense". Defaults to "sparse".
     """
 
-    def __init__(self, render=False, reward_type="sparse"):
+    def __init__(self, render=False, reward_type="sparse", control="ee"):
         self.sim = PyBullet(render=render)
-        self.robot = Panda(self.sim, block_gripper=True, base_position=[-0.6, 0.0, 0.0])
+        self.robot = Panda(self.sim, block_gripper=True, base_position=[-0.6, 0.0, 0.0], control=control)
         self.task = Reach(
             self.sim,
             reward_type=reward_type,
