@@ -18,6 +18,7 @@ class PandaFlipEnv(RobotTaskEnv):
             self.sim,
             block_gripper=False,
             base_position=[-0.6, 0.0, 0.0],
+            control="joints",
             fingers_friction=5.0,
         )
         self.task = Flip(self.sim, reward_type=reward_type)
