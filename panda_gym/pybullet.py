@@ -531,7 +531,7 @@ class PyBullet:
             rgba_color=[0.15, 0.15, 0.15, 1.0],
         )
 
-    def create_table(self, length, width, height, x_offset=0):
+    def create_table(self, length, width, height, x_offset=0, friction=0.1):
         """Create a fixed table. Top is z=0, centered in y."""
         self.create_box(
             body_name="table",
@@ -540,7 +540,7 @@ class PyBullet:
             position=[x_offset, 0.0, -height / 2],
             specular_color=[0.0, 0.0, 0.0],
             rgba_color=[0.95, 0.95, 0.95, 1],
-            friction=0.1,
+            friction=friction,
         )
 
     def set_friction(self, body, link, friction):
