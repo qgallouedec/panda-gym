@@ -12,7 +12,8 @@ class Panda(PyBulletRobot):
         block_gripper (bool, optional): Whether the gripper is blocked.
             Defaults to False.
         base_position ((x, y, z), optionnal): Position of the base base of the robot.
-        control (str, optional): Control type : "ee" or "joints". Defaults to "ee".
+        control_type (str, optional): "ee" to control end-effector position or "joints" to control joint values.
+            Defaults to "ee".
         fingers_friction (float, optional): Lateral friction of the fingers. Defaults to 1.0.
     """
 
@@ -21,10 +22,10 @@ class Panda(PyBulletRobot):
     NEUTRAL_JOINT_VALUES = [0.00, 0.41, 0.00, -1.85, -0.00, 2.26, 0.79, 0, 0]
     JOINT_FORCES = [87, 128, 87, 87, 12, 120, 120, 170, 170]
 
-    def __init__(self, sim, block_gripper=False, base_position=[0, 0, 0], control="ee", fingers_friction=1.0):
+    def __init__(self, sim, block_gripper=False, base_position=[0, 0, 0], control_type="ee", fingers_friction=1.0):
         self.block_gripper = block_gripper
-        self.control = control
-        n_action = 3 if self.control == "ee" else 7
+        self.control_type = control_type
+        n_action = 3 if self.control_type == "ee" else 7  # control (x, y z) if "ee", else, control the 7 joints
         n_action += 0 if self.block_gripper else 1
         self.action_space = spaces.Box(-1.0, 1.0, shape=(n_action,))
         self.ee_link = 11
@@ -38,7 +39,7 @@ class Panda(PyBulletRobot):
         self.sim.set_friction(self.body_name, self.FINGERS_INDICES[1], fingers_friction)
 
     def set_action(self, action):
-        if self.control == "ee":
+        if self.control_type == "ee":
             return self.set_ee_action(action)
         else:
             return self.set_joints_action(action)
