@@ -10,7 +10,7 @@ class Flip(Task):
         self,
         sim,
         reward_type="sparse",
-        distance_threshold=0.05,
+        distance_threshold=0.2,
         obj_xy_range=0.3,
     ):
         self.sim = sim
@@ -28,9 +28,7 @@ class Flip(Task):
 
     def _create_scene(self):
         self.sim.create_plane(z_offset=-0.4)
-        self.sim.create_table(
-            length=1.1, width=0.7, height=0.4, x_offset=-0.3, friction=0.2
-        )  # increase friction in order to allow fliping
+        self.sim.create_table(length=1.1, width=0.7, height=0.4, x_offset=-0.3)
         self.sim.create_box(
             body_name="object",
             half_extents=[
@@ -40,7 +38,6 @@ class Flip(Task):
             ],
             mass=1.0,
             position=[0.0, 0.0, self.object_size / 2],
-            friction=5,  # increase friction. For some reason, it helps a lot learning
             texture="colored_cube.png",
         )
         self.sim.create_box(

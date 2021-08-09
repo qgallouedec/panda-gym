@@ -32,12 +32,12 @@ class Slide(Task):
         self.sim.create_table(length=1.4, width=0.7, height=0.4, x_offset=-0.1)
         self.sim.create_cylinder(
             body_name="object",
-            mass=2,
+            mass=1.0,
             radius=self.object_size / 2,
             height=self.object_size / 2,
             position=[0.0, 0.0, self.object_size / 2],
             rgba_color=[0.9, 0.1, 0.1, 1],
-            friction=0.5,
+            lateral_friction=0.1,
         )
         self.sim.create_cylinder(
             body_name="target",

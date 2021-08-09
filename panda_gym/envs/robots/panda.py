@@ -14,7 +14,6 @@ class Panda(PyBulletRobot):
         base_position ((x, y, z), optionnal): Position of the base base of the robot.
         control_type (str, optional): "ee" to control end-effector position or "joints" to control joint values.
             Defaults to "ee".
-        fingers_friction (float, optional): Lateral friction of the fingers. Defaults to 1.0.
     """
 
     JOINT_INDICES = [0, 1, 2, 3, 4, 5, 6, 9, 10]
@@ -22,7 +21,7 @@ class Panda(PyBulletRobot):
     NEUTRAL_JOINT_VALUES = [0.00, 0.41, 0.00, -1.85, -0.00, 2.26, 0.79, 0, 0]
     JOINT_FORCES = [87, 128, 87, 87, 12, 120, 120, 170, 170]
 
-    def __init__(self, sim, block_gripper=False, base_position=[0, 0, 0], control_type="ee", fingers_friction=1.0):
+    def __init__(self, sim, block_gripper=False, base_position=[0, 0, 0], control_type="ee"):
         self.block_gripper = block_gripper
         self.control_type = control_type
         n_action = 3 if self.control_type == "ee" else 7  # control (x, y z) if "ee", else, control the 7 joints
@@ -35,8 +34,10 @@ class Panda(PyBulletRobot):
             file_name="franka_panda/panda.urdf",
             base_position=base_position,
         )
-        self.sim.set_friction(self.body_name, self.FINGERS_INDICES[0], fingers_friction)
-        self.sim.set_friction(self.body_name, self.FINGERS_INDICES[1], fingers_friction)
+        self.sim.set_lateral_friction(self.body_name, self.FINGERS_INDICES[0], lateral_friction=0.5)
+        self.sim.set_lateral_friction(self.body_name, self.FINGERS_INDICES[1], lateral_friction=0.5)
+        self.sim.set_spinning_friction(self.body_name, self.FINGERS_INDICES[0], spinning_friction=0.001)
+        self.sim.set_spinning_friction(self.body_name, self.FINGERS_INDICES[1], spinning_friction=0.001)
 
     def set_action(self, action):
         if self.control_type == "ee":

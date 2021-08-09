@@ -351,7 +351,8 @@ class PyBullet:
         rgba_color=[1, 1, 1, 1],
         specular_color=[0, 0, 0, 0],
         ghost=False,
-        friction=None,
+        lateral_friction=0.5,
+        spinning_friction=0.001,
         texture=None,
     ):
         """Create a box.
@@ -364,7 +365,7 @@ class PyBullet:
             specular_color (r, g, b): RGB specular color.
             rgba_color (r, g, b, a): RGBA color.
             ghost (bool, optional): Whether the box can collide. Defaults to False.
-            friction (float, optionnal): The friction. If None, keep the pybullet default
+            lateral_friction (float, optionnal): The friction. If None, keep the pybullet default
                 value. Defaults to None.
         """
         visual_kwargs = {
@@ -379,7 +380,8 @@ class PyBullet:
             mass=mass,
             position=position,
             ghost=ghost,
-            friction=friction,
+            lateral_friction=lateral_friction,
+            spinning_friction=spinning_friction,
             visual_kwargs=visual_kwargs,
             collision_kwargs=collision_kwargs,
         )
@@ -398,7 +400,8 @@ class PyBullet:
         rgba_color,
         specular_color=[0, 0, 0, 0],
         ghost=False,
-        friction=None,
+        lateral_friction=None,
+        spinning_friction=None,
     ):
         """Create a cylinder.
 
@@ -411,7 +414,7 @@ class PyBullet:
             specular_color (r, g, b): RGB specular color.
             rgba_color (r, g, b, a): RGBA color.
             ghost (bool, optional): Whether the sphere can collide. Defaults to False.
-            friction (float, optionnal): The friction. If None, keep the pybullet default
+            lateral_friction (float, optionnal): The friction. If None, keep the pybullet default
                 value. Defaults to None.
         """
         visual_kwargs = {
@@ -427,7 +430,8 @@ class PyBullet:
             mass=mass,
             position=position,
             ghost=ghost,
-            friction=friction,
+            lateral_friction=lateral_friction,
+            spinning_friction=spinning_friction,
             visual_kwargs=visual_kwargs,
             collision_kwargs=collision_kwargs,
         )
@@ -441,7 +445,8 @@ class PyBullet:
         rgba_color,
         specular_color=[0, 0, 0, 0],
         ghost=False,
-        friction=None,
+        lateral_friction=None,
+        spinning_friction=None,
     ):
         """Create a sphere.
 
@@ -453,7 +458,7 @@ class PyBullet:
             specular_color (r, g, b): RGB specular color.
             rgba_color (r, g, b, a): RGBA color.
             ghost (bool, optional): Whether the sphere can collide. Defaults to False.
-            friction (float, optionnal): The friction. If None, keep the pybullet default
+            lateral_friction (float, optionnal): The friction. If None, keep the pybullet default
                 value. Defaults to None.
         """
         visual_kwargs = {
@@ -468,7 +473,8 @@ class PyBullet:
             mass=mass,
             position=position,
             ghost=ghost,
-            friction=friction,
+            lateral_friction=lateral_friction,
+            spinning_friction=spinning_friction,
             visual_kwargs=visual_kwargs,
             collision_kwargs=collision_kwargs,
         )
@@ -477,10 +483,11 @@ class PyBullet:
         self,
         body_name,
         geom_type,
-        mass=0,
-        position=(0, 0, 0),
-        ghost=False,
-        friction=None,
+        mass,
+        position,
+        ghost,
+        lateral_friction,
+        spinning_friction,
         visual_kwargs={},
         collision_kwargs={},
     ):
@@ -493,7 +500,7 @@ class PyBullet:
             position (x, y, z): The position of the geom. Defaults to (0, 0, 0)
             ghost (bool, optional): Whether the geometry can collide. Defaults
                 to False.
-            friction (float, optionnal): The friction coef.
+            lateral_friction (float, optionnal): The friction coef.
             visual_kwargs (dict, optional): Visual kwargs. Defaults to {}.
             collision_kwargs (dict, optional): Collision kwargs. Defaults to {}.
         """
@@ -509,12 +516,10 @@ class PyBullet:
             basePosition=position,
         )
 
-        if friction is not None:
-            self.physics_client.changeDynamics(
-                bodyUniqueId=self._bodies_idx[body_name],
-                linkIndex=-1,
-                lateralFriction=friction,
-            )
+        if lateral_friction is not None:
+            self.set_lateral_friction(body=body_name, link=-1, lateral_friction=lateral_friction)
+        if spinning_friction is not None:
+            self.set_spinning_friction(body=body_name, link=-1, spinning_friction=spinning_friction)
 
     def create_plane(self, z_offset):
         """Create a plane. (Actually it is a thin box)
@@ -531,7 +536,7 @@ class PyBullet:
             rgba_color=[0.15, 0.15, 0.15, 1.0],
         )
 
-    def create_table(self, length, width, height, x_offset=0, friction=0.1):
+    def create_table(self, length, width, height, x_offset=0, lateral_friction=0.5):
         """Create a fixed table. Top is z=0, centered in y."""
         self.create_box(
             body_name="table",
@@ -540,19 +545,33 @@ class PyBullet:
             position=[x_offset, 0.0, -height / 2],
             specular_color=[0.0, 0.0, 0.0],
             rgba_color=[0.95, 0.95, 0.95, 1],
-            friction=friction,
+            lateral_friction=lateral_friction,
         )
 
-    def set_friction(self, body, link, friction):
+    def set_lateral_friction(self, body, link, lateral_friction):
         """Set the lateral friction of a link.
 
         Args:
             body (str): Body unique name.
             link (int): Link index in the body.
-            friction (float): Lateral friction.
+            lateral_friction (float): Lateral friction.
         """
         self.physics_client.changeDynamics(
             bodyUniqueId=self._bodies_idx[body],
             linkIndex=link,
-            lateralFriction=friction,
+            lateralFriction=lateral_friction,
+        )
+
+    def set_spinning_friction(self, body, link, spinning_friction):
+        """Set the spinning friction of a link.
+
+        Args:
+            body (str): Body unique name.
+            link (int): Link index in the body.
+            spinning_friction (float): Spinning friction.
+        """
+        self.physics_client.changeDynamics(
+            bodyUniqueId=self._bodies_idx[body],
+            linkIndex=link,
+            spinningFriction=spinning_friction,
         )

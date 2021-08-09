@@ -16,12 +16,6 @@ class PandaFlipEnv(RobotTaskEnv):
 
     def __init__(self, render=False, reward_type="sparse", control_type="ee"):
         self.sim = PyBullet(render=render)
-        self.robot = Panda(
-            self.sim,
-            block_gripper=False,
-            base_position=[-0.6, 0.0, 0.0],
-            control_type=control_type,
-            fingers_friction=0.1,
-        )
+        self.robot = Panda(self.sim, block_gripper=False, base_position=[-0.6, 0.0, 0.0], control_type=control_type)
         self.task = Flip(self.sim, reward_type=reward_type)
         RobotTaskEnv.__init__(self)
