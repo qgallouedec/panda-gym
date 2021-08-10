@@ -37,7 +37,7 @@ class Slide(Task):
             height=self.object_size / 2,
             position=[0.0, 0.0, self.object_size / 2],
             rgba_color=[0.9, 0.1, 0.1, 1],
-            lateral_friction=0.1,
+            lateral_friction=0.04,
         )
         self.sim.create_cylinder(
             body_name="target",

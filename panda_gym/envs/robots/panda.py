@@ -34,8 +34,8 @@ class Panda(PyBulletRobot):
             file_name="franka_panda/panda.urdf",
             base_position=base_position,
         )
-        self.sim.set_lateral_friction(self.body_name, self.FINGERS_INDICES[0], lateral_friction=0.5)
-        self.sim.set_lateral_friction(self.body_name, self.FINGERS_INDICES[1], lateral_friction=0.5)
+        self.sim.set_lateral_friction(self.body_name, self.FINGERS_INDICES[0], lateral_friction=1.0)
+        self.sim.set_lateral_friction(self.body_name, self.FINGERS_INDICES[1], lateral_friction=1.0)
         self.sim.set_spinning_friction(self.body_name, self.FINGERS_INDICES[0], spinning_friction=0.001)
         self.sim.set_spinning_friction(self.body_name, self.FINGERS_INDICES[1], spinning_friction=0.001)
 
