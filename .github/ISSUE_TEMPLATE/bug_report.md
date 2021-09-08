@@ -22,6 +22,6 @@ import panda_gym
 
 ## System
 
-- OS:
-- Python version (`python --version`):
-- Package version (`pip list | grep panda-gym`):
+  - OS:
+  - Python version (`python --version`):
+  - Package version (`pip list | grep panda-gym`):
