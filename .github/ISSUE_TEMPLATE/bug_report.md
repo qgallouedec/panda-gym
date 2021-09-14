@@ -2,7 +2,7 @@
 name: Bug report
 about: Create a report to help us improve
 title: ''
-labels: ''
+labels: bug
 assignees: ''
 
 ---
@@ -22,6 +22,6 @@ import panda_gym
 
 ## System
 
-- OS:
-- Python version (`python --version`):
-- Package version (`pip list | grep panda-gym`):
+  - OS:
+  - Python version (`python --version`):
+  - Package version (`pip list | grep panda-gym`):
