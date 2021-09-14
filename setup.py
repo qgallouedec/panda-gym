@@ -1,4 +1,9 @@
-from setuptools import setup, find_packages
+import os
+
+from setuptools import find_packages, setup
+
+with open(os.path.join("panda_gym", "version.txt"), "r") as file_handler:
+    __version__ = file_handler.read().strip()
 
 with open("README.md", "r") as f:
     long_description = f.read()
@@ -14,7 +19,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     package_data={},
-    version="1.1.0",
+    version=__version__,
     install_requires=["gym", "pybullet", "numpy"],
     classifiers=[
         "License :: OSI Approved :: MIT License",
