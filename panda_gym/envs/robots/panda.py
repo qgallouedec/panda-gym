@@ -23,7 +23,7 @@ class Panda(PyBulletRobot):
     def __init__(self, sim, block_gripper=False, base_position=[0, 0, 0], fingers_friction=1.0):
         self.block_gripper = block_gripper
         n_action = 3 if self.block_gripper else 4
-        self.action_space = spaces.Box(-1.0, 1.0, shape=(n_action,))
+        self.action_space = spaces.Box(-1.0, 1.0, shape=(n_action,), dtype=np.float32)
         self.ee_link = 11
         super().__init__(
             sim,
