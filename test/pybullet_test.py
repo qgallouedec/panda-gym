@@ -231,3 +231,84 @@ def test_set_joint_angle():
     joint_angle = pybullet.get_joint_angle("panda", 3)
     assert pytest.approx(joint_angle, abs=0.001) == 0.4
     pybullet.close()
+
+
+def test_set_joint_angles():
+    from panda_gym.pybullet import PyBullet
+
+    pybullet = PyBullet()
+    pybullet.loadURDF(
+        body_name="panda",
+        fileName="franka_panda/panda.urdf",
+        basePosition=[0.0, 0.0, 0.0],
+        useFixedBase=True,
+    )
+    pybullet.set_joint_angles("panda", [3, 4], [0.4, 0.5])
+    joint_angle3 = pybullet.get_joint_angle("panda", 3)
+    joint_angle4 = pybullet.get_joint_angle("panda", 4)
+    assert pytest.approx(joint_angle3, abs=0.001) == 0.4
+    assert pytest.approx(joint_angle4, abs=0.001) == 0.5
+    pybullet.close()
+
+
+def test_inverse_kinematics():
+    from panda_gym.pybullet import PyBullet
+
+    pybullet = PyBullet()
+    pybullet.loadURDF(
+        body_name="panda",
+        fileName="franka_panda/panda.urdf",
+        basePosition=[0.0, 0.0, 0.0],
+        useFixedBase=True,
+    )
+    joint_angles = pybullet.inverse_kinematics("panda", 6, [0.4, 0.5, 0.6], [0.707, -0.02, 0.02, 0.707])
+    assert pytest.approx(list(joint_angles), abs=0.001) == [1.000, 1.223, -1.113, -0.021, -0.917, 0.666, -0.499, 0.0, 0.0]
+    pybullet.close()
+
+
+def test_place_visalizer():
+    from panda_gym.pybullet import PyBullet
+
+    pybullet = PyBullet()
+    pybullet.place_visualizer([0.1, 0.2, 0.3], 5.0, 0.3, 0.4)
+
+
+def test_create_cylinder():
+    from panda_gym.pybullet import PyBullet
+
+    pybullet = PyBullet()
+    pybullet.create_cylinder("my_cylinder", 0.5, 1.0, 1.0, [0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 1.0])
+    pybullet.close()
+
+
+def test_create_sphere():
+    from panda_gym.pybullet import PyBullet
+
+    pybullet = PyBullet()
+    pybullet.create_sphere("my_sphere", 0.5, 1.0, [0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 1.0])
+    pybullet.close()
+
+
+def test_create_plane():
+    from panda_gym.pybullet import PyBullet
+
+    pybullet = PyBullet()
+    pybullet.create_plane(0.5)
+    pybullet.close()
+
+
+def test_create_table():
+    from panda_gym.pybullet import PyBullet
+
+    pybullet = PyBullet()
+    pybullet.create_table(0.5, 0.6, 0.4)
+    pybullet.close()
+
+
+def test_set_friction():
+    from panda_gym.pybullet import PyBullet
+
+    pybullet = PyBullet()
+    pybullet.create_box("my_box", [0.5, 0.5, 0.5], 1.0, [0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 1.0])
+    pybullet.set_friction("my_box", 0, 0.5)
+    pybullet.close()
