@@ -1,4 +1,9 @@
+import os
+
 from gym.envs.registration import register
+
+with open(os.path.join(os.path.dirname(__file__), "version.txt"), "r") as file_handler:
+    __version__ = file_handler.read().strip()
 
 for reward_type in ["sparse", "dense"]:
     for control_type in ["ee", "joints"]:

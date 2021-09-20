@@ -52,7 +52,7 @@ class PyBullet:
 
     def close(self):
         """Close the simulation."""
-        p.disconnect()
+        self.physics_client.disconnect()
 
     def render(
         self,
