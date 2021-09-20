@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 import time
+import warnings
 
 import numpy as np
 import pybullet as p
@@ -17,19 +18,17 @@ class PyBullet:
     """
 
     def __init__(self, render=False, n_substeps=20, background_color=(116, 160, 216)):
-        self.render_enabled = render
         self.background_color = [val / 255 for val in background_color]
-        if render:
-            options = "--background_color_red={} \
-                       --background_color_green={} \
-                       --background_color_blue={}".format(
-                *self.background_color
-            )
-            self.physics_client = bc.BulletClient(connection_mode=p.GUI, options=options)
-            self.physics_client.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
-            self.physics_client.configureDebugVisualizer(p.COV_ENABLE_MOUSE_PICKING, 0)
-        else:
-            self.physics_client = bc.BulletClient(connection_mode=p.DIRECT)
+
+        options = "--background_color_red={} \
+                    --background_color_green={} \
+                    --background_color_blue={}".format(
+            *self.background_color
+        )
+        self.connection_mode = p.GUI if render else p.DIRECT
+        self.physics_client = bc.BulletClient(connection_mode=self.connection_mode, options=options)
+        self.physics_client.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
+        self.physics_client.configureDebugVisualizer(p.COV_ENABLE_MOUSE_PICKING, 0)
 
         self.n_substeps = n_substeps
         self.timestep = 1.0 / 500
@@ -56,12 +55,12 @@ class PyBullet:
     def render(
         self,
         mode="human",
-        width=960,
-        height=720,
+        width=720,
+        height=480,
         target_position=(0.0, 0.0, 0.0),
-        distance=2,
+        distance=1.4,
         yaw=45,
-        pitch=-15,
+        pitch=-30,
         roll=0,
     ):
         """Render.
@@ -89,6 +88,14 @@ class PyBullet:
             self.physics_client.configureDebugVisualizer(self.physics_client.COV_ENABLE_SINGLE_STEP_RENDERING)
             time.sleep(self.dt)  # wait to seems like real speed
         if mode == "rgb_array":
+            if self.connection_mode == p.DIRECT:
+                warnings.warn(
+                    "The use of the render method is not recommended when the environment "
+                    "has not been created with render=True. The rendering will probably be weird. "
+                    "Prefer making the environment with option `render=True`. For example: "
+                    "`env = gym.make('PandaReach-v1', render=True)`.",
+                    UserWarning,
+                )
             view_matrix = self.physics_client.computeViewMatrixFromYawPitchRoll(
                 cameraTargetPosition=target_position,
                 distance=distance,
@@ -105,24 +112,10 @@ class PyBullet:
                 height=height,
                 viewMatrix=view_matrix,
                 projectionMatrix=proj_matrix,
-                lightDirection=[1.0, -0.9, 2.0],
-                lightColor=[1.0, 1.0, 1.0],
-                lightDistance=1,
-                lightAmbientCoeff=0.3,
-                lightDiffuseCoeff=0.7,
-                lightSpecularCoeff=0.7,
+                renderer=p.ER_BULLET_HARDWARE_OPENGL,
             )
-            # configure background color
-            bg = [val * 255 for val in self.background_color] + [255.0]
-            for ix in range(len(px)):
-                for iy in range(len(px[ix])):
-                    if depth[ix][iy] > 0.99:
-                        px[ix][iy][:] = bg
 
-            rgb_array = np.array(px, dtype=np.uint8)
-            rgb_array = np.reshape(rgb_array, (height, width, 4))
-            rgb_array = rgb_array[:, :, :3]
-            return rgb_array
+            return px
 
     def get_base_position(self, body):
         """Get the position of the body.
@@ -314,7 +307,7 @@ class PyBullet:
             targetOrientation=orientation,
         )
 
-    def place_visualizer(self, target, distance, yaw, pitch):
+    def place_visualizer(self, target_position, distance, yaw, pitch):
         """Orient the camera used for rendering.
 
         Args:
@@ -327,7 +320,7 @@ class PyBullet:
             cameraDistance=distance,
             cameraYaw=yaw,
             cameraPitch=pitch,
-            cameraTargetPosition=target,
+            cameraTargetPosition=target_position,
         )
 
     @contextmanager

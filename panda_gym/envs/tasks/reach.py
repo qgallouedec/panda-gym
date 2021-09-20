@@ -22,7 +22,7 @@ class Reach(Task):
         self.goal_range_high = np.array([goal_range / 2, goal_range / 2, goal_range])
         with self.sim.no_rendering():
             self._create_scene()
-            self.sim.place_visualizer(target=[0, 0, 0], distance=0.9, yaw=45, pitch=-30)
+            self.sim.place_visualizer(target_position=[0, 0, 0], distance=0.9, yaw=45, pitch=-30)
 
     def _create_scene(self):
         self.sim.create_plane(z_offset=-0.4)
