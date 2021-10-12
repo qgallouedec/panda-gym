@@ -6,7 +6,6 @@ from typing import Any, Dict, Iterator, Optional
 import numpy as np
 import pybullet_data
 import pybullet_utils.bullet_client as bc
-
 import pybullet as p
 
 
@@ -22,7 +21,7 @@ class PyBullet:
 
     def __init__(
         self, render: bool = False, n_substeps: int = 20, background_color: np.ndarray = np.array([116.0, 160.0, 216.0])
-    ):
+    ) -> None:
         self.background_color = background_color.astype(np.float64) / 255
         options = "--background_color_red={} \
                     --background_color_green={} \
@@ -78,7 +77,7 @@ class PyBullet:
                 array. Defaults to 'human'.
             width (int, optional): Image width. Defaults to 960.
             height (int, optional): Image height. Image height. Defaults to 720.
-            target_position ((x, y, z), optional): Camera targetting this postion.
+            target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
                 Defaults to (0., 0., 0.).
             distance (float, optional): Distance of the camera. Defaults to 2.
             yaw (float, optional): Yaw of the camera. Defaults to 45.
@@ -130,7 +129,8 @@ class PyBullet:
         Returns:
             np.ndarray: The position, as (x, y, z).
         """
-        return self.physics_client.getBasePositionAndOrientation(self._bodies_idx[body])[0]
+        position = self.physics_client.getBasePositionAndOrientation(self._bodies_idx[body])[0]
+        return np.array(position)
 
     def get_base_orientation(self, body: str) -> np.ndarray:
         """Get the orientation of the body.
@@ -141,7 +141,8 @@ class PyBullet:
         Returns:
             np.ndarray: The orientation, as quaternion (x, y, z, w).
         """
-        return self.physics_client.getBasePositionAndOrientation(self._bodies_idx[body])[1]
+        orientation = self.physics_client.getBasePositionAndOrientation(self._bodies_idx[body])[1]
+        return np.array(orientation)
 
     def get_base_rotation(self, body: str) -> np.ndarray:
         """Get the rotation of the body.
@@ -152,7 +153,8 @@ class PyBullet:
         Returns:
             np.ndarray: The rotation, as (rx, ry, rz).
         """
-        return self.physics_client.getEulerFromQuaternion(self.get_base_orientation(body))
+        rotation = self.physics_client.getEulerFromQuaternion(self.get_base_orientation(body))
+        return np.array(rotation)
 
     def get_base_velocity(self, body: str) -> np.ndarray:
         """Get the velocity of the body.
@@ -163,7 +165,8 @@ class PyBullet:
         Returns:
             np.ndarray: The velocity, as (vx, vy, vz).
         """
-        return self.physics_client.getBaseVelocity(self._bodies_idx[body])[0]
+        velocity = self.physics_client.getBaseVelocity(self._bodies_idx[body])[0]
+        return np.array(velocity)
 
     def get_base_angular_velocity(self, body: str) -> np.ndarray:
         """Get the angular velocity of the body.
@@ -174,7 +177,8 @@ class PyBullet:
         Returns:
             np.ndarray: The angular velocity, as (wx, wy, wz).
         """
-        return self.physics_client.getBaseVelocity(self._bodies_idx[body])[1]
+        angular_velocity = self.physics_client.getBaseVelocity(self._bodies_idx[body])[1]
+        return np.array(angular_velocity)
 
     def get_link_position(self, body: str, link: int) -> np.ndarray:
         """Get the position of the link of the body.
@@ -186,7 +190,8 @@ class PyBullet:
         Returns:
             np.ndarray: The position, as (x, y, z).
         """
-        return self.physics_client.getLinkState(self._bodies_idx[body], link)[0]
+        position = self.physics_client.getLinkState(self._bodies_idx[body], link)[0]
+        return np.array(position)
 
     def get_link_orientation(self, body: str, link: int) -> np.ndarray:
         """Get the orientation of the link of the body.
@@ -198,7 +203,8 @@ class PyBullet:
         Returns:
             np.ndarray: The rotation, as (rx, ry, rz).
         """
-        return self.physics_client.getLinkState(self._bodies_idx[body], link)[1]
+        orientation = self.physics_client.getLinkState(self._bodies_idx[body], link)[1]
+        return np.array(orientation)
 
     def get_link_velocity(self, body: str, link: int) -> np.ndarray:
         """Get the velocity of the link of the body.
@@ -210,7 +216,8 @@ class PyBullet:
         Returns:
             np.ndarray: The velocity, as (vx, vy, vz).
         """
-        return self.physics_client.getLinkState(self._bodies_idx[body], link, computeLinkVelocity=True)[6]
+        velocity = self.physics_client.getLinkState(self._bodies_idx[body], link, computeLinkVelocity=True)[6]
+        return np.array(velocity)
 
     def get_link_angular_velocity(self, body: str, link: int) -> np.ndarray:
         """Get the angular velocity of the link of the body.
@@ -222,7 +229,8 @@ class PyBullet:
         Returns:
             np.ndarray: The angular velocity, as (wx, wy, wz).
         """
-        return self.physics_client.getLinkState(self._bodies_idx[body], link, computeLinkVelocity=True)[7]
+        angular_velocity = self.physics_client.getLinkState(self._bodies_idx[body], link, computeLinkVelocity=True)[7]
+        return np.array(angular_velocity)
 
     def get_joint_angle(self, body: str, joint: int) -> float:
         """Get the angle of the joint of the body.
@@ -241,7 +249,7 @@ class PyBullet:
 
         Args:
             body (str): Body unique name.
-            position (np.ndarray): The target position as (x, y, z).
+            position (np.ndarray): The position, as (x, y, z).
             orientation (np.ndarray): The target orientation as quaternion (x, y, z, w).
         """
         self.physics_client.resetBasePositionAndOrientation(
@@ -292,24 +300,25 @@ class PyBullet:
         Args:
             body (str): Body unique name.
             ee_link (int): Link index of the end-effector.
-            position (np.ndarray): Desired position of the end-effector as (x, y, z).
+            position (np.ndarray): Desired position of the end-effector, as (x, y, z).
             orientation (np.ndarray): Desired orientation of the end-effector as quaternion (x, y, z, w).
 
         Returns:
             np.ndarray: The new joint state.
         """
-        return self.physics_client.calculateInverseKinematics(
+        joint_state = self.physics_client.calculateInverseKinematics(
             bodyIndex=self._bodies_idx[body],
             endEffectorLinkIndex=ee_link,
             targetPosition=position,
             targetOrientation=orientation,
         )
+        return np.array(joint_state)
 
     def place_visualizer(self, target_position: np.ndarray, distance: float, yaw: float, pitch: float) -> None:
         """Orient the camera used for rendering.
 
         Args:
-            target (np.ndarray): Target position as (x, y, z)
+            target (np.ndarray): Target position, as (x, y, z).
             distance (float): Distance from the target position.
             yaw (float): Yaw.
             pitch (float): Pitch.
@@ -328,7 +337,7 @@ class PyBullet:
         yield
         self.physics_client.configureDebugVisualizer(self.physics_client.COV_ENABLE_RENDERING, 1)
 
-    def loadURDF(self, body_name: str, **kwargs) -> None:
+    def loadURDF(self, body_name: str, **kwargs: Any) -> None:
         """Load URDF file.
 
         Args:
@@ -343,22 +352,21 @@ class PyBullet:
         mass: float,
         position: np.ndarray,
         rgba_color: np.ndarray,
-        specular_color: np.ndarray = np.zeros(4),
+        specular_color: np.ndarray = np.zeros(3),
         ghost: bool = False,
         friction: Optional[float] = None,
     ) -> None:
         """Create a box.
 
         Args:
-            body_name (str): The name of the box. Must be unique in the sim.
+            body_name (str): The name of the body. Must be unique in the sim.
             half_extents (x, y, z): Half size of the box in meters.
             mass (float): The mass in kg.
-            position (x, y, z): The position of the box.
-            specular_color (r, g, b): RGB specular color.
-            rgba_color (r, g, b, a): RGBA color.
-            ghost (bool, optional): Whether the box can collide. Defaults to False.
-            friction (float, optionnal): The friction. If None, keep the pybullet default
-                value. Defaults to None.
+            position (np.ndarray): The position, as (x, y, z).
+            rgba_color (np.ndarray): Body color, as (r, g, b, a).
+            specular_color (np.ndarray, optional): Specular color, as (r, g, b). Defaults to [0, 0, 0].
+            ghost (bool, optional): Whether the body can collide. Defaults to False.
+            friction (float or None, optional): Lateral friction. If None, use the default pybullet value. Defaults to None.
         """
         visual_kwargs = {
             "halfExtents": half_extents,
@@ -385,23 +393,22 @@ class PyBullet:
         mass: float,
         position: np.ndarray,
         rgba_color: np.ndarray,
-        specular_color: np.ndarray = np.zeros(4),
+        specular_color: np.ndarray = np.zeros(3),
         ghost: bool = False,
         friction: Optional[float] = None,
     ) -> None:
         """Create a cylinder.
 
         Args:
-            body_name (str): The name of the box. Must be unique in the sim.
+            body_name (str): The name of the body. Must be unique in the sim.
             radius (float): The radius in meter.
-            height (float): The radius in meter.
+            height (float): The height in meter.
             mass (float): The mass in kg.
-            position (x, y, z): The position of the sphere.
-            specular_color (r, g, b): RGB specular color.
-            rgba_color (r, g, b, a): RGBA color.
-            ghost (bool, optional): Whether the sphere can collide. Defaults to False.
-            friction (float, optionnal): The friction. If None, keep the pybullet default
-                value. Defaults to None.
+            position (np.ndarray): The position, as (x, y, z).
+            rgba_color (np.ndarray): Body color, as (r, g, b, a).
+            specular_color (np.ndarray, optional): Specular color, as (r, g, b). Defaults to [0, 0, 0].
+            ghost (bool, optional): Whether the body can collide. Defaults to False.
+            friction (float or None, optional): Lateral friction. If None, use the default pybullet value. Defaults to None.
         """
         visual_kwargs = {
             "radius": radius,
@@ -428,22 +435,21 @@ class PyBullet:
         mass: float,
         position: np.ndarray,
         rgba_color: np.ndarray,
-        specular_color: np.ndarray = np.zeros(4),
+        specular_color: np.ndarray = np.zeros(3),
         ghost: bool = False,
         friction: Optional[float] = None,
     ) -> None:
         """Create a sphere.
 
         Args:
-            body_name (str): The name of the box. Must be unique in the sim.
+            body_name (str): The name of the body. Must be unique in the sim.
             radius (float): The radius in meter.
             mass (float): The mass in kg.
-            position (x, y, z): The position of the sphere.
-            specular_color (r, g, b): RGB specular color.
-            rgba_color (r, g, b, a): RGBA color.
-            ghost (bool, optional): Whether the sphere can collide. Defaults to False.
-            friction (float, optionnal): The friction. If None, keep the pybullet default
-                value. Defaults to None.
+            position (np.ndarray): The position, as (x, y, z).
+            rgba_color (np.ndarray): Body color, as (r, g, b, a).
+            specular_color (np.ndarray, optional): Specular color, as (r, g, b). Defaults to [0, 0, 0].
+            ghost (bool, optional): Whether the body can collide. Defaults to False.
+            friction (float or None, optional): Lateral friction. If None, use the default pybullet value. Defaults to None.
         """
         visual_kwargs = {
             "radius": radius,
@@ -479,10 +485,9 @@ class PyBullet:
             body_name (str): The name of the body. Must be unique in the sim.
             geom_type (int): The geometry type. See self.physics_client.GEOM_<shape>.
             mass (float, optional): The mass in kg. Defaults to 0.
-            position (x, y, z): The position of the geom. Defaults to (0, 0, 0)
-            ghost (bool, optional): Whether the geometry can collide. Defaults
-                to False.
-            friction (float, optionnal): The friction coef.
+            position (np.ndarray, optional): The position, as (x, y, z). Defaults to (0, 0, 0).
+            ghost (bool, optional): Whether the body can collide. Defaults to False.
+            friction (float or None, optional): Lateral friction. If None, use the default pybullet value. Defaults to None.
             visual_kwargs (dict, optional): Visual kwargs. Defaults to {}.
             collision_kwargs (dict, optional): Collision kwargs. Defaults to {}.
         """
@@ -506,7 +511,7 @@ class PyBullet:
             )
 
     def create_plane(self, z_offset: float) -> None:
-        """Create a plane. (Actually it is a thin box)
+        """Create a plane. (Actually, it is a thin box.)
 
         Args:
             z_offset (float): Offset of the plane.
@@ -520,7 +525,7 @@ class PyBullet:
             rgba_color=np.array([0.15, 0.15, 0.15, 1.0]),
         )
 
-    def create_table(self, length: float, width: float, height: float, x_offset: float = 0.0):
+    def create_table(self, length: float, width: float, height: float, x_offset: float = 0.0) -> None:
         """Create a fixed table. Top is z=0, centered in y."""
         self.create_box(
             body_name="table",
@@ -532,7 +537,7 @@ class PyBullet:
             friction=0.1,
         )
 
-    def set_friction(self, body: str, link: int, friction: float):
+    def set_friction(self, body: str, link: int, friction: float) -> None:
         """Set the lateral friction of a link.
 
         Args:

@@ -3,8 +3,9 @@ from typing import Any, Dict, Optional, Tuple, Union
 
 import gym
 import gym.spaces
-import gym.utils
+import gym.utils.seeding
 import numpy as np
+
 from panda_gym.pybullet import PyBullet
 
 
@@ -28,19 +29,22 @@ class PyBulletRobot(ABC):
     def JOINT_FORCES(self):
         ...
 
-    def __init__(self, sim: PyBullet, body_name: str, file_name: str, base_position: np.ndarray) -> None:
+    def __init__(
+        self, sim: PyBullet, body_name: str, file_name: str, base_position: np.ndarray, action_space: gym.spaces.Space
+    ) -> None:
         self.sim = sim  # sim engine
         self.body_name = body_name
         with self.sim.no_rendering():
             self._load_robot(file_name, base_position)
             self.setup()
+        self.action_space = action_space
 
-    def _load_robot(self, file_name, base_position):
+    def _load_robot(self, file_name: str, base_position: np.ndarray) -> None:
         """Load the robot.
 
         Args:
-            file_name (str): The file name of the robot.
-            base_position (x, y, z): The position of the robot.
+            file_name (str): The URDF file name of the robot.
+            base_position (np.ndarray): The position of the robot, as (x, y, z).
         """
         self.sim.loadURDF(
             body_name=self.body_name,
@@ -169,11 +173,11 @@ class RobotTaskEnv(gym.GoalEnv):
     metadata = {"render.modes": ["human", "rgb_array"]}
 
     def __init__(self, robot: PyBulletRobot, task: Task) -> None:
-        assert robot.sim == task.sim
+        assert robot.sim == task.sim, "The robot and the task must belong to the same simulation."
         self.sim = robot.sim
         self.robot = robot
         self.task = task
-        self.seed()  # required for init; can be changer later
+        self.seed()  # required for init; can be changed later
         obs = self.reset()
         observation_shape = obs["observation"].shape
         achieved_goal_shape = obs["achieved_goal"].shape

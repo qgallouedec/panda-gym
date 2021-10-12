@@ -1,6 +1,7 @@
 import numpy as np
-import panda_gym.envs.robots
+
 from panda_gym.envs.core import RobotTaskEnv
+from panda_gym.envs.robots import Panda
 from panda_gym.envs.tasks import Stack
 from panda_gym.pybullet import PyBullet
 
@@ -13,10 +14,8 @@ class PandaStackEnv(RobotTaskEnv):
         reward_type (str, optional): "sparse" or "dense". Defaults to "sparse".
     """
 
-    def __init__(self, render: bool = False, reward_type: str = "sparse"):
+    def __init__(self, render: bool = False, reward_type: str = "sparse") -> None:
         sim = PyBullet(render=render)
-        robot = panda_gym.envs.robots.Panda(
-            sim, block_gripper=False, base_position=np.array([-0.6, 0.0, 0.0]), fingers_friction=5.0
-        )
+        robot = Panda(sim, block_gripper=False, base_position=np.array([-0.6, 0.0, 0.0]), fingers_friction=5.0)
         task = Stack(sim, reward_type=reward_type)
         super().__init__(robot, task)

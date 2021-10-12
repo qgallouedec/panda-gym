@@ -1,7 +1,7 @@
 from typing import Any, Dict, Tuple, Union
 
 import numpy as np
-from gym import utils
+
 from panda_gym.envs.core import Task
 from panda_gym.utils import distance
 
@@ -14,7 +14,7 @@ class Stack(Task):
         distance_threshold=0.1,
         goal_xy_range=0.3,
         obj_xy_range=0.3,
-    ):
+    ) -> None:
         super().__init__(sim)
         self.reward_type = reward_type
         self.distance_threshold = distance_threshold

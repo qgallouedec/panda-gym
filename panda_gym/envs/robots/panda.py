@@ -1,6 +1,8 @@
 import numpy as np
 from gym import spaces
+
 from panda_gym.envs.core import PyBulletRobot
+from panda_gym.pybullet import PyBullet
 
 
 class Panda(PyBulletRobot):
@@ -14,23 +16,25 @@ class Panda(PyBulletRobot):
         fingers_friction (float, optional): Lateral friction of the fingers. Defaults to 1.0.
     """
 
-    JOINT_INDICES = [0, 1, 2, 3, 4, 5, 6, 9, 10]
-    FINGERS_INDICES = [9, 10]
-    NEUTRAL_JOINT_VALUES = [0.00, 0.41, 0.00, -1.85, -0.00, 2.26, 0.79, 0, 0]
-    JOINT_FORCES = [87, 87, 87, 87, 12, 120, 120, 170, 170]
+    JOINT_INDICES = np.array([0, 1, 2, 3, 4, 5, 6, 9, 10])
+    FINGERS_INDICES = np.array([9, 10])
+    NEUTRAL_JOINT_VALUES = np.array([0.00, 0.41, 0.00, -1.85, 0.00, 2.26, 0.79, 0.00, 0.00])
+    JOINT_FORCES = np.array([87.0, 87.0, 87.0, 87.0, 12.0, 120.0, 120.0, 170.0, 170.0])
 
     def __init__(
         self,
-        sim,
+        sim: PyBullet,
         block_gripper: bool = False,
         base_position: np.ndarray = np.array([0.0, 0.0, 0.0]),
         fingers_friction: float = 1.0,
-    ):
+    ) -> None:
         self.block_gripper = block_gripper
         n_action = 3 if self.block_gripper else 4
-        self.action_space = spaces.Box(-1.0, 1.0, shape=(n_action,), dtype=np.float64)
+        action_space = spaces.Box(-1.0, 1.0, shape=(n_action,), dtype=np.float64)
         self.ee_link = 11
-        super().__init__(sim, body_name="panda", file_name="franka_panda/panda.urdf", base_position=base_position)
+        super().__init__(
+            sim, body_name="panda", file_name="franka_panda/panda.urdf", base_position=base_position, action_space=action_space
+        )
         self.sim.set_friction(self.body_name, self.FINGERS_INDICES[0], fingers_friction)
         self.sim.set_friction(self.body_name, self.FINGERS_INDICES[1], fingers_friction)
 
@@ -42,7 +46,7 @@ class Panda(PyBulletRobot):
         ee_position = self.get_ee_position()
         target_ee_position = ee_position + ee_ctrl
         # Clip the height target. For some reason, it has a great impact on learning
-        target_ee_position[2] = max(0, target_ee_position[2])
+        target_ee_position[2] = np.max(0, target_ee_position[2])
         # compute the new joint angles
         target_angles = self._inverse_kinematics(position=target_ee_position, orientation=np.array([1.0, 0.0, 0.0, 0.0]))
         if not self.block_gripper:
@@ -81,7 +85,7 @@ class Panda(PyBulletRobot):
         """Returns the velocity of the end-effector as (vx, vy, vz)"""
         return self.get_link_velocity(self.ee_link)
 
-    def _inverse_kinematics(self, position, orientation):
+    def _inverse_kinematics(self, position: np.ndarray, orientation: np.ndarray) -> np.ndarray:
         """Compute the inverse kinematics and return the new joint values. The last two
         coordinates (fingers) are [0, 0].
 
@@ -96,14 +100,14 @@ class Panda(PyBulletRobot):
             self.body_name, ee_link=11, position=position, orientation=orientation
         )
         # Replace the fingers coef by [0, 0]
-        inverse_kinematics = list(inverse_kinematics[0:7]) + [0, 0]
+        inverse_kinematics[7:9] = np.zeros(2)
         return inverse_kinematics
 
     def set_joint_neutral(self):
         """Set the robot to its neutral pose."""
         self.set_joint_values(self.NEUTRAL_JOINT_VALUES)
 
-    def set_ee_position(self, position):
+    def set_ee_position(self, position: np.ndarray):
         """Set the end-effector position. Can induce collisions.
 
         Warning:
@@ -113,7 +117,7 @@ class Panda(PyBulletRobot):
             position (x, y, z): Desired position of the gripper.
         """
         # compute the new joint angles
-        angles = self._inverse_kinematics(position=position, orientation=[1.0, 0.0, 0.0, 0.0])
+        angles = self._inverse_kinematics(position=position, orientation=np.array([1.0, 0.0, 0.0, 0.0]))
         self.set_joint_values(angles=angles)
 
     def set_joint_values(self, angles):

@@ -1,7 +1,7 @@
 from typing import Any, Dict, Union
 
 import numpy as np
-from gym import utils
+
 from panda_gym.envs.core import Task
 from panda_gym.pybullet import PyBullet
 from panda_gym.utils import distance

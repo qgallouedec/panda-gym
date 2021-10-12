@@ -1,7 +1,7 @@
 from typing import Any, Dict, Union
 
 import numpy as np
-from gym import utils
+
 from panda_gym.envs.core import Task
 from panda_gym.utils import distance
 
@@ -14,7 +14,7 @@ class Reach(Task):
         reward_type="sparse",
         distance_threshold=0.05,
         goal_range=0.3,
-    ):
+    ) -> None:
         super().__init__(sim)
         self.reward_type = reward_type
         self.distance_threshold = distance_threshold
