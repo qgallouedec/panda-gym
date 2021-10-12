@@ -46,7 +46,7 @@ class Panda(PyBulletRobot):
         ee_position = self.get_ee_position()
         target_ee_position = ee_position + ee_ctrl
         # Clip the height target. For some reason, it has a great impact on learning
-        target_ee_position[2] = np.max(0, target_ee_position[2])
+        target_ee_position[2] = np.max((0, target_ee_position[2]))
         # compute the new joint angles
         target_angles = self._inverse_kinematics(position=target_ee_position, orientation=np.array([1.0, 0.0, 0.0, 0.0]))
         if not self.block_gripper:
