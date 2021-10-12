@@ -1,9 +1,12 @@
+from abc import ABC, abstractmethod
+
 import gym
-from gym import utils, spaces
 import numpy as np
+import gym.spaces
+import gym.utils
 
 
-class PyBulletRobot:
+class PyBulletRobot(ABC):
     """Base class for robot env.
 
     Args:
@@ -14,12 +17,24 @@ class PyBulletRobot:
         base_position (x, y, z): Position of the base of the robot.
     """
 
-    def __init__(self, sim, body_name, file_name, base_position):
+    @property
+    @abstractmethod
+    def JOINT_INDICES(self):
+        ...
+
+    @property
+    @abstractmethod
+    def JOINT_FORCES(self):
+        ...
+
+    def __init__(self, sim, body_name, file_name, base_position, joint_indices, joint_forces):
         self.sim = sim  # sim engine
         self.body_name = body_name
         with self.sim.no_rendering():
             self._load_robot(file_name, base_position)
             self.setup()
+        self.joint_indices = joint_indices
+        self.joint_forces = joint_forces
 
     def _load_robot(self, file_name, base_position):
         """Load the robot.
@@ -79,11 +94,11 @@ class RobotTaskEnv(gym.GoalEnv):
         observation_shape = obs["observation"].shape
         achieved_goal_shape = obs["achieved_goal"].shape
         desired_goal_shape = obs["achieved_goal"].shape
-        self.observation_space = spaces.Dict(
+        self.observation_space = gym.spaces.Dict(
             dict(
-                observation=spaces.Box(-10.0, 10.0, shape=observation_shape, dtype=np.float32),
-                desired_goal=spaces.Box(-10.0, 10.0, shape=achieved_goal_shape, dtype=np.float32),
-                achieved_goal=spaces.Box(-10.0, 10.0, shape=desired_goal_shape, dtype=np.float32),
+                observation=gym.spaces.Box(-10.0, 10.0, shape=observation_shape, dtype=np.float32),
+                desired_goal=gym.spaces.Box(-10.0, 10.0, shape=achieved_goal_shape, dtype=np.float32),
+                achieved_goal=gym.spaces.Box(-10.0, 10.0, shape=desired_goal_shape, dtype=np.float32),
             )
         )
         self.action_space = self.robot.action_space
@@ -160,7 +175,7 @@ class Task:
 
     def seed(self, seed):
         """Sets the seed for this env's random number."""
-        self.np_random, seed = utils.seeding.np_random(seed)
+        self.np_random, seed = gym.utils.seeding.np_random(seed)
         return seed
 
     def is_success(self, achieved_goal, desired_goal):
