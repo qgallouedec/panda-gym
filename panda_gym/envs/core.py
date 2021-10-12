@@ -1,20 +1,21 @@
 from abc import ABC, abstractmethod
+from typing import Any, Dict, Optional, Tuple, Union
 
 import gym
-import numpy as np
 import gym.spaces
 import gym.utils
+import numpy as np
+from panda_gym.pybullet import PyBullet
 
 
 class PyBulletRobot(ABC):
     """Base class for robot env.
 
     Args:
-        sim (Any): The simulation engine.
+        sim (PyBullet): The simulation engine.
         body_name (str): The name of the robot within the simulation.
-        ee_link (int): Link index of the end-effector
         file_name (str): Path of the urdf file.
-        base_position (x, y, z): Position of the base of the robot.
+        base_position (np.ndarray): Position of the base of the robot as (x, y, z).
     """
 
     @property
@@ -27,14 +28,12 @@ class PyBulletRobot(ABC):
     def JOINT_FORCES(self):
         ...
 
-    def __init__(self, sim, body_name, file_name, base_position, joint_indices, joint_forces):
+    def __init__(self, sim: PyBullet, body_name: str, file_name: str, base_position: np.ndarray) -> None:
         self.sim = sim  # sim engine
         self.body_name = body_name
         with self.sim.no_rendering():
             self._load_robot(file_name, base_position)
             self.setup()
-        self.joint_indices = joint_indices
-        self.joint_forces = joint_forces
 
     def _load_robot(self, file_name, base_position):
         """Load the robot.
@@ -50,32 +49,62 @@ class PyBulletRobot(ABC):
             useFixedBase=True,
         )
 
-    def setup(self):
-        """Called once in en constructor."""
+    def setup(self) -> None:
+        """Called after robot loading."""
         pass
 
-    def set_action(self, action):
-        """Perform the action."""
-        raise NotImplementedError
+    @abstractmethod
+    def set_action(self, action: np.ndarray) -> None:
+        """Set the action. Must be call just before sim.step().
 
-    def get_obs(self):
-        """Return the observation associated to the robot."""
-        raise NotImplementedError
+        Args:
+            action (np.ndarray): The action.
+        """
 
-    def reset(self):
-        """Reset the robot."""
-        raise NotImplementedError
+    @abstractmethod
+    def get_obs(self) -> np.ndarray:
+        """Return the observation associated to the robot.
 
-    def get_link_position(self, link):
-        """Returns the position of a link as (x, y, z)"""
+        Returns:
+            np.ndarray: The observation.
+        """
+
+    @abstractmethod
+    def reset(self) -> np.ndarray:
+        """Reset the robot and return the observation.
+
+        Returns:
+            np.ndarray: The observation.
+        """
+
+    def get_link_position(self, link: int) -> np.ndarray:
+        """Returns the position of a link as (x, y, z)
+
+        Args:
+            link (int): The link index.
+
+        Returns:
+            np.ndarray: Position as (x, y, z)
+        """
         return self.sim.get_link_position(self.body_name, link)
 
-    def get_link_velocity(self, link):
-        """Returns the velocity of a link as (vx, vy, vz)"""
+    def get_link_velocity(self, link: int) -> np.ndarray:
+        """Returns the velocity of a link as (vx, vy, vz)
+
+        Args:
+            link (int): The link index.
+
+        Returns:
+            np.ndarray: Velocity as (vx, vy, vz)
+        """
         return self.sim.get_link_velocity(self.body_name, link)
 
-    def control_joints(self, target_angles):
-        """Control the joints of the robot."""
+    def control_joints(self, target_angles: np.ndarray) -> None:
+        """Control the joints of the robot.
+
+        Args:
+            target_angles (np.ndarray): The target angles. The length of the array must equal to the number of joints.
+        """
         self.sim.control_joints(
             body=self.body_name,
             joints=self.JOINT_INDICES,
@@ -84,64 +113,126 @@ class PyBulletRobot(ABC):
         )
 
 
+class Task(ABC):
+    """To be completed."""
+
+    def __init__(self, sim: PyBullet) -> None:
+        self.sim = sim
+
+    @abstractmethod
+    def get_goal(self) -> np.ndarray:
+        """Return the current goal."""
+
+    @abstractmethod
+    def get_obs(self) -> np.ndarray:
+        """Return the observation associated to the task."""
+
+    @abstractmethod
+    def get_achieved_goal(self) -> np.ndarray:
+        """Return the achieved goal."""
+
+    def reset(self) -> None:
+        """Reset the task: sample a new goal"""
+        pass
+
+    def seed(self, seed: Optional[int]) -> int:
+        """Sets the random seed.
+
+        Args:
+            seed (Optional[int]): The desired seed. Leave None to generate one.
+
+        Returns:
+            int: The seed.
+        """
+        self.np_random, seed = gym.utils.seeding.np_random(seed)
+        return seed
+
+    @abstractmethod
+    def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> Union[np.ndarray, float]:
+        """Returns whether the achieved goal match the desired goal."""
+
+    @abstractmethod
+    def compute_reward(
+        self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any]
+    ) -> Union[np.ndarray, float]:
+        """Compute reward associated to the achieved and the desired goal."""
+
+
 class RobotTaskEnv(gym.GoalEnv):
+    """Robotic task goal env, as the junction of a task and a robot.
+
+    Args:
+        robot (PyBulletRobot): The robot.
+        task (Task): The task.
+    """
 
     metadata = {"render.modes": ["human", "rgb_array"]}
 
-    def __init__(self):
-        self.seed()  # required for init for can be changer later
+    def __init__(self, robot: PyBulletRobot, task: Task) -> None:
+        assert robot.sim == task.sim
+        self.sim = robot.sim
+        self.robot = robot
+        self.task = task
+        self.seed()  # required for init; can be changer later
         obs = self.reset()
         observation_shape = obs["observation"].shape
         achieved_goal_shape = obs["achieved_goal"].shape
         desired_goal_shape = obs["achieved_goal"].shape
         self.observation_space = gym.spaces.Dict(
             dict(
-                observation=gym.spaces.Box(-10.0, 10.0, shape=observation_shape, dtype=np.float32),
-                desired_goal=gym.spaces.Box(-10.0, 10.0, shape=achieved_goal_shape, dtype=np.float32),
-                achieved_goal=gym.spaces.Box(-10.0, 10.0, shape=desired_goal_shape, dtype=np.float32),
+                observation=gym.spaces.Box(-10.0, 10.0, shape=observation_shape, dtype=np.float64),
+                desired_goal=gym.spaces.Box(-10.0, 10.0, shape=achieved_goal_shape, dtype=np.float64),
+                achieved_goal=gym.spaces.Box(-10.0, 10.0, shape=desired_goal_shape, dtype=np.float64),
             )
         )
         self.action_space = self.robot.action_space
         self.compute_reward = self.task.compute_reward
 
-    def _get_obs(self):
+    def _get_obs(self) -> Dict[str, np.ndarray]:
         robot_obs = self.robot.get_obs()  # robot state
         task_obs = self.task.get_obs()  # object position, velococity, etc...
         observation = np.concatenate([robot_obs, task_obs])
-
         achieved_goal = self.task.get_achieved_goal()
-
         return {
             "observation": observation,
             "achieved_goal": achieved_goal,
             "desired_goal": self.task.get_goal(),
         }
 
-    def reset(self):
+    def reset(self) -> Dict[str, np.ndarray]:
         with self.sim.no_rendering():
             self.robot.reset()
             self.task.reset()
         return self._get_obs()
 
-    def step(self, action):
+    def step(self, action: np.ndarray) -> Tuple[Dict[str, np.ndarray], float, bool, Dict[str, Any]]:
         self.robot.set_action(action)
         self.sim.step()
         obs = self._get_obs()
         done = False
-        info = {
-            "is_success": self.task.is_success(obs["achieved_goal"], self.task.get_goal()),
-        }
+        info = {"is_success": self.task.is_success(obs["achieved_goal"], self.task.get_goal())}
         reward = self.task.compute_reward(obs["achieved_goal"], self.task.get_goal(), info)
+        assert isinstance(reward, float)  # needed for pytype cheking
         return obs, reward, done, info
 
-    def seed(self, seed=None):
+    def seed(self, seed: Optional[int] = None) -> int:
         """Setup the seed."""
         return self.task.seed(seed)
 
-    def close(self):
+    def close(self) -> None:
         self.sim.close()
 
-    def render(self, mode, width=720, height=480, target_position=(0.0, 0.0, 0.0), distance=1.4, yaw=45, pitch=-30, roll=0):
+    def render(
+        self,
+        mode,
+        width: int = 720,
+        height: int = 480,
+        target_position: np.ndarray = np.zeros(3),
+        distance: float = 1.4,
+        yaw: float = 45,
+        pitch: float = -30,
+        roll=0,
+    ):
         return self.sim.render(
             mode,
             width=width,
@@ -152,36 +243,3 @@ class RobotTaskEnv(gym.GoalEnv):
             pitch=pitch,
             roll=roll,
         )
-
-
-class Task:
-    """To be completed."""
-
-    def get_goal(self):
-        """Return the current goal."""
-        raise NotImplementedError
-
-    def get_obs(self):
-        """Return the observation associated to the task."""
-        raise NotImplementedError
-
-    def get_achieved_goal(self):
-        """Return the achieved goal."""
-        raise NotImplementedError
-
-    def reset(self):
-        """Reset the task: sample a new goal"""
-        pass
-
-    def seed(self, seed):
-        """Sets the seed for this env's random number."""
-        self.np_random, seed = gym.utils.seeding.np_random(seed)
-        return seed
-
-    def is_success(self, achieved_goal, desired_goal):
-        """Returns whether the achieved goal match the desired goal."""
-        raise NotImplementedError
-
-    def compute_reward(self, achieved_goal, desired_goal, info):
-        """Compute reward associated to the achieved and the desired goal."""
-        raise NotImplementedError

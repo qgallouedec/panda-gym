@@ -1,6 +1,5 @@
 import numpy as np
 from gym import spaces
-
 from panda_gym.envs.core import PyBulletRobot
 
 
@@ -20,21 +19,22 @@ class Panda(PyBulletRobot):
     NEUTRAL_JOINT_VALUES = [0.00, 0.41, 0.00, -1.85, -0.00, 2.26, 0.79, 0, 0]
     JOINT_FORCES = [87, 87, 87, 87, 12, 120, 120, 170, 170]
 
-    def __init__(self, sim, block_gripper=False, base_position=[0, 0, 0], fingers_friction=1.0):
+    def __init__(
+        self,
+        sim,
+        block_gripper: bool = False,
+        base_position: np.ndarray = np.array([0.0, 0.0, 0.0]),
+        fingers_friction: float = 1.0,
+    ):
         self.block_gripper = block_gripper
         n_action = 3 if self.block_gripper else 4
-        self.action_space = spaces.Box(-1.0, 1.0, shape=(n_action,), dtype=np.float32)
+        self.action_space = spaces.Box(-1.0, 1.0, shape=(n_action,), dtype=np.float64)
         self.ee_link = 11
-        super().__init__(
-            sim,
-            body_name="panda",
-            file_name="franka_panda/panda.urdf",
-            base_position=base_position,
-        )
+        super().__init__(sim, body_name="panda", file_name="franka_panda/panda.urdf", base_position=base_position)
         self.sim.set_friction(self.body_name, self.FINGERS_INDICES[0], fingers_friction)
         self.sim.set_friction(self.body_name, self.FINGERS_INDICES[1], fingers_friction)
 
-    def set_action(self, action):
+    def set_action(self, action: np.ndarray) -> None:
         action = action.copy()  # ensure action don't change
         action = np.clip(action, self.action_space.low, self.action_space.high)
         ee_ctrl = action[:3] * 0.05  # limit maximum change in position
@@ -43,19 +43,16 @@ class Panda(PyBulletRobot):
         target_ee_position = ee_position + ee_ctrl
         # Clip the height target. For some reason, it has a great impact on learning
         target_ee_position[2] = max(0, target_ee_position[2])
-
         # compute the new joint angles
-        target_angles = self._inverse_kinematics(position=target_ee_position, orientation=[1, 0, 0, 0])
-
+        target_angles = self._inverse_kinematics(position=target_ee_position, orientation=np.array([1.0, 0.0, 0.0, 0.0]))
         if not self.block_gripper:
             fingers_ctrl = action[3] * 0.2  # limit maximum change in position
             fingers_width = self.get_fingers_width()
             target_fingers_width = fingers_width + fingers_ctrl
             target_angles[-2:] = [target_fingers_width / 2, target_fingers_width / 2]
-
         self.control_joints(target_angles=target_angles)
 
-    def get_obs(self):
+    def get_obs(self) -> np.ndarray:
         # end-effector position and velocity
         ee_position = np.array(self.get_ee_position())
         ee_velocity = np.array(self.get_ee_velocity())
