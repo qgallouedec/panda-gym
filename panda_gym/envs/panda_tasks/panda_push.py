@@ -1,8 +1,8 @@
 import numpy as np
 
 from panda_gym.envs.core import RobotTaskEnv
-from panda_gym.envs.robots import Panda
-from panda_gym.envs.tasks import Push
+from panda_gym.envs.robots.panda import Panda
+from panda_gym.envs.tasks.push import Push
 from panda_gym.pybullet import PyBullet
 
 
