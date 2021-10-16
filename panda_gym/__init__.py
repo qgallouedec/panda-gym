@@ -12,42 +12,42 @@ for reward_type in ["sparse", "dense"]:
         kwargs = {"reward_type": reward_type, "control_type": control_type}
 
         register(
-            id="PandaReach{}{}-v1".format(control_suffix, reward_suffix),
+            id="PandaReach{}{}-v2".format(control_suffix, reward_suffix),
             entry_point="panda_gym.envs:PandaReachEnv",
             kwargs=kwargs,
             max_episode_steps=50,
         )
 
         register(
-            id="PandaPush{}{}-v1".format(control_suffix, reward_suffix),
+            id="PandaPush{}{}-v2".format(control_suffix, reward_suffix),
             entry_point="panda_gym.envs:PandaPushEnv",
             kwargs=kwargs,
             max_episode_steps=50,
         )
 
         register(
-            id="PandaSlide{}{}-v1".format(control_suffix, reward_suffix),
+            id="PandaSlide{}{}-v2".format(control_suffix, reward_suffix),
             entry_point="panda_gym.envs:PandaSlideEnv",
             kwargs=kwargs,
             max_episode_steps=50,
         )
 
         register(
-            id="PandaPickAndPlace{}{}-v1".format(control_suffix, reward_suffix),
+            id="PandaPickAndPlace{}{}-v2".format(control_suffix, reward_suffix),
             entry_point="panda_gym.envs:PandaPickAndPlaceEnv",
             kwargs=kwargs,
             max_episode_steps=50,
         )
 
         register(
-            id="PandaStack{}{}-v1".format(control_suffix, reward_suffix),
+            id="PandaStack{}{}-v2".format(control_suffix, reward_suffix),
             entry_point="panda_gym.envs:PandaStackEnv",
             kwargs=kwargs,
             max_episode_steps=100,
         )
 
         register(
-            id="PandaFlip{}{}-v1".format(control_suffix, reward_suffix),
+            id="PandaFlip{}{}-v2".format(control_suffix, reward_suffix),
             entry_point="panda_gym.envs:PandaFlipEnv",
             kwargs=kwargs,
             max_episode_steps=50,

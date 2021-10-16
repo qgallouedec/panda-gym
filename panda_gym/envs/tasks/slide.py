@@ -1,5 +1,6 @@
+from typing import Any, Dict, Union
+
 import numpy as np
-from gym import utils
 
 from panda_gym.envs.core import Task
 from panda_gym.utils import distance
@@ -14,8 +15,8 @@ class Slide(Task):
         goal_xy_range=0.3,
         goal_x_offset=0.4,
         obj_xy_range=0.3,
-    ):
-        self.sim = sim
+    ) -> None:
+        super().__init__(sim)
         self.reward_type = reward_type
         self.distance_threshold = distance_threshold
         self.object_size = 0.06
@@ -23,11 +24,12 @@ class Slide(Task):
         self.goal_range_high = np.array([goal_xy_range / 2 + goal_x_offset, goal_xy_range / 2, 0])
         self.obj_range_low = np.array([-obj_xy_range / 2, -obj_xy_range / 2, 0])
         self.obj_range_high = np.array([obj_xy_range / 2, obj_xy_range / 2, 0])
+        self.goal = None  # will be generated when reset
         with self.sim.no_rendering():
             self._create_scene()
-            self.sim.place_visualizer(target_position=[0, 0, 0], distance=0.9, yaw=45, pitch=-30)
+            self.sim.place_visualizer(target_position=np.zeros(3), distance=0.9, yaw=45, pitch=-30)
 
-    def _create_scene(self):
+    def _create_scene(self) -> None:
         self.sim.create_plane(z_offset=-0.4)
         self.sim.create_table(length=1.4, width=0.7, height=0.4, x_offset=-0.1)
         self.sim.create_cylinder(
@@ -35,8 +37,8 @@ class Slide(Task):
             mass=1.0,
             radius=self.object_size / 2,
             height=self.object_size / 2,
-            position=[0.0, 0.0, self.object_size / 2],
-            rgba_color=[0.9, 0.1, 0.1, 1],
+            position=np.array([0.0, 0.0, self.object_size / 2]),
+            rgba_color=np.array([0.9, 0.1, 0.1, 1.0]),
             lateral_friction=0.04,
         )
         self.sim.create_cylinder(
@@ -45,14 +47,14 @@ class Slide(Task):
             ghost=True,
             radius=self.object_size / 2,
             height=self.object_size / 2,
-            position=[0.0, 0.0, self.object_size / 2],
-            rgba_color=[0.9, 0.1, 0.1, 0.3],
+            position=np.array([0.0, 0.0, self.object_size / 2]),
+            rgba_color=np.array([0.9, 0.1, 0.1, 0.3]),
         )
 
-    def get_goal(self):
+    def get_goal(self) -> np.ndarray:
         return self.goal.copy()
 
-    def get_obs(self):
+    def get_obs(self) -> np.ndarray:
         # position, rotation of the object
         object_position = np.array(self.sim.get_base_position("object"))
         object_rotation = np.array(self.sim.get_base_rotation("object"))
@@ -68,37 +70,37 @@ class Slide(Task):
         )
         return observation
 
-    def get_achieved_goal(self):
+    def get_achieved_goal(self) -> np.ndarray:
         object_position = np.array(self.sim.get_base_position("object"))
         return object_position.copy()
 
-    def reset(self):
+    def reset(self) -> None:
         self.goal = self._sample_goal()
         object_position = self._sample_object()
-        self.sim.set_base_pose("target", self.goal, [0, 0, 0, 1])
-        self.sim.set_base_pose("object", object_position, [0, 0, 0, 1])
+        self.sim.set_base_pose("target", self.goal, np.array([0.0, 0.0, 0.0, 1.0]))
+        self.sim.set_base_pose("object", object_position, np.array([0.0, 0.0, 0.0, 1.0]))
 
-    def _sample_goal(self):
+    def _sample_goal(self) -> np.ndarray:
         """Randomize goal."""
-        goal = [0.0, 0.0, self.object_size / 2]  # z offset for the cube center
+        goal = np.array([0.0, 0.0, self.object_size / 2])  # z offset for the cube center
         noise = self.np_random.uniform(self.goal_range_low, self.goal_range_high)
         goal += noise
         return goal.copy()
 
-    def _sample_object(self):
+    def _sample_object(self) -> np.ndarray:
         """Randomize start position of object."""
-        object_position = [0.0, 0.0, self.object_size / 2]
+        object_position = np.array([0.0, 0.0, self.object_size / 2])
         noise = self.np_random.uniform(self.obj_range_low, self.obj_range_high)
         object_position += noise
-        return object_position.copy()
+        return object_position
 
-    def is_success(self, achieved_goal, desired_goal):
+    def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> Union[np.ndarray, float]:
         d = distance(achieved_goal, desired_goal)
-        return (d < self.distance_threshold).astype(np.float32)
+        return np.array(d < self.distance_threshold, dtype=np.float64)
 
-    def compute_reward(self, achieved_goal, desired_goal, info):
+    def compute_reward(self, achieved_goal, desired_goal, info: Dict[str, Any]) -> Union[np.ndarray, float]:
         d = distance(achieved_goal, desired_goal)
         if self.reward_type == "sparse":
-            return -(d > self.distance_threshold).astype(np.float32)
+            return -np.array(d > self.distance_threshold, dtype=np.float64)
         else:
             return -d

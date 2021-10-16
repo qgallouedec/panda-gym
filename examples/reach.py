@@ -2,7 +2,7 @@ import gym
 import panda_gym
 
 
-env = gym.make("PandaReach-v1", render=True)
+env = gym.make("PandaReach-v2", render=True)
 
 obs = env.reset()
 for _ in range(50):

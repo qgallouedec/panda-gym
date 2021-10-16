@@ -1,7 +1,9 @@
+import numpy as np
+
 from panda_gym.envs.core import RobotTaskEnv
+from panda_gym.envs.robots.panda import Panda
+from panda_gym.envs.tasks.flip import Flip
 from panda_gym.pybullet import PyBullet
-from panda_gym.envs.robots import Panda
-from panda_gym.envs.tasks import Flip
 
 
 class PandaFlipEnv(RobotTaskEnv):
@@ -15,7 +17,9 @@ class PandaFlipEnv(RobotTaskEnv):
     """
 
     def __init__(self, render=False, reward_type="sparse", control_type="ee"):
-        self.sim = PyBullet(render=render)
-        self.robot = Panda(self.sim, block_gripper=False, base_position=[-0.6, 0.0, 0.0], control_type=control_type)
-        self.task = Flip(self.sim, reward_type=reward_type)
-        RobotTaskEnv.__init__(self)
+        sim = PyBullet(render=render)
+        robot = Panda(
+            sim, block_gripper=False, base_position=np.array([-0.6, 0.0, 0.0]), fingers_friction=5.0, control_type=control_type
+        )
+        task = Flip(sim, reward_type=reward_type)
+        super().__init__(robot, task)

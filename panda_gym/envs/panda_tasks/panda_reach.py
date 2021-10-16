@@ -1,7 +1,9 @@
+import numpy as np
+
 from panda_gym.envs.core import RobotTaskEnv
+from panda_gym.envs.robots.panda import Panda
+from panda_gym.envs.tasks.reach import Reach
 from panda_gym.pybullet import PyBullet
-from panda_gym.envs.robots import Panda
-from panda_gym.envs.tasks import Reach
 
 
 class PandaReachEnv(RobotTaskEnv):
@@ -14,12 +16,8 @@ class PandaReachEnv(RobotTaskEnv):
             Defaults to "ee".
     """
 
-    def __init__(self, render=False, reward_type="sparse", control_type="ee"):
-        self.sim = PyBullet(render=render)
-        self.robot = Panda(self.sim, block_gripper=True, base_position=[-0.6, 0.0, 0.0], control_type=control_type)
-        self.task = Reach(
-            self.sim,
-            reward_type=reward_type,
-            get_ee_position=self.robot.get_ee_position,
-        )
-        RobotTaskEnv.__init__(self)
+    def __init__(self, render: bool = False, reward_type: str = "sparse", control_type: str = "ee") -> None:
+        sim = PyBullet(render=render)
+        robot = Panda(sim, block_gripper=True, base_position=np.array([-0.6, 0.0, 0.0]))
+        task = Reach(sim, reward_type=reward_type, get_ee_position=robot.get_ee_position)
+        super().__init__(robot, task)

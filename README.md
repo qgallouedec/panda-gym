@@ -31,7 +31,7 @@ pip install -e panda-gym
 import gym
 import panda_gym
 
-env = gym.make('PandaReach-v1', render=True)
+env = gym.make('PandaReach-v2', render=True)
 
 obs = env.reset()
 done = False
@@ -48,12 +48,12 @@ You can also [![Open in Colab](https://colab.research.google.com/assets/colab-ba
 
 |                                  |                                                |
 | :------------------------------: | :--------------------------------------------: |
-|         `PandaReach-v1`          |                 `PandaPush-v1`                 |
-| ![PandaReach-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/reach.gif) |         ![PandaPush-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/push.gif)         |
-|         `PandaSlide-v1`          |             `PandaPickAndPlace-v1`             |
-| ![PandaSlide-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/slide.gif) | ![PandaPickAndPlace-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/pickandplace.gif) |
-|         `PandaStack-v1`          |                                                |
-| ![PandaStack-v1](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/stack.gif) |                                                |
+|         `PandaReach-v2`          |                 `PandaPush-v2`                 |
+| ![PandaReach-v2](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/reach.gif) |         ![PandaPush-v2](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/push.gif)         |
+|         `PandaSlide-v2`          |             `PandaPickAndPlace-v2`             |
+| ![PandaSlide-v2](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/slide.gif) | ![PandaPickAndPlace-v2](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/pickandplace.gif) |
+|         `PandaStack-v2`          |                                                |
+| ![PandaStack-v2](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/stack.gif) |                                                |
 
 ## Baselines results
 

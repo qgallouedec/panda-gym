@@ -4,7 +4,7 @@ import numpy as np
 
 
 def test_seed_reach():
-    env = gym.make("PandaReach-v1")
+    env = gym.make("PandaReach-v2")
     env.seed(12345)
     env.reset()
     actions = [
@@ -29,7 +29,7 @@ def test_seed_reach():
 
 
 def test_seed_push():
-    env = gym.make("PandaPush-v1")
+    env = gym.make("PandaPush-v2")
     env.seed(6789)
     env.reset()
     actions = [
@@ -75,7 +75,7 @@ def test_seed_push():
 
 
 def test_seed_slide():
-    env = gym.make("PandaSlide-v1")
+    env = gym.make("PandaSlide-v2")
     env.seed(13795)
     env.reset()
     actions = [
@@ -121,7 +121,7 @@ def test_seed_slide():
 
 
 def test_seed_pick_and_place():
-    env = gym.make("PandaPickAndPlace-v1")
+    env = gym.make("PandaPickAndPlace-v2")
     env.seed(794512)
     env.reset()
     actions = [
@@ -167,7 +167,7 @@ def test_seed_pick_and_place():
 
 
 def test_seed_stack():
-    env = gym.make("PandaStack-v1")
+    env = gym.make("PandaStack-v2")
     env.seed(657894)
     env.reset()
     actions = [

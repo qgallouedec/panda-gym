@@ -21,6 +21,10 @@ setup(
     package_data={"panda_gym": ["version.txt"]},
     version=__version__,
     install_requires=["gym", "pybullet", "numpy"],
+    extras_require={
+        "tests": ["pytest", "black"],
+        "extra": ["optuna", "stable-baselines3"],
+    },
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3.5",
