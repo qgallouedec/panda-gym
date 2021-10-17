@@ -27,12 +27,15 @@ def objective(trial: optuna.Study):
     n_sampled_goal = trial.suggest_categorical("n_sampled_goal", [1, 2, 3, 4, 5, 6])
     goal_selection_strategy = trial.suggest_categorical("goal_selection_strategy", ["future", "episode"])
     online_sampling = trial.suggest_categorical("online_sampling", [True, False])
-    action_noise_cls = trial.suggest_categorical("action_noise_cls", ["Normal", "OrnsteinUhlenbeck"])
-    action_noise_cls = {"Normal": NormalActionNoise, "OrnsteinUhlenbeck": OrnsteinUhlenbeckActionNoise}[action_noise_cls]
+    action_noise_cls = trial.suggest_categorical("action_noise_cls", ["Normal", "OrnsteinUhlenbeck", "None"])
+    action_noise_cls = {"Normal": NormalActionNoise, "OrnsteinUhlenbeck": OrnsteinUhlenbeckActionNoise, "None": None}[action_noise_cls]
     action_noise_sigma = trial.suggest_loguniform("action_noise_std", 1e-5, 1)
-    action_noise = action_noise_cls(
-        mean=np.zeros(env.action_space.shape), sigma=np.ones(env.action_space.shape) * action_noise_sigma
-    )
+    if action_noise_cls is not None:
+        action_noise = action_noise_cls(
+            mean=np.zeros(env.action_space.shape), sigma=np.ones(env.action_space.shape) * action_noise_sigma
+        )
+    else:
+        action_noise = None
     all_successes = []
     for _ in range(5):
         model = SAC(
