@@ -9,7 +9,7 @@ import gym
 import numpy as np
 import optuna
 import panda_gym
-from stable_baselines3 import HerReplayBuffer, SAC
+from stable_baselines3 import HerReplayBuffer, TD3
 from stable_baselines3.common.noise import NormalActionNoise, OrnsteinUhlenbeckActionNoise
 
 
@@ -28,7 +28,9 @@ def objective(trial: optuna.Study):
     goal_selection_strategy = trial.suggest_categorical("goal_selection_strategy", ["future", "episode"])
     online_sampling = trial.suggest_categorical("online_sampling", [True, False])
     action_noise_cls = trial.suggest_categorical("action_noise_cls", ["Normal", "OrnsteinUhlenbeck", "None"])
-    action_noise_cls = {"Normal": NormalActionNoise, "OrnsteinUhlenbeck": OrnsteinUhlenbeckActionNoise, "None": None}[action_noise_cls]
+    action_noise_cls = {"Normal": NormalActionNoise, "OrnsteinUhlenbeck": OrnsteinUhlenbeckActionNoise, "None": None}[
+        action_noise_cls
+    ]
     action_noise_sigma = trial.suggest_loguniform("action_noise_std", 1e-5, 1)
     if action_noise_cls is not None:
         action_noise = action_noise_cls(
@@ -36,9 +38,13 @@ def objective(trial: optuna.Study):
         )
     else:
         action_noise = None
+    policy_delay = trial.suggest_categorical("policy_delay", [1, 2, 3, 5, 10])
+    target_policy_noise = trial.suggest_loguniform("target_policy_noise", 1e-5, 1)
+    target_noise_clip = trial.suggest_loguniform("target_noise_clip", 1e-5, 1)
+
     all_successes = []
-    for _ in range(5):
-        model = SAC(
+    for _ in range(3):
+        model = TD3(
             policy="MultiInputPolicy",
             env=env,
             learning_rate=learning_rate,
@@ -54,8 +60,11 @@ def objective(trial: optuna.Study):
                 online_sampling=online_sampling,
             ),
             policy_kwargs=dict(net_arch=net_arch),
+            policy_delay=policy_delay,
+            target_policy_noise=target_policy_noise,
+            target_noise_clip=target_noise_clip,
         )
-        model.learn(200000)
+        model.learn(1000000)
 
         # test
         successes = []
