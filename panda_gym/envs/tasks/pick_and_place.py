@@ -39,7 +39,7 @@ class PickAndPlace(Task):
             half_extents=np.ones(3) * self.object_size / 2,
             mass=1.0,
             position=np.array([0.0, 0.0, self.object_size / 2]),
-            rgba_color=np.array([0.9, 0.1, 0.1, 1.0]),
+            rgba_color=np.array([0.1, 0.9, 0.1, 1.0]),
         )
         self.sim.create_box(
             body_name="target",
@@ -47,7 +47,7 @@ class PickAndPlace(Task):
             mass=0.0,
             ghost=True,
             position=np.array([0.0, 0.0, 0.05]),
-            rgba_color=np.array([0.9, 0.1, 0.1, 0.3]),
+            rgba_color=np.array([0.1, 0.9, 0.1, 0.3]),
         )
 
     def get_goal(self) -> np.ndarray:
