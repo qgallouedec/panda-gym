@@ -18,6 +18,6 @@ class PandaStackEnv(RobotTaskEnv):
 
     def __init__(self, render: bool = False, reward_type: str = "sparse", control_type: str = "ee") -> None:
         sim = PyBullet(render=render)
-        robot = Panda(sim, block_gripper=False, base_position=np.array([-0.6, 0.0, 0.0]), fingers_friction=5.0)
+        robot = Panda(sim, block_gripper=False, base_position=np.array([-0.6, 0.0, 0.0]))
         task = Stack(sim, reward_type=reward_type)
         super().__init__(robot, task)
