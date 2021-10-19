@@ -9,12 +9,12 @@ import gym
 import numpy as np
 import optuna
 import panda_gym
-from stable_baselines3 import HerReplayBuffer, TD3
+from stable_baselines3 import DDPG, HerReplayBuffer
 from stable_baselines3.common.noise import NormalActionNoise, OrnsteinUhlenbeckActionNoise
 
 
 def objective(trial: optuna.Study):
-    env = gym.make("PandaPickAndPlaceJoints-v2")
+    env = gym.make("PandaPushJoints-v2")
 
     gamma = trial.suggest_categorical("gamma", [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
     learning_rate = trial.suggest_loguniform("learning_rate", 1e-5, 1)
@@ -38,13 +38,10 @@ def objective(trial: optuna.Study):
         )
     else:
         action_noise = None
-    policy_delay = trial.suggest_categorical("policy_delay", [1, 2, 3, 5, 10])
-    target_policy_noise = trial.suggest_loguniform("target_policy_noise", 1e-5, 1)
-    target_noise_clip = trial.suggest_loguniform("target_noise_clip", 1e-5, 1)
 
     all_successes = []
     for _ in range(3):
-        model = TD3(
+        model = DDPG(
             policy="MultiInputPolicy",
             env=env,
             learning_rate=learning_rate,
@@ -60,9 +57,6 @@ def objective(trial: optuna.Study):
                 online_sampling=online_sampling,
             ),
             policy_kwargs=dict(net_arch=net_arch),
-            policy_delay=policy_delay,
-            target_policy_noise=target_policy_noise,
-            target_noise_clip=target_noise_clip,
         )
         model.learn(1000000)
 
@@ -83,7 +77,7 @@ def objective(trial: optuna.Study):
 if __name__ == "__main__":
     study = optuna.create_study(
         storage="sqlite:///optimize_panda_joints.db",
-        study_name="PandaPickAndPlaceJoints",
+        study_name="PandaPushJoints",
         direction="maximize",
         load_if_exists=True,
     )
