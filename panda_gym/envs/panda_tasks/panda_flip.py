@@ -16,7 +16,7 @@ class PandaFlipEnv(RobotTaskEnv):
             Defaults to "ee".
     """
 
-    def __init__(self, render=False, reward_type="sparse", control_type="ee"):
+    def __init__(self, render: bool = False, reward_type: str = "sparse", control_type: str = "ee") -> None:
         sim = PyBullet(render=render)
         robot = Panda(sim, block_gripper=False, base_position=np.array([-0.6, 0.0, 0.0]), control_type=control_type)
         task = Flip(sim, reward_type=reward_type)
