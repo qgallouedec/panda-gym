@@ -1,7 +1,6 @@
 import gym
 import panda_gym
 
-
 env = gym.make("PandaReach-v2", render=True)
 
 obs = env.reset()
