@@ -314,6 +314,7 @@ def test_set_lateral_friction():
     pybullet.set_lateral_friction("my_box", 0, 0.5)
     pybullet.close()
 
+
 def test_set_spinning_friction():
     from panda_gym.pybullet import PyBullet
 

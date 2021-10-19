@@ -19,11 +19,11 @@ class PyBullet:
         render (bool, optional): Enable rendering. Defaults to False.
         n_substeps (int, optional): Number of sim substep when step() is called. Defaults to 20.
         background_color (np.ndarray, optional): The background color as (red, green, blue).
-            Defaults to np.array([116, 160, 216]).
+            Defaults to np.array([223, 54, 45]).
     """
 
     def __init__(
-        self, render: bool = False, n_substeps: int = 20, background_color: np.ndarray = np.array([116.0, 160.0, 216.0])
+        self, render: bool = False, n_substeps: int = 20, background_color: np.ndarray = np.array([223.0, 54.0, 45.0])
     ) -> None:
         self.background_color = background_color.astype(np.float64) / 255
         options = "--background_color_red={} \

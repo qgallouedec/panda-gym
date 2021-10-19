@@ -71,6 +71,7 @@ def test_dense_flip():
     env = gym.make("PandaFlipDense-v2")
     run_env(env)
 
+
 def test_reach():
     env = gym.make("PandaReachJoints-v2")
     run_env(env)
