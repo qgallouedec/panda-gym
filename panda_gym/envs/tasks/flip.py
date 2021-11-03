@@ -14,7 +14,7 @@ class Flip(Task):
         reward_type: str = "sparse",
         distance_threshold: float = 0.2,
         obj_xy_range: float = 0.3,
-    ):
+    ) -> None:
         super().__init__(sim)
         self.reward_type = reward_type
         self.distance_threshold = distance_threshold
@@ -24,7 +24,6 @@ class Flip(Task):
         self.goal_z_range_high = np.pi
         self.obj_range_low = np.array([-obj_xy_range / 2, -obj_xy_range / 2, 0])
         self.obj_range_high = np.array([obj_xy_range / 2, obj_xy_range / 2, 0])
-        self.goal = None  # will be generated when reset
         with self.sim.no_rendering():
             self._create_scene()
             self.sim.place_visualizer(target_position=np.zeros(3), distance=0.9, yaw=45, pitch=-30)
@@ -49,12 +48,6 @@ class Flip(Task):
             rgba_color=np.array([1.0, 1.0, 1.0, 0.5]),
             texture="colored_cube.png",
         )
-
-    def get_goal(self) -> np.ndarray:
-        if not isinstance(self.goal, np.ndarray):
-            raise RuntimeError("No goal yet, call reset() first")
-        else:
-            return self.goal.copy()
 
     def get_obs(self) -> np.ndarray:
         # position, rotation of the object

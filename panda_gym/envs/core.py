@@ -19,18 +19,15 @@ class PyBulletRobot(ABC):
         base_position (np.ndarray): Position of the base of the robot as (x, y, z).
     """
 
-    @property
-    @abstractmethod
-    def JOINT_INDICES(self):
-        ...
-
-    @property
-    @abstractmethod
-    def JOINT_FORCES(self):
-        ...
-
     def __init__(
-        self, sim: PyBullet, body_name: str, file_name: str, base_position: np.ndarray, action_space: gym.spaces.Space
+        self,
+        sim: PyBullet,
+        body_name: str,
+        file_name: str,
+        base_position: np.ndarray,
+        action_space: gym.spaces.Space,
+        joint_indices: np.ndarray,
+        joint_forces: np.ndarray,
     ) -> None:
         self.sim = sim  # sim engine
         self.body_name = body_name
@@ -38,6 +35,8 @@ class PyBulletRobot(ABC):
             self._load_robot(file_name, base_position)
             self.setup()
         self.action_space = action_space
+        self.joint_indices = joint_indices
+        self.joint_forces = joint_forces
 
     def _load_robot(self, file_name: str, base_position: np.ndarray) -> None:
         """Load the robot.
@@ -59,7 +58,7 @@ class PyBulletRobot(ABC):
 
     @abstractmethod
     def set_action(self, action: np.ndarray) -> None:
-        """Set the action. Must be call just before sim.step().
+        """Set the action. Must be called just before sim.step().
 
         Args:
             action (np.ndarray): The action.
@@ -103,6 +102,28 @@ class PyBulletRobot(ABC):
         """
         return self.sim.get_link_velocity(self.body_name, link)
 
+    def get_joint_angle(self, joint: int) -> float:
+        """Returns the angle of a joint
+
+        Args:
+            joint (int): The joint index.
+
+        Returns:
+            float: Joint angle
+        """
+        return self.sim.get_joint_angle(self.body_name, joint)
+
+    def get_joint_velocity(self, joint: int) -> float:
+        """Returns the velocity of a joint as (wx, wy, wz)
+
+        Args:
+            joint (int): The joint index.
+
+        Returns:
+            np.ndarray: Joint velocity as (wx, wy, wz)
+        """
+        return self.sim.get_joint_velocity(self.body_name, joint)
+
     def control_joints(self, target_angles: np.ndarray) -> None:
         """Control the joints of the robot.
 
@@ -111,10 +132,32 @@ class PyBulletRobot(ABC):
         """
         self.sim.control_joints(
             body=self.body_name,
-            joints=self.JOINT_INDICES,
+            joints=self.joint_indices,
             target_angles=target_angles,
-            forces=self.JOINT_FORCES,
+            forces=self.joint_forces,
         )
+
+    def set_joint_angles(self, angles: np.ndarray) -> None:
+        """Set the joint position of a body. Can induce collisions.
+
+        Args:
+            angles (list): Joint angles.
+        """
+        self.sim.set_joint_angles(self.body_name, joints=self.joint_indices, angles=angles)
+
+    def inverse_kinematics(self, link: int, position: np.ndarray, orientation: np.ndarray) -> np.ndarray:
+        """Compute the inverse kinematics and return the new joint values.
+
+        Args:
+            link (int): The link.
+            position (x, y, z): Desired position of the link.
+            orientation (x, y, z, w): Desired orientation of the end-effector.
+
+        Returns:
+            List of joint values.
+        """
+        inverse_kinematics = self.sim.inverse_kinematics(self.body_name, link=link, position=position, orientation=orientation)
+        return inverse_kinematics
 
 
 class Task(ABC):
@@ -122,10 +165,11 @@ class Task(ABC):
 
     def __init__(self, sim: PyBullet) -> None:
         self.sim = sim
+        self.goal = None
 
     @abstractmethod
-    def get_goal(self) -> np.ndarray:
-        """Return the current goal."""
+    def reset(self) -> None:
+        """Reset the task: sample a new goal"""
 
     @abstractmethod
     def get_obs(self) -> np.ndarray:
@@ -135,9 +179,12 @@ class Task(ABC):
     def get_achieved_goal(self) -> np.ndarray:
         """Return the achieved goal."""
 
-    def reset(self) -> None:
-        """Reset the task: sample a new goal"""
-        pass
+    def get_goal(self) -> np.ndarray:
+        """Return the current goal."""
+        if self.goal is None:
+            raise RuntimeError("No goal yet, call reset() first")
+        else:
+            return self.goal.copy()
 
     def seed(self, seed: Optional[int]) -> int:
         """Sets the random seed.
@@ -152,12 +199,14 @@ class Task(ABC):
         return seed
 
     @abstractmethod
-    def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> Union[np.ndarray, float]:
+    def is_success(
+        self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}
+    ) -> Union[np.ndarray, float]:
         """Returns whether the achieved goal match the desired goal."""
 
     @abstractmethod
     def compute_reward(
-        self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any]
+        self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}
     ) -> Union[np.ndarray, float]:
         """Compute reward associated to the achieved and the desired goal."""
 

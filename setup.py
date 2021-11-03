@@ -22,8 +22,9 @@ setup(
     version=__version__,
     install_requires=["gym", "pybullet", "numpy"],
     extras_require={
-        "tests": ["pytest", "black"],
+        "tests": ["pytest", "black", "pytype"],
         "extra": ["optuna", "stable-baselines3"],
+        "docs": ["sphinx", "sphinx-rtd-theme"],
     },
     classifiers=[
         "License :: OSI Approved :: MIT License",

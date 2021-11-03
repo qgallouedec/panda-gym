@@ -23,7 +23,6 @@ class Stack(Task):
         self.goal_range_high = np.array([goal_xy_range / 2, goal_xy_range / 2, 0])
         self.obj_range_low = np.array([-obj_xy_range / 2, -obj_xy_range / 2, 0])
         self.obj_range_high = np.array([obj_xy_range / 2, obj_xy_range / 2, 0])
-        self.goal = None  # will be generated when reset
         with self.sim.no_rendering():
             self._create_scene()
             self.sim.place_visualizer(target_position=np.zeros(3), distance=0.9, yaw=45, pitch=-30)
@@ -61,9 +60,6 @@ class Stack(Task):
             position=np.array([0.5, 0.0, 0.05]),
             rgba_color=np.array([0.1, 0.9, 0.1, 0.3]),
         )
-
-    def get_goal(self) -> np.ndarray:
-        return self.goal.copy()
 
     def get_obs(self) -> np.ndarray:
         # position, rotation of the object

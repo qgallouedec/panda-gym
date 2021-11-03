@@ -21,7 +21,6 @@ class Reach(Task):
         self.get_ee_position = get_ee_position
         self.goal_range_low = np.array([-goal_range / 2, -goal_range / 2, 0])
         self.goal_range_high = np.array([goal_range / 2, goal_range / 2, goal_range])
-        self.goal = None  # will be generated when reset
         with self.sim.no_rendering():
             self._create_scene()
             self.sim.place_visualizer(target_position=np.zeros(3), distance=0.9, yaw=45, pitch=-30)
@@ -38,9 +37,6 @@ class Reach(Task):
             rgba_color=np.array([0.1, 0.9, 0.1, 0.3]),
         )
 
-    def get_goal(self) -> np.ndarray:
-        return self.goal.copy()
-
     def get_obs(self) -> np.ndarray:
         return np.array([])  # no tasak-specific observation
 
@@ -54,7 +50,6 @@ class Reach(Task):
 
     def _sample_goal(self) -> np.ndarray:
         """Randomize goal."""
-        # print(self.np_random.get_seed())
         goal = self.np_random.uniform(self.goal_range_low, self.goal_range_high)
         return goal
 

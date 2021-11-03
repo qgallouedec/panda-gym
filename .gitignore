@@ -2,3 +2,7 @@ env
 *__pycache__
 *.egg-info
 *.db
+.vscode
+_build/
+build/
+.DS_Store

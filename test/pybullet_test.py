@@ -80,7 +80,6 @@ def test_get_base_rotation():
     pybullet = PyBullet()
     pybullet.create_box("my_box", [0.5, 0.5, 0.5], 1.0, [0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 1.0])
     base_rotation = pybullet.get_base_rotation("my_box")
-    print(base_rotation)
     pybullet.close()
     assert np.allclose(base_rotation, [0.0, 0.0, 0.0], atol=1e-3)
 

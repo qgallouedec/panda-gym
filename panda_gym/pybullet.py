@@ -247,6 +247,18 @@ class PyBullet:
         """
         return self.physics_client.getJointState(self._bodies_idx[body], joint)[0]
 
+    def get_joint_velocity(self, body: str, joint: int) -> float:
+        """Get the velocity of the joint of the body.
+
+        Args:
+            body (str): Body unique name.
+            joint (int): Joint index in the body
+
+        Returns:
+            float: The velocity.
+        """
+        return self.physics_client.getJointState(self._bodies_idx[body], joint)[1]
+
     def set_base_pose(self, body: str, position: np.ndarray, orientation: np.ndarray) -> None:
         """Set the position of the body.
 
@@ -299,12 +311,12 @@ class PyBullet:
             forces=forces,
         )
 
-    def inverse_kinematics(self, body: str, ee_link: int, position: np.ndarray, orientation: np.ndarray) -> np.ndarray:
+    def inverse_kinematics(self, body: str, link: int, position: np.ndarray, orientation: np.ndarray) -> np.ndarray:
         """Compute the inverse kinematics and return the new joint state.
 
         Args:
             body (str): Body unique name.
-            ee_link (int): Link index of the end-effector.
+            link (int): Link index in the body.
             position (np.ndarray): Desired position of the end-effector, as (x, y, z).
             orientation (np.ndarray): Desired orientation of the end-effector as quaternion (x, y, z, w).
 
@@ -313,7 +325,7 @@ class PyBullet:
         """
         joint_state = self.physics_client.calculateInverseKinematics(
             bodyIndex=self._bodies_idx[body],
-            endEffectorLinkIndex=ee_link,
+            endEffectorLinkIndex=link,
             targetPosition=position,
             targetOrientation=orientation,
         )
