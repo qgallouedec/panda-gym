@@ -72,61 +72,61 @@ def test_dense_flip():
     run_env(env)
 
 
-def test_reach():
+def test_reach_joints():
     env = gym.make("PandaReachJoints-v2")
     run_env(env)
 
 
-def test_slide():
+def test_slide_joints():
     env = gym.make("PandaSlideJoints-v2")
     run_env(env)
 
 
-def test_push():
+def test_push_joints():
     env = gym.make("PandaPushJoints-v2")
     run_env(env)
 
 
-def test_pickandplace():
+def test_pickandplace_joints():
     env = gym.make("PandaPickAndPlaceJoints-v2")
     run_env(env)
 
 
-def test_stack():
+def test_stack_joints():
     env = gym.make("PandaStackJoints-v2")
     run_env(env)
 
 
-def test_flip():
+def test_flip_joints():
     env = gym.make("PandaFlipJoints-v2")
     run_env(env)
 
 
-def test_dense_reach():
+def test_dense_reach_joints():
     env = gym.make("PandaReachJointsDense-v2")
     run_env(env)
 
 
-def test_dense_slide():
+def test_dense_slide_joints():
     env = gym.make("PandaSlideDense-v2")
     run_env(env)
 
 
-def test_dense_push():
+def test_dense_push_joints():
     env = gym.make("PandaPushJointsDense-v2")
     run_env(env)
 
 
-def test_dense_pickandplace():
+def test_dense_pickandplace_joints():
     env = gym.make("PandaPickAndPlaceJointsDense-v2")
     run_env(env)
 
 
-def test_dense_stack():
+def test_dense_stack_joints():
     env = gym.make("PandaStackJointsDense-v2")
     run_env(env)
 
 
-def test_dense_flip():
+def test_dense_flip_joints():
     env = gym.make("PandaFlipJointsDense-v2")
     run_env(env)
