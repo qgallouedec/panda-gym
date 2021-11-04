@@ -1,3 +1,5 @@
+.. _custom_task:
+
 Custom task
 ===========
 
@@ -63,6 +65,8 @@ For the purpose of the example, we consider here a very simple task, consisting 
 
 Obviously, you have to adapt the example to your task.
 
+Test it
+-------
 
 The task is ready. To test it, execute the following code.
 

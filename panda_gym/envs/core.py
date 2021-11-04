@@ -13,7 +13,7 @@ class PyBulletRobot(ABC):
     """Base class for robot env.
 
     Args:
-        sim (PyBullet): The simulation engine.
+        sim (PyBullet): Simulation instance.
         body_name (str): The name of the robot within the simulation.
         file_name (str): Path of the urdf file.
         base_position (np.ndarray): Position of the base of the robot as (x, y, z).
@@ -29,7 +29,7 @@ class PyBulletRobot(ABC):
         joint_indices: np.ndarray,
         joint_forces: np.ndarray,
     ) -> None:
-        self.sim = sim  # sim engine
+        self.sim = sim
         self.body_name = body_name
         with self.sim.no_rendering():
             self._load_robot(file_name, base_position)
@@ -151,7 +151,7 @@ class PyBulletRobot(ABC):
         Args:
             link (int): The link.
             position (x, y, z): Desired position of the link.
-            orientation (x, y, z, w): Desired orientation of the end-effector.
+            orientation (x, y, z, w): Desired orientation of the link.
 
         Returns:
             List of joint values.
@@ -161,7 +161,10 @@ class PyBulletRobot(ABC):
 
 
 class Task(ABC):
-    """To be completed."""
+    """Base class for tasks.
+    Args:
+        sim (PyBullet): Simulation instance.
+    """
 
     def __init__(self, sim: PyBullet) -> None:
         self.sim = sim
@@ -277,15 +280,35 @@ class RobotTaskEnv(gym.GoalEnv):
 
     def render(
         self,
-        mode,
+        mode: str,
         width: int = 720,
         height: int = 480,
         target_position: np.ndarray = np.zeros(3),
         distance: float = 1.4,
         yaw: float = 45,
         pitch: float = -30,
-        roll=0,
-    ):
+        roll: float = 0,
+    ) -> Optional[np.ndarray]:
+        """Render.
+
+        If mode is "human", make the rendering real-time. All other arguments are
+        unused. If mode is "rgb_array", return an RGB array of the scene.
+
+        Args:
+            mode (str): "human" of "rgb_array". If "human", this method waits for the time necessary to have
+                a realistic temporal rendering and all other args are ignored. Else, return an RGB array.
+            width (int, optional): Image width. Defaults to 720.
+            height (int, optional): Image height. Defaults to 480.
+            target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
+                Defaults to [0., 0., 0.].
+            distance (float, optional): Distance of the camera. Defaults to 1.4.
+            yaw (float, optional): Yaw of the camera. Defaults to 45.
+            pitch (float, optional): Pitch of the camera. Defaults to -30.
+            roll (int, optional): Rool of the camera. Defaults to 0.
+
+        Returns:
+            RGB np.ndarray or None: An RGB array if mode is 'rgb_array', else None.
+        """
         return self.sim.render(
             mode,
             width=width,

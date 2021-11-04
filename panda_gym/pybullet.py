@@ -71,24 +71,23 @@ class PyBullet:
     ) -> Optional[np.ndarray]:
         """Render.
 
-        If mode is human, make the rendering real-time. All other arguments are
-        unused. If mode is 'rgb_array', return an rgb_array of the scene.
+        If mode is "human", make the rendering real-time. All other arguments are
+        unused. If mode is "rgb_array", return an RGB array of the scene.
 
         Args:
-            mode (str, optional): 'human' of 'rgb_array'. If human, just sleep a
-                few time to make the rendering real-time. Else, return an RGB
-                array. Defaults to 'human'.
-            width (int, optional): Image width. Defaults to 960.
-            height (int, optional): Image height. Image height. Defaults to 720.
+            mode (str): "human" of "rgb_array". If "human", this method waits for the time necessary to have
+                a realistic temporal rendering and all other args are ignored. Else, return an RGB array.
+            width (int, optional): Image width. Defaults to 720.
+            height (int, optional): Image height. Defaults to 480.
             target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
-                Defaults to (0., 0., 0.).
-            distance (float, optional): Distance of the camera. Defaults to 2.
+                Defaults to [0., 0., 0.].
+            distance (float, optional): Distance of the camera. Defaults to 1.4.
             yaw (float, optional): Yaw of the camera. Defaults to 45.
-            pitch (float, optional): Pitch of the camera. Defaults to -15.
-            roll (float, optional): Rool of the camera. Defaults to 0.
+            pitch (float, optional): Pitch of the camera. Defaults to -30.
+            roll (int, optional): Rool of the camera. Defaults to 0.
 
         Returns:
-            An RGB array if mode is 'rgb_array'.
+            RGB np.ndarray or None: An RGB array if mode is 'rgb_array', else None.
         """
         if mode == "human":
             self.physics_client.configureDebugVisualizer(self.physics_client.COV_ENABLE_SINGLE_STEP_RENDERING)

@@ -19,11 +19,29 @@ Welcome to panda-gym's documentation!
 
 .. toctree::
    :maxdepth: 1
-   :caption: Documentation
+   :caption: Base classes
 
-   documentation/pybullet
-   documentation/panda
-   documentation/task
+   base_class/pybullet
+   base_class/robot
+   base_class/task
+   base_class/robot_task
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Robots
+
+   robots/panda
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Tasks
+
+   tasks/reach
+   tasks/push
+   tasks/slide
+   tasks/pick_and_place
+   tasks/stack
+   tasks/flip
 
 
 Citing

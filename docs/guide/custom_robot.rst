@@ -1,3 +1,5 @@
+.. _custom_robot:
+
 Custom robot
 ============
 
@@ -15,7 +17,7 @@ To define your own robot, you need to inherit from `PyBulletRobot`, and define a
 - `get_obs()`: returns the observation.
 - `reset()`: how the robot is reset.
 
-For the purpose of the example, we consider here that our URDF file defines a very simple robot, consisting of two links and a single join.  
+For the purpose of the example, we consider here that our URDF file defines a very simple robot, consisting of two links and a single joint.  
 
 .. code-block:: python
 
@@ -29,8 +31,8 @@ For the purpose of the example, we consider here that our URDF file defines a ve
     class MyRobot(PyBulletRobot):
         """My robot"""
 
-        def __init__(self, sim) -> None:
-            action_dim = 1 # In our example, there is only one joint, so the dimension of the action space is 1.
+        def __init__(self, sim):
+            action_dim = 1 # = number of joints; here, 1 joint, so dimension = 1
             action_space = spaces.Box(-1.0, 1.0, shape=(action_dim,), dtype=np.float32)
             super().__init__(
                 sim,
@@ -54,8 +56,13 @@ For the purpose of the example, we consider here that our URDF file defines a ve
             self.set_joint_angles(angles=neutral_angle)
 
 
-Obviously, you have to adapt the example to your robot, especially concerning the number and index of the joints, as well as the force applied for the control.
+Obviously, you have to adapt the example to your robot, especially concerning the number and indeces of the joints, as well as the force applied for the control.
+You can also use other types of control, for example using inverse dynamics with the parent class function , and any 
 
+You can also use other types of control, using all the methods of the parent class :py:class:`PyBulletRobot<panda_gym.envs.core.PyBulletRobot>` and the simulation instance :py:class:`PyBullet<panda_gym.pybullet.PyBullet>`. For example for inverse kinematics you can use the method :py:meth:`PyBulletRobot.inverse_kinematics<panda_gym.envs.core.PyBulletRobot.inverse_kinematics>`.
+
+Test it
+-------
 
 The robot is ready. To see it move, execute the following code.
 
