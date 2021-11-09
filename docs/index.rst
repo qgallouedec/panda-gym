@@ -8,14 +8,26 @@ Welcome to panda-gym's documentation!
 
 .. toctree::
    :maxdepth: 1
-   :caption: Guide
+   :caption: Getting started
 
    guide/install
    guide/quick_start
-   guide/custom_robot
-   guide/custom_task
-   guide/custom_env
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Usage
+
+   usage/environments
+   usage/manual_control
+   usage/train_with_sb3
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Your custom environment
+
+   custom/custom_robot
+   custom/custom_task
+   custom/custom_env
 
 .. toctree::
    :maxdepth: 1
@@ -42,7 +54,6 @@ Welcome to panda-gym's documentation!
    tasks/pick_and_place
    tasks/stack
    tasks/flip
-
 
 Citing
 ------
