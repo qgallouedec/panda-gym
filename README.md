@@ -53,11 +53,11 @@ You can also [![Open in Colab](https://colab.research.google.com/assets/colab-ba
 |                                  |                                                |
 | :------------------------------: | :--------------------------------------------: |
 |         `PandaReach-v2`          |                 `PandaPush-v2`                 |
-| ![PandaReach-v2](https://gallouedec.com/uploads/img/reach.png) |         ![PandaPush-v2](https://gallouedec.com/uploads/img/push.png)         |
+| ![PandaReach-v2](docs/_static/img/reach.png) |         ![PandaPush-v2](docs/_static/img/push.png)         |
 |         `PandaSlide-v2`          |             `PandaPickAndPlace-v2`             |
-| ![PandaSlide-v2](https://gallouedec.com/uploads/img/slide.png) | ![PandaPickAndPlace-v2](https://gallouedec.com/uploads/img/pickandplace.png) |
+| ![PandaSlide-v2](docs/_static/img/slide.png) | ![PandaPickAndPlace-v2](docs/_static/img/pickandplace.png) |
 |         `PandaStack-v2`          |              `PandaFlip-v2`                    |
-| ![PandaStack-v2](https://gallouedec.com/uploads/img/stack.png) | ![PandaFlip-v2](https://gallouedec.com/uploads/img/flip.png) |
+| ![PandaStack-v2](docs/_static/img/stack.png) | ![PandaFlip-v2](docs/_static/img/flip.png) |
 
 ## Baselines results
 
