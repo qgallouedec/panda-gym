@@ -146,17 +146,24 @@ class PyBullet:
         orientation = self.physics_client.getBasePositionAndOrientation(self._bodies_idx[body])[1]
         return np.array(orientation)
 
-    def get_base_rotation(self, body: str) -> np.ndarray:
+    def get_base_rotation(self, body: str, type: str = "euler") -> np.ndarray:
         """Get the rotation of the body.
 
         Args:
             body (str): Body unique name.
+            type (str): Type of angle, either "euler" or "quaternion"
 
         Returns:
-            np.ndarray: The rotation, as (rx, ry, rz).
+            np.ndarray: The rotation.
         """
-        rotation = self.physics_client.getEulerFromQuaternion(self.get_base_orientation(body))
-        return np.array(rotation)
+        quaternion = self.get_base_orientation(body)
+        if type == "euler":
+            rotation = self.physics_client.getEulerFromQuaternion(quaternion)
+            return np.array(rotation)
+        elif type == "quaternion":
+            return np.array(quaternion)
+        else:
+            raise ValueError("""type must be "euler" or "quaternion".""")
 
     def get_base_velocity(self, body: str) -> np.ndarray:
         """Get the velocity of the body.
