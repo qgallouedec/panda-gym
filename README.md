@@ -1,6 +1,6 @@
 # panda-gym
 
-OpenaAI Gym Franka Emika Panda robot environment based on PyBullet.
+Set of OpenAI/gym robotic environments based on PyBullet physics engine.
 
 [![PyPI version](https://img.shields.io/pypi/v/panda-gym.svg?logo=pypi&logoColor=FFE873)](https://pypi.org/project/panda-gym/)
 [![Downloads](https://pepy.tech/badge/panda-gym)](https://pepy.tech/project/panda-gym)
@@ -9,6 +9,10 @@ OpenaAI Gym Franka Emika Panda robot environment based on PyBullet.
 [![codecov](https://codecov.io/gh/qgallouedec/panda-gym/branch/master/graph/badge.svg?token=pv0VdsXByP)](https://codecov.io/gh/qgallouedec/panda-gym)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![arXiv](https://img.shields.io/badge/cs.LG-arXiv%3A2106.13687-B31B1B.svg)](https://arxiv.org/abs/2106.13687)
+
+## Documentation
+
+Check out the [documentation](https://panda-gym.readthedocs.io/en/latest/).
 
 ## Installation
 
@@ -49,11 +53,11 @@ You can also [![Open in Colab](https://colab.research.google.com/assets/colab-ba
 |                                  |                                                |
 | :------------------------------: | :--------------------------------------------: |
 |         `PandaReach-v2`          |                 `PandaPush-v2`                 |
-| ![PandaReach-v2](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/reach.gif) |         ![PandaPush-v2](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/push.gif)         |
+| ![PandaReach-v2](https://gallouedec.com/uploads/img/reach.png) |         ![PandaPush-v2](https://gallouedec.com/uploads/img/push.png)         |
 |         `PandaSlide-v2`          |             `PandaPickAndPlace-v2`             |
-| ![PandaSlide-v2](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/slide.gif) | ![PandaPickAndPlace-v2](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/pickandplace.gif) |
-|         `PandaStack-v2`          |                                                |
-| ![PandaStack-v2](https://raw.githubusercontent.com/qgallouedec/panda-gym/master/docs/stack.gif) |                                                |
+| ![PandaSlide-v2](https://gallouedec.com/uploads/img/slide.png) | ![PandaPickAndPlace-v2](https://gallouedec.com/uploads/img/pickandplace.png) |
+|         `PandaStack-v2`          |              `PandaFlip-v2`                    |
+| ![PandaStack-v2](https://gallouedec.com/uploads/img/stack.png) | ![PandaFlip-v2](https://gallouedec.com/uploads/img/flip.png) |
 
 ## Baselines results
 

@@ -25,5 +25,5 @@ It is possible to manually control the robot, giving it deterministic actions, d
 
 The result is as follows.
 
-.. image:: ../img/manual_reach.png
+.. image:: https://gallouedec.com/uploads/img/manual_reach.png
   :alt: Manual push rendering
