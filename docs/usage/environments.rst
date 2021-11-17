@@ -3,12 +3,12 @@
 Environments
 ============
 
-Panda-gym includes 
+``panda-gym`` includes:
 
 - 1 robot: 
     - the Franka Emika Panda robot,
 - 6 tasks:
-    - **Reach**: The robot must place its end-effector at a target position,
+    - **Reach**: the robot must place its end-effector at a target position,
     - **Push**: the robot has to push a cube to a target position,
     - **Slide**: the robot has to slide an object to a target position,
     - **Pick and place**: the robot has to pick up and place an object at a target position,
@@ -21,7 +21,7 @@ Panda-gym includes
     - **Sparse**: the environment return a reward if and only if the task is completed,
     - **Dense**: the closer the agent is to completing the task, the higher the reward.
 
-By default, the reward is sparse and the control mode is the end-effector movement.
+By default, the reward is sparse and the control mode is the end-effector displacement.
 The complete set of environments present in the package is presented in the following list.
 
 Sparce reward, end-effector control (default setting)

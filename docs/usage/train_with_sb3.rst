@@ -23,7 +23,7 @@ Alternatively, you can install ``panda-gym`` and SB3 directly with a single comm
 Train
 -----
 
-Now that SB3 is installed, you can run the following code to train an agent on the Reach task with DDPG algorithm.
+Now that SB3 is installed, you can run the following code to train an agent. You can use every algorithm compatible with ``Box`` action space, see `stable-baselines3/RL Algorithm <https://stable-baselines3.readthedocs.io/en/master/guide/algos.html>`_). In the following example, a DDPG agent is trained to solve th Reach task.
 
 .. code-block:: python
 
@@ -40,14 +40,14 @@ Now that SB3 is installed, you can run the following code to train an agent on t
     Here we provide the canonical code for training with SB3. For any information on the setting of hyperparameters, verbosity, saving the model, ... please read the `SB3 documentation <https://stable-baselines3.readthedocs.io/en/master/index.html>`_. 
  
 
-Bonus: Train with RL baselines3 Zoo
+Bonus: Train with RL Baselines3 Zoo
 -----------------------------------
 
 `RL Baselines3 Zoo <https://stable-baselines3.readthedocs.io/en/master/guide/rl_zoo.html>`_ is the training framework associated with SB3.
-It provides scripts for training, evaluating agents, setting hyperparameters, plotting results and recording video. It also contains already optimized hypermeters, including for some panda-gym environments.
+It provides scripts for training, evaluating agents, setting hyperparameters, plotting results and recording video. It also contains already optimized hypermeters, including for some ``panda-gym`` environments.
 
 .. warning::
-    The current version of RL Baselines3 Zoo provides hyperparameters for version 1 of panda-gym, but not v2. So before using RL Baselines3 Zoo, you will have to set your own hyperparameters by editing ``hyperparameters/<ALGO>.yml``. For more information, please read the `README of RL Baselines3 Zoo <https://github.com/DLR-RM/rl-baselines3-zoo#readme>`_.
+    The current version of RL Baselines3 Zoo provides hyperparameters for version 1 of ``panda-gym``, but not for version 2. Before training with RL Baselines3 Zoo, you will have to set your own hyperparameters by editing ``hyperparameters/<ALGO>.yml``. For more information, please read the `README of RL Baselines3 Zoo <https://github.com/DLR-RM/rl-baselines3-zoo#readme>`_.
 
 Train
 ~~~~~
@@ -62,7 +62,7 @@ For example, to train an agent with TQC on ``PandaPickAndPlace-v2``:
 
 .. code-block:: bash
 
-    python train.py --algo TQC --env PandaPickAndPlace-v2
+    python train.py --algo tqc --env PandaPickAndPlace-v2
 
 Enjoy
 ~~~~~

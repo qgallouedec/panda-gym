@@ -23,7 +23,7 @@ setup(
     install_requires=["gym", "pybullet", "numpy", "scipy"],
     extras_require={
         "tests": ["pytest", "black", "pytype"],
-        "extra": ["optuna", "stable-baselines3"],
+        "extra": ["numpngw", "stable-baselines3"],
         "docs": ["sphinx", "sphinx-rtd-theme"],
     },
     classifiers=[

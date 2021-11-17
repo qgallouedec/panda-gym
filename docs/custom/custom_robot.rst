@@ -19,7 +19,7 @@ To define your own robot, you need to define the following methods and attribute
 - the ``get_obs()`` method and
 - the ``reset()`` method.
 
-For the purpose of the example, we consider here that our URDF file defines a very simple robot, consisting of two links and a single joint. The URDF file thus looks like
+For the purpose of the example, let's use a very simple robot, whose URDF file is given below. It consists in two links and a single joint.
 
 .. code-block:: xml
 
@@ -38,18 +38,18 @@ For the purpose of the example, we consider here that our URDF file defines a ve
 Joint indices
 ~~~~~~~~~~~~~
 
-The first step is to identify the joints you want to be able to control with the agent. These joints will be identified by their index in the URDF file. Here, it is the index 0 joint that we want to control (it is also the only one in the URDF file). For the following, we will use ``joint_indices=np.array([0])``.
+The first step is to identify the joints you want to be able to control with the agent. These joints will be identified by their index in the URDF file. Here, it is the index 0 joint that you want to control (it is also the only one in the URDF file). For the following, you will use ``joint_indices=np.array([0])``.
 
 Joint forces
 ~~~~~~~~~~~~~
 
-Then, for each joint, we must define a maximum force. This data is usually found in the technical specifications of the robot, and sometimes in the URDF file (``<limit effort="1.0"/>`` for a maximum effort of 1.0 Nm). Here, let's consider that our maximum effort is 1.0 Nm. 
-For the following, we will use ``joint_forces=np.array([1.0])``.
+For each joint, you must define a maximum force. This data is usually found in the technical specifications of the robot, and sometimes in the URDF file (``<limit effort="1.0"/>`` for a maximum effort of 1.0 Nm). Here, let's consider that the maximum effort is 1.0 Nm. 
+For the following, you will use ``joint_forces=np.array([1.0])``.
 
 ``set_action`` method
 ~~~~~~~~~~~~~~~~~~~~~
 
-The ``set_action`` method specify what the robot must do with the action. In our example, the robot only uses the action as a target angle for its single joint. Thus:
+The ``set_action`` method specify what the robot must do with the action. In the example, the robot only uses the action as a target angle for its single joint. Thus:
 
 .. code-block:: python
 
@@ -60,7 +60,7 @@ The ``set_action`` method specify what the robot must do with the action. In our
 ``get_obs`` method
 ~~~~~~~~~~~~~~~~~~
 
-The ``get_obs`` method returns the observation associated with the robot. In our example, the robot only returns the position of it single joint.
+The ``get_obs`` method returns the observation associated with the robot. In the example, the robot only returns the position of it single joint.
 
 .. code-block:: python
 
@@ -71,7 +71,7 @@ The ``get_obs`` method returns the observation associated with the robot. In our
 ``reset`` method
 ~~~~~~~~~~~~~~~~
 
-The ``reset`` method specify how to reset the robot. In our example, the robot resets its single joint to an angle of 0.
+The ``reset`` method specify how to reset the robot. In the example, the robot resets its single joint to an angle of 0.
 
 .. code-block:: python
 
@@ -82,7 +82,7 @@ The ``reset`` method specify how to reset the robot. In our example, the robot r
 Full code
 ~~~~~~~~~
 
-We now have everything we need to define our custom robot. We only have to inherit the class :py:class:`PyBulletRobot<panda_gym.envs.core.PyBulletRobot>` in the following way.
+You now have everything you need to define your custom robot. You only have to inherit the class :py:class:`PyBulletRobot<panda_gym.envs.core.PyBulletRobot>` in the following way.
 
 .. code-block:: python
 
@@ -119,8 +119,7 @@ We now have everything we need to define our custom robot. We only have to inher
             self.set_joint_angles(angles=neutral_angle)
 
 
-Obviously, you have to adapt the example to your robot, especially concerning the number and indeces of the joints, as well as the force applied for the control.
-You can also use other types of control, for example using inverse dynamics with the parent class function , and any 
+Obviously, you have to adapt the example to your robot, especially concerning the number and the indices of the joints, as well as the forces applied for the control.
 
 You can also use other types of control, using all the methods of the parent class :py:class:`PyBulletRobot<panda_gym.envs.core.PyBulletRobot>` and the simulation instance :py:class:`PyBullet<panda_gym.pybullet.PyBullet>`. For example for inverse kinematics you can use the method :py:meth:`PyBulletRobot.inverse_kinematics<panda_gym.envs.core.PyBulletRobot.inverse_kinematics>`.
 

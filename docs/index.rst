@@ -44,16 +44,6 @@ Welcome to panda-gym's documentation!
 
    robots/panda
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Tasks
-
-   tasks/reach
-   tasks/push
-   tasks/slide
-   tasks/pick_and_place
-   tasks/stack
-   tasks/flip
 
 Citing
 ------

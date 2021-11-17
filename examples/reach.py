@@ -4,9 +4,11 @@ import panda_gym
 env = gym.make("PandaReach-v2", render=True)
 
 obs = env.reset()
-for _ in range(50):
-    env.render()
+done = False
+
+while not done:
     action = env.action_space.sample()
-    env.step(action)
+    obs, reward, done, info = env.step(action)
+    env.render()
 
 env.close()

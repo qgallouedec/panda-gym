@@ -19,7 +19,7 @@ To define your own task, you need to inherit from :py:class:`Task<panda_gym.envs
 - ``is_success(achieved_goal, desired_goal, info)``: returns whether the task is successfull
 - ``compute_reward(achieved_goal, desired_goal, info)``: returns the reward
 
-For the purpose of the example, we consider here a very simple task, consisting in moving a cube toward a target position. The goal position is sampled within a volume of 10 m x 10 m x 10 m. 
+For the purpose of the example, let's consider here a very simple task, consisting in moving a cube toward a target position. The goal position is sampled within a volume of 10 m x 10 m x 10 m. 
 
 .. code-block:: python
 
