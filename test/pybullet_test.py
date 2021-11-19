@@ -1,3 +1,4 @@
+import numpy as np
 import pytest
 
 
@@ -49,7 +50,7 @@ def test_get_base_position():
     pybullet.create_box("my_box", [0.5, 0.5, 0.5], 1.0, [0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 1.0])
     base_position = pybullet.get_base_position("my_box")
     pybullet.close()
-    assert base_position == (0.0, 0.0, 0.0)
+    assert np.allclose(base_position, np.zeros(3), atol=1e-7)
 
 
 def test_get_base_velocity():
@@ -60,7 +61,7 @@ def test_get_base_velocity():
     pybullet.step()
     base_velocity = pybullet.get_base_velocity("my_box")
     pybullet.close()
-    assert pytest.approx(list(base_velocity), abs=0.001) == [0.0, 0.0, -0.392]
+    assert np.allclose(base_velocity, [0.0, 0.0, -0.392], atol=1e-3)
 
 
 def test_get_base_orientation():
@@ -70,7 +71,7 @@ def test_get_base_orientation():
     pybullet.create_box("my_box", [0.5, 0.5, 0.5], 1.0, [0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 1.0])
     base_orientation = pybullet.get_base_orientation("my_box")
     pybullet.close()
-    assert pytest.approx(list(base_orientation), abs=0.001) == [0.0, 0.0, 0.0, 1.0]
+    assert np.allclose(base_orientation, [0.0, 0.0, 0.0, 1.0], atol=1e-3)
 
 
 def test_get_base_rotation():
@@ -79,9 +80,8 @@ def test_get_base_rotation():
     pybullet = PyBullet()
     pybullet.create_box("my_box", [0.5, 0.5, 0.5], 1.0, [0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 1.0])
     base_rotation = pybullet.get_base_rotation("my_box")
-    print(base_rotation)
     pybullet.close()
-    assert pytest.approx(list(base_rotation), abs=0.001) == [0.0, 0.0, 0.0]
+    assert np.allclose(base_rotation, [0.0, 0.0, 0.0], atol=1e-3)
 
 
 def test_get_base_angular_velocity():
@@ -91,7 +91,7 @@ def test_get_base_angular_velocity():
     pybullet.create_box("my_box", [0.5, 0.5, 0.5], 1.0, [0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 1.0])
     base_angular_velocity = pybullet.get_base_angular_velocity("my_box")
     pybullet.close()
-    assert pytest.approx(list(base_angular_velocity), abs=0.001) == [0.0, 0.0, 0.0]
+    assert np.allclose(base_angular_velocity, [0.0, 0.0, 0.0], atol=1e-3)
 
 
 def test_load_URDF():
@@ -132,7 +132,7 @@ def test_get_link_position():
         useFixedBase=True,
     )
     link_position = pybullet.get_link_position("panda", 1)
-    assert pytest.approx(list(link_position), abs=0.001) == [0.000, 0.060, 0.373]
+    assert np.allclose(link_position, [0.000, 0.060, 0.373], atol=1e-3)
     pybullet.close()
 
 
@@ -149,7 +149,7 @@ def test_get_link_orientation():
     pybullet.control_joints("panda", [5], [0.3], [5.0])
     pybullet.step()
     link_orientation = pybullet.get_link_orientation("panda", 5)
-    assert pytest.approx(list(link_orientation), abs=0.001) == [0.707, -0.02, 0.02, 0.707]
+    assert np.allclose(link_orientation, [0.707, -0.02, 0.02, 0.707], atol=1e-3)
     pybullet.close()
 
 
@@ -166,7 +166,7 @@ def test_get_link_velocity():
     pybullet.control_joints("panda", [5], [0.3], [5.0])
     pybullet.step()
     link_velocity = pybullet.get_link_velocity("panda", 5)
-    assert pytest.approx(list(link_velocity), abs=0.001) == [-0.0068, 0.0000, 0.1186]
+    assert np.allclose(link_velocity, [-0.0068, 0.0000, 0.1186], atol=1e-3)
     pybullet.close()
 
 
@@ -183,7 +183,7 @@ def test_get_link_angular_velocity():
     pybullet.control_joints("panda", [5], [0.3], [5.0])
     pybullet.step()
     link_angular_velocity = pybullet.get_link_angular_velocity("panda", 5)
-    assert pytest.approx(list(link_angular_velocity), abs=0.001) == [0.000, -2.969, 0.000]
+    assert np.allclose(link_angular_velocity, [0.000, -2.969, 0.000], atol=1e-3)
     pybullet.close()
 
 
@@ -200,7 +200,7 @@ def test_get_joint_angle():
     pybullet.control_joints("panda", [5], [0.3], [5.0])
     pybullet.step()
     joint_angle = pybullet.get_joint_angle("panda", 5)
-    assert pytest.approx(joint_angle, abs=0.001) == 0.063
+    assert np.allclose(joint_angle, 0.063, atol=1e-3)
     pybullet.close()
 
 
@@ -213,8 +213,8 @@ def test_set_base_pose():
     base_position = pybullet.get_base_position("my_box")
     base_orientation = pybullet.get_base_orientation("my_box")
     pybullet.close()
-    assert pytest.approx(list(base_position), abs=0.001) == [1.0, 1.0, 1.0]
-    assert pytest.approx(list(base_orientation), abs=0.001) == [0.707, -0.02, 0.02, 0.707]
+    assert np.allclose(base_position, [1.0, 1.0, 1.0], atol=1e-3)
+    assert np.allclose(base_orientation, [0.707, -0.02, 0.02, 0.707], atol=1e-3)
 
 
 def test_set_joint_angle():
@@ -229,7 +229,7 @@ def test_set_joint_angle():
     )
     pybullet.set_joint_angle("panda", 3, 0.4)
     joint_angle = pybullet.get_joint_angle("panda", 3)
-    assert pytest.approx(joint_angle, abs=0.001) == 0.4
+    assert np.allclose(joint_angle, 0.4, atol=1e-3)
     pybullet.close()
 
 
@@ -246,8 +246,8 @@ def test_set_joint_angles():
     pybullet.set_joint_angles("panda", [3, 4], [0.4, 0.5])
     joint_angle3 = pybullet.get_joint_angle("panda", 3)
     joint_angle4 = pybullet.get_joint_angle("panda", 4)
-    assert pytest.approx(joint_angle3, abs=0.001) == 0.4
-    assert pytest.approx(joint_angle4, abs=0.001) == 0.5
+    assert np.allclose(joint_angle3, 0.4, atol=1e-3)
+    assert np.allclose(joint_angle4, 0.5, atol=1e-3)
     pybullet.close()
 
 
@@ -262,7 +262,7 @@ def test_inverse_kinematics():
         useFixedBase=True,
     )
     joint_angles = pybullet.inverse_kinematics("panda", 6, [0.4, 0.5, 0.6], [0.707, -0.02, 0.02, 0.707])
-    assert pytest.approx(list(joint_angles), abs=0.001) == [1.000, 1.223, -1.113, -0.021, -0.917, 0.666, -0.499, 0.0, 0.0]
+    assert np.allclose(joint_angles, [1.000, 1.223, -1.113, -0.021, -0.917, 0.666, -0.499, 0.0, 0.0], atol=1e-3)
     pybullet.close()
 
 
@@ -305,10 +305,19 @@ def test_create_table():
     pybullet.close()
 
 
-def test_set_friction():
+def test_set_lateral_friction():
     from panda_gym.pybullet import PyBullet
 
     pybullet = PyBullet()
     pybullet.create_box("my_box", [0.5, 0.5, 0.5], 1.0, [0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 1.0])
-    pybullet.set_friction("my_box", 0, 0.5)
+    pybullet.set_lateral_friction("my_box", 0, 0.5)
+    pybullet.close()
+
+
+def test_set_spinning_friction():
+    from panda_gym.pybullet import PyBullet
+
+    pybullet = PyBullet()
+    pybullet.create_box("my_box", [0.5, 0.5, 0.5], 1.0, [0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 1.0])
+    pybullet.set_spinning_friction("my_box", 0, 0.5)
     pybullet.close()

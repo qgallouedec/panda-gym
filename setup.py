@@ -10,7 +10,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="panda_gym",
-    description="OpenAI Gym Franka Emika Panda robot environment based on PyBullet.",
+    description="Set of OpenAI/gym robotic environments based on PyBullet physics engine.",
     author="Quentin GALLOUÉDEC",
     author_email="gallouedec.quentin@gmail.com",
     long_description=long_description,
@@ -20,12 +20,17 @@ setup(
     include_package_data=True,
     package_data={"panda_gym": ["version.txt"]},
     version=__version__,
-    install_requires=["gym", "pybullet", "numpy"],
+    install_requires=["gym", "pybullet", "numpy", "scipy"],
+    extras_require={
+        "tests": ["pytest", "black", "pytype"],
+        "extra": ["numpngw", "stable-baselines3"],
+        "docs": ["sphinx", "sphinx-rtd-theme"],
+    },
     classifiers=[
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
 )
