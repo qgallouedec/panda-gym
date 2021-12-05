@@ -1,5 +1,7 @@
 # panda-gym
 
+**In this branch, you can find another environment: `PandaNoTask-v0`. It is not a `GoalEnv`.  There is no task to achieve, so no reward to get. This environment is convinient for exploration problems.**
+
 Set of OpenAI/gym robotic environments based on PyBullet physics engine.
 
 [![PyPI version](https://img.shields.io/pypi/v/panda-gym.svg?logo=pypi&logoColor=FFE873)](https://pypi.org/project/panda-gym/)

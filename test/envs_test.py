@@ -130,3 +130,13 @@ def test_dense_stack_joints():
 def test_dense_flip_joints():
     env = gym.make("PandaFlipJointsDense-v2")
     run_env(env)
+
+
+def test_no_task():
+    env = gym.make("PandaNoTask-v0")
+    run_env(env)
+
+
+def test_no_task_joints():
+    env = gym.make("PandaNoTaskJoints-v0")
+    run_env(env)

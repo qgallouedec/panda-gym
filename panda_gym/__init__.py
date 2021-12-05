@@ -52,3 +52,16 @@ for reward_type in ["sparse", "dense"]:
             kwargs=kwargs,
             max_episode_steps=50,
         )
+
+register(
+    id="PandaNoTask-v0",
+    entry_point="panda_gym.envs:PandaNoTaskEnv",
+    max_episode_steps=50,
+)
+
+register(
+    id="PandaNoTaskJoints-v0",
+    entry_point="panda_gym.envs:PandaNoTaskEnv",
+    max_episode_steps=50,
+    kwargs={"control_type": "joints"},
+)
