@@ -48,7 +48,7 @@ class PandaNoTaskEnv(gym.Env):
                 body_name="object" + str(i),
                 half_extents=np.ones(3) * self.object_size / 2,
                 mass=1.0,
-                position=np.array([self.object_size * i, 0.0, self.object_size / 2]),
+                position=np.array([self.object_size * i + 0.1, 0.1, self.object_size / 2]),
                 rgba_color=COLORS[i % 5],
             )
 
@@ -85,7 +85,9 @@ class PandaNoTaskEnv(gym.Env):
         self.robot.reset()
         for i in range(self.nb_objects):
             self.sim.set_base_pose(
-                "object" + str(i), np.array([self.object_size * i, 0.0, self.object_size / 2]), np.array([0.0, 0.0, 0.0, 1.0])
+                "object" + str(i), # add 0.1 : trick not to be between two cells
+                np.array([self.object_size * i + 0.1, 0.1, self.object_size / 2]),
+                np.array([0.0, 0.0, 0.0, 1.0]),
             )
         obs = self.robot.get_obs()
         if self.nb_objects > 0:
