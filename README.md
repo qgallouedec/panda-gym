@@ -67,15 +67,16 @@ Baselines results and pre-trained agents available in [rl-baselines3-zoo](https:
 
 Cite as
 
-```text
-@misc{gallouédec2021multigoal,
-      title={Multi-Goal Reinforcement Learning environments for simulated Franka Emika Panda robot}, 
-      author={Quentin Gallou{\'e}dec and Nicolas Cazin and Emmanuel Dellandr{\'e}a and Liming Chen},
-      year={2021},
-      eprint={2106.13687},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
-}
+```bib
+@misc{gallouedec2021pandagym,
+  author        = {Gallou{\'{e}}dec, Quentin and Cazin, Nicolas and Dellandr{\'{e}}a, Emmanuel and Chen, Liming},
+  title         = {{panda-gym: Open-source goal-conditioned environments for robotic learning}}
+  year          = {2021},
+  eprint        = {2106.13687},
+  archivePrefix = {arXiv},
+  primaryClass. = {cs.LG},
+  url           = {https://arxiv.org/abs/2106.13687}
+}      
 ```
 
 Environments are widely inspired from [OpenAI Fetch environments](https://openai.com/blog/ingredients-for-robotics-research/). 
