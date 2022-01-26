@@ -70,7 +70,7 @@ Cite as
 ```bib
 @misc{gallouedec2021pandagym,
   author        = {Gallou{\'{e}}dec, Quentin and Cazin, Nicolas and Dellandr{\'{e}}a, Emmanuel and Chen, Liming},
-  title         = {{panda-gym: Open-source goal-conditioned environments for robotic learning}}
+  title         = {{panda-gym: Open-source goal-conditioned environments for robotic learning}},
   year          = {2021},
   eprint        = {2106.13687},
   archivePrefix = {arXiv},
