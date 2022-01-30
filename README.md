@@ -68,14 +68,11 @@ Baselines results and pre-trained agents available in [rl-baselines3-zoo](https:
 Cite as
 
 ```bib
-@misc{gallouedec2021pandagym,
-  author        = {Gallou{\'{e}}dec, Quentin and Cazin, Nicolas and Dellandr{\'{e}}a, Emmanuel and Chen, Liming},
-  title         = {{panda-gym: Open-source goal-conditioned environments for robotic learning}},
-  year          = {2021},
-  eprint        = {2106.13687},
-  archivePrefix = {arXiv},
-  primaryClass. = {cs.LG},
-  url           = {https://arxiv.org/abs/2106.13687}
+@article{gallouedec2021multi,
+  title        = {{panda-gym: Open-Source Goal-Conditioned Environments for Robotic Learning}},
+  author       = {Gallou{\'e}dec, Quentin and Cazin, Nicolas and Dellandr{\'e}a, Emmanuel and Chen, Liming},
+  year         = 2021,
+  journal      = {Robot Learning Workshop: Self-Supervised and Lifelong Learning at NeurIPS},
 }      
 ```
 
