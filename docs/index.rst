@@ -51,11 +51,11 @@ To cite this project in publications:
 
 .. code-block:: bibtex
 
-   @article{gallouedec2021multi,
-      title={Multi-Goal Reinforcement Learning environments for simulated Franka Emika Panda robot},
-      author={Gallou{\'e}dec, Quentin and Cazin, Nicolas and Dellandr{\'e}a, Emmanuel and Chen, Liming},
-      journal={arXiv preprint arXiv:2106.13687},
-      year={2021}
+   @article{gallouedec2021pandagym,
+   title        = {{panda-gym: Open-Source Goal-Conditioned Environments for Robotic Learning}},
+   author       = {Gallou{\'e}dec, Quentin and Cazin, Nicolas and Dellandr{\'e}a, Emmanuel and Chen, Liming},
+   year         = 2021,
+   journal      = {4th Robot Learning Workshop: Self-Supervised and Lifelong Learning at NeurIPS},
    }
 
 

@@ -68,12 +68,12 @@ Baselines results and pre-trained agents available in [rl-baselines3-zoo](https:
 Cite as
 
 ```bib
-@article{gallouedec2021multi,
+@article{gallouedec2021pandagym,
   title        = {{panda-gym: Open-Source Goal-Conditioned Environments for Robotic Learning}},
   author       = {Gallou{\'e}dec, Quentin and Cazin, Nicolas and Dellandr{\'e}a, Emmanuel and Chen, Liming},
   year         = 2021,
-  journal      = {Robot Learning Workshop: Self-Supervised and Lifelong Learning at NeurIPS},
-}      
+  journal      = {4th Robot Learning Workshop: Self-Supervised and Lifelong Learning at NeurIPS},
+}
 ```
 
 Environments are widely inspired from [OpenAI Fetch environments](https://openai.com/blog/ingredients-for-robotics-research/). 
