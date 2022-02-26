@@ -20,7 +20,7 @@ setup(
     include_package_data=True,
     package_data={"panda_gym": ["version.txt"]},
     version=__version__,
-    install_requires=["gym==0.21.0", "pybullet", "numpy", "scipy"],
+    install_requires=["gym", "gym-robotics", "pybullet", "numpy", "scipy"],
     extras_require={
         "tests": ["pytest", "black", "pytype"],
         "extra": ["numpngw", "stable-baselines3"],
@@ -28,7 +28,6 @@ setup(
     },
     classifiers=[
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
