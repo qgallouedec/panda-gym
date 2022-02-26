@@ -4,6 +4,7 @@ from typing import Any, Dict, Optional, Tuple, Union
 import gym
 import gym.spaces
 import gym.utils.seeding
+import gym_robotics
 import numpy as np
 
 from panda_gym.pybullet import PyBullet
@@ -73,12 +74,8 @@ class PyBulletRobot(ABC):
         """
 
     @abstractmethod
-    def reset(self) -> np.ndarray:
-        """Reset the robot and return the observation.
-
-        Returns:
-            np.ndarray: The observation.
-        """
+    def reset(self) -> None:
+        """Reset the robot and return the observation."""
 
     def get_link_position(self, link: int) -> np.ndarray:
         """Returns the position of a link as (x, y, z)
@@ -172,7 +169,7 @@ class Task(ABC):
 
     @abstractmethod
     def reset(self) -> None:
-        """Reset the task: sample a new goal"""
+        """Reset the task: sample a new goal."""
 
     @abstractmethod
     def get_obs(self) -> np.ndarray:
@@ -189,18 +186,6 @@ class Task(ABC):
         else:
             return self.goal.copy()
 
-    def seed(self, seed: Optional[int]) -> int:
-        """Sets the random seed.
-
-        Args:
-            seed (Optional[int]): The desired seed. Leave None to generate one.
-
-        Returns:
-            int: The seed.
-        """
-        self.np_random, seed = gym.utils.seeding.np_random(seed)
-        return seed
-
     @abstractmethod
     def is_success(
         self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}
@@ -214,7 +199,7 @@ class Task(ABC):
         """Compute reward associated to the achieved and the desired goal."""
 
 
-class RobotTaskEnv(gym.GoalEnv):
+class RobotTaskEnv(gym_robotics.GoalEnv):
     """Robotic task goal env, as the junction of a task and a robot.
 
     Args:
@@ -229,8 +214,7 @@ class RobotTaskEnv(gym.GoalEnv):
         self.sim = robot.sim
         self.robot = robot
         self.task = task
-        self.seed()  # required for init; can be changed later
-        obs = self.reset()
+        obs = self.reset()  # required for init; seed can be changed later
         observation_shape = obs["observation"].shape
         achieved_goal_shape = obs["achieved_goal"].shape
         desired_goal_shape = obs["achieved_goal"].shape
@@ -255,7 +239,8 @@ class RobotTaskEnv(gym.GoalEnv):
             "desired_goal": self.task.get_goal(),
         }
 
-    def reset(self) -> Dict[str, np.ndarray]:
+    def reset(self, seed: Optional[int] = None) -> Dict[str, np.ndarray]:
+        self.task.np_random, seed = gym.utils.seeding.np_random(seed)
         with self.sim.no_rendering():
             self.robot.reset()
             self.task.reset()
@@ -270,10 +255,6 @@ class RobotTaskEnv(gym.GoalEnv):
         reward = self.task.compute_reward(obs["achieved_goal"], self.task.get_goal(), info)
         assert isinstance(reward, float)  # needed for pytype cheking
         return obs, reward, done, info
-
-    def seed(self, seed: Optional[int] = None) -> int:
-        """Setup the seed."""
-        return self.task.seed(seed)
 
     def close(self) -> None:
         self.sim.close()
