@@ -22,7 +22,7 @@ setup(
     version=__version__,
     install_requires=["gym", "gym-robotics", "pybullet", "numpy", "scipy"],
     extras_require={
-        "tests": ["pytest", "black", "pytype"],
+        "tests": ["pytest-cov", "black", "isort", "pytype"],
         "extra": ["numpngw", "stable-baselines3"],
         "docs": ["sphinx", "sphinx-rtd-theme"],
     },
