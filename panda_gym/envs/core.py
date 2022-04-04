@@ -18,6 +18,8 @@ class PyBulletRobot(ABC):
         body_name (str): The name of the robot within the simulation.
         file_name (str): Path of the urdf file.
         base_position (np.ndarray): Position of the base of the robot as (x, y, z).
+        base_orientation (np.ndarray): Orientation of the robot base as world space quaternion (x,y,z,w).
+                                       Defaults to np.array([0.0, 0.0, 0.0, 1.0]) (no rotation).
     """
 
     def __init__(
@@ -29,28 +31,31 @@ class PyBulletRobot(ABC):
         action_space: gym.spaces.Space,
         joint_indices: np.ndarray,
         joint_forces: np.ndarray,
+        base_orientation: np.ndarray = np.array([0.0, 0.0, 0.0, 1.0])
     ) -> None:
         self.sim = sim
         self.body_name = body_name
         with self.sim.no_rendering():
-            self._load_robot(file_name, base_position)
+            self._load_robot(file_name, base_position, base_orientation)
             self.setup()
         self.action_space = action_space
         self.joint_indices = joint_indices
         self.joint_forces = joint_forces
 
-    def _load_robot(self, file_name: str, base_position: np.ndarray) -> None:
+    def _load_robot(self, file_name: str, base_position: np.ndarray, base_orientation: np.ndarray) -> None:
         """Load the robot.
 
         Args:
             file_name (str): The URDF file name of the robot.
             base_position (np.ndarray): The position of the robot, as (x, y, z).
+            base_orientation (np.ndarray): Orientation of the robot base as world space quaternion (x,y,z,w).
         """
         self.sim.loadURDF(
             body_name=self.body_name,
             fileName=file_name,
             basePosition=base_position,
-            useFixedBase=True,
+            baseOrientation=base_orientation,
+            useFixedBase=True
         )
 
     def setup(self) -> None:
