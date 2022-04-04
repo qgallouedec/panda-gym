@@ -450,6 +450,7 @@ class PyBullet:
             spinning_friction (float or None, optional): Spinning friction. If None, use the default pybullet
                 value. Defaults to None.
         """
+        rgba_color = rgba_color if rgba_color is not None else np.zeros(4)
         specular_color = specular_color if specular_color is not None else np.zeros(3)
         visual_kwargs = {
             "radius": radius,
@@ -497,6 +498,7 @@ class PyBullet:
             spinning_friction (float or None, optional): Spinning friction. If None, use the default pybullet
                 value. Defaults to None.
         """
+        rgba_color = rgba_color if rgba_color is not None else np.zeros(4)
         specular_color = specular_color if specular_color is not None else np.zeros(3)
         visual_kwargs = {
             "radius": radius,
