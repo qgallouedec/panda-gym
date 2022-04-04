@@ -12,6 +12,8 @@ class Panda(PyBulletRobot):
         sim (PyBullet): Simulation instance.
         block_gripper (bool, optional): Whether the gripper is blocked. Defaults to False.
         base_position (np.ndarray, optionnal): Position of the base base of the robot, as (x, y, z). Defaults to (0, 0, 0).
+        base_orientation (np.ndarray): Orientation of the robot base as world space quaternion (x,y,z,w).
+                                       Defaults to np.array([0.0, 0.0, 0.0, 1.0]) (no rotation).
         control_type (str, optional): "ee" to control end-effector displacement or "joints" to control joint angles.
             Defaults to "ee".
         robot_id (int, optional): In case of multiple Panda robot in the same environment, different robot_id has to be
@@ -23,6 +25,7 @@ class Panda(PyBulletRobot):
         sim: PyBullet,
         block_gripper: bool = False,
         base_position: np.ndarray = np.array([0.0, 0.0, 0.0]),
+        base_orientation: np.ndarray = np.array([0.0, 0.0, 0.0, 1.0]),
         control_type: str = "ee",
         robot_id: int = 0
     ) -> None:
@@ -36,6 +39,7 @@ class Panda(PyBulletRobot):
             body_name=f"panda_{robot_id}",
             file_name="franka_panda/panda.urdf",
             base_position=base_position,
+            base_orientation=base_orientation,
             action_space=action_space,
             joint_indices=np.array([0, 1, 2, 3, 4, 5, 6, 9, 10]),
             joint_forces=np.array([87.0, 87.0, 87.0, 87.0, 12.0, 120.0, 120.0, 170.0, 170.0]),
