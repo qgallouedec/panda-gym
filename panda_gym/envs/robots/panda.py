@@ -14,6 +14,8 @@ class Panda(PyBulletRobot):
         base_position (np.ndarray, optionnal): Position of the base base of the robot, as (x, y, z). Defaults to (0, 0, 0).
         control_type (str, optional): "ee" to control end-effector displacement or "joints" to control joint angles.
             Defaults to "ee".
+        robot_id (int, optional): In case of multiple Panda robot in the same environment, different robot_id has to be
+                                  set for each robot to allow separate control. Defaults to 0.
     """
 
     def __init__(
@@ -22,6 +24,7 @@ class Panda(PyBulletRobot):
         block_gripper: bool = False,
         base_position: np.ndarray = np.array([0.0, 0.0, 0.0]),
         control_type: str = "ee",
+        robot_id: int = 0
     ) -> None:
         self.block_gripper = block_gripper
         self.control_type = control_type
@@ -30,7 +33,7 @@ class Panda(PyBulletRobot):
         action_space = spaces.Box(-1.0, 1.0, shape=(n_action,), dtype=np.float32)
         super().__init__(
             sim,
-            body_name="panda",
+            body_name=f"panda_{robot_id}",
             file_name="franka_panda/panda.urdf",
             base_position=base_position,
             action_space=action_space,
