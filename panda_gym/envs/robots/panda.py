@@ -27,7 +27,7 @@ class Panda(PyBulletRobot):
         base_position: np.ndarray = np.array([0.0, 0.0, 0.0]),
         base_orientation: np.ndarray = np.array([0.0, 0.0, 0.0, 1.0]),
         control_type: str = "ee",
-        robot_id: int = 0
+        robot_id: int = 0,
     ) -> None:
         self.block_gripper = block_gripper
         self.control_type = control_type

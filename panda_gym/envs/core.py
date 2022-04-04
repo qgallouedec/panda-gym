@@ -31,7 +31,7 @@ class PyBulletRobot(ABC):
         action_space: gym.spaces.Space,
         joint_indices: np.ndarray,
         joint_forces: np.ndarray,
-        base_orientation: np.ndarray = np.array([0.0, 0.0, 0.0, 1.0])
+        base_orientation: np.ndarray = np.array([0.0, 0.0, 0.0, 1.0]),
     ) -> None:
         self.sim = sim
         self.body_name = body_name
@@ -55,7 +55,7 @@ class PyBulletRobot(ABC):
             fileName=file_name,
             basePosition=base_position,
             baseOrientation=base_orientation,
-            useFixedBase=True
+            useFixedBase=True,
         )
 
     def setup(self) -> None:
