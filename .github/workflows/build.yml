@@ -3,7 +3,7 @@ name: build
 on: [push, pull_request]
 
 jobs:
-  build:
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -18,14 +18,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -e .[docs,tests]
-    - name: Pytype
-      run: |
-        pytype panda_gym
-    - name: Check codestyle
-      run: |
-        black -l 127 --check panda_gym test
-        isort -l 127 --check panda_gym test
+        pip install -e .[tests]
     - name: Test with pytest
       run: |
         pytest --cov=./ --cov-report=xml
@@ -35,6 +28,25 @@ jobs:
         name: codecov-umbrella # optional
         fail_ci_if_error: true # optional (default = false)
         verbose: true # optional (default = false)
+  codestyle_and_doc:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .[docs,tests]
+    - name: Pytype
+      run: |
+        pytype panda_gym
+    - name: Check codestyle
+      run: |
+        black -l 127 --check panda_gym test
+        isort -l 127 --check panda_gym test
     - name: Make docs
       run: |
         make html
