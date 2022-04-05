@@ -1,3 +1,5 @@
+from typing import Optional
+
 import numpy as np
 from gym import spaces
 
@@ -20,9 +22,10 @@ class Panda(PyBulletRobot):
         self,
         sim: PyBullet,
         block_gripper: bool = False,
-        base_position: np.ndarray = np.array([0.0, 0.0, 0.0]),
+        base_position: Optional[np.ndarray] = None,
         control_type: str = "ee",
     ) -> None:
+        base_position = base_position if base_position is not None else np.zeros(3)
         self.block_gripper = block_gripper
         self.control_type = control_type
         n_action = 3 if self.control_type == "ee" else 7  # control (x, y z) if "ee", else, control the 7 joints

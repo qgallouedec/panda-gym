@@ -264,7 +264,7 @@ class RobotTaskEnv(gym_robotics.GoalEnv):
         mode: str,
         width: int = 720,
         height: int = 480,
-        target_position: np.ndarray = np.zeros(3),
+        target_position: Optional[np.ndarray] = None,
         distance: float = 1.4,
         yaw: float = 45,
         pitch: float = -30,
@@ -290,6 +290,7 @@ class RobotTaskEnv(gym_robotics.GoalEnv):
         Returns:
             RGB np.ndarray or None: An RGB array if mode is 'rgb_array', else None.
         """
+        target_position = target_position if target_position is not None else np.zeros(3)
         return self.sim.render(
             mode,
             width=width,
