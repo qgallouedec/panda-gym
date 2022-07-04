@@ -246,6 +246,15 @@ class RobotTaskEnv(gym_robotics.GoalEnv):
             self.task.reset()
         return self._get_obs()
 
+    def save_state(self) -> int:
+        return self.sim.save_state()
+
+    def restore_state(self, state_id: int) -> None:
+        self.sim.restore_state(state_id)
+
+    def remove_state(self, state_id: int) -> None:
+        self.sim.remove_state(state_id)
+
     def step(self, action: np.ndarray) -> Tuple[Dict[str, np.ndarray], float, bool, Dict[str, Any]]:
         self.robot.set_action(action)
         self.sim.step()

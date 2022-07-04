@@ -56,6 +56,32 @@ class PyBullet:
     def close(self) -> None:
         """Close the simulation."""
         self.physics_client.disconnect()
+    
+    def save_state(self) -> int:
+        """Save the current simulation state.
+        
+        Returns:
+            int: A state id assigned by PyBullet, which is the first non-negative
+            integer available for indexing.
+        """
+        return p.save_state()
+       
+    def restore_state(self, state_id: int) -> None:
+        """Restore a simulation state.
+
+        Args:
+            state_id: The simulation state id returned by save_state().
+        """
+        p.restore_state(state_id)
+    
+    def restore_state(self, state_id: int) -> None:
+        """Remove a simulation state. This will make this state_id available again
+        for returning in save_state().
+
+        Args:
+            state_id: The simulation state id returned by save_state().
+        """
+        p.remove_state(state_id)
 
     def render(
         self,
