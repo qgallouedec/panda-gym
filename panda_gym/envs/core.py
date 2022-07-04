@@ -234,17 +234,26 @@ class RobotTaskEnv(gym_robotics.GoalEnv):
         observation = np.concatenate([robot_obs, task_obs])
         achieved_goal = self.task.get_achieved_goal()
         return {
-            "observation": observation,
-            "achieved_goal": achieved_goal,
-            "desired_goal": self.task.get_goal(),
+            "observation": observation.astype(np.float32),
+            "achieved_goal": achieved_goal.astype(np.float32),
+            "desired_goal": self.task.get_goal().astype(np.float32),
         }
 
-    def reset(self, seed: Optional[int] = None) -> Dict[str, np.ndarray]:
-        self.task.np_random, seed = gym.utils.seeding.np_random(seed)
+    def reset(
+        self,
+        seed: Optional[int] = None,
+        return_info: bool = False,
+        options: Optional[dict] = None,
+    ) -> Union[Dict[str, np.ndarray], Tuple[Dict[str, np.ndarray], Dict]]:
+        super().reset(seed)
+        self.task.np_random = self._np_random
         with self.sim.no_rendering():
             self.robot.reset()
             self.task.reset()
-        return self._get_obs()
+        if return_info:
+            return self._get_obs()
+        else:
+            return self._get_obs(), {}
 
     def step(self, action: np.ndarray) -> Tuple[Dict[str, np.ndarray], float, bool, Dict[str, Any]]:
         self.robot.set_action(action)
