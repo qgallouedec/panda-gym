@@ -19,6 +19,7 @@ Welcome to panda-gym's documentation!
 
    usage/environments
    usage/manual_control
+   usage/save_restore_state
    usage/train_with_sb3
 
 .. toctree::
