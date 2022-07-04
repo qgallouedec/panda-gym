@@ -20,7 +20,7 @@ setup(
     include_package_data=True,
     package_data={"panda_gym": ["version.txt"]},
     version=__version__,
-    install_requires=["gym>=0.22", "gym-robotics", "pybullet", "numpy", "scipy"],
+    install_requires=["gym>=0.22, <=0.23", "gym-robotics", "pybullet", "numpy", "scipy"],
     extras_require={
         "tests": ["pytest-cov"],
         "codestyle": ["black", "isort", "pytype"],
