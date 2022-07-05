@@ -75,8 +75,7 @@ class PyBullet:
         self.physics_client.restoreState(state_id)
 
     def remove_state(self, state_id: int) -> None:
-        """Remove a simulation state. This will make this state_id available again
-        for returning in save_state().
+        """Remove a simulation state. This will make this state_id available again for returning in save_state().
 
         Args:
             state_id: The simulation state id returned by save_state().
