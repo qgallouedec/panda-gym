@@ -22,7 +22,7 @@ copyright = '2021, Quentin Gallouédec'
 author = 'Quentin Gallouédec'
 
 # The full version, including alpha/beta/rc tags
-release = 'v2.0.3'
+release = 'v2.0.4'
 
 
 # -- General configuration ---------------------------------------------------
