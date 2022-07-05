@@ -1,8 +1,8 @@
+import gym
 import numpy as np
 import pybullet
 import pytest
 
-import gym
 import panda_gym
 
 
@@ -17,6 +17,7 @@ def test_save_and_restore_state():
     next_obs1, reward, done, info = env.step(action)
 
     # Restore and perform the same action
+    env.reset()
     env.restore_state(state_id)
     next_obs2, reward, done, info = env.step(action)
 
