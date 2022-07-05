@@ -64,7 +64,7 @@ class PyBullet:
             int: A state id assigned by PyBullet, which is the first non-negative
             integer available for indexing.
         """
-        return p.saveState()
+        return self.physics_client.saveState()
 
     def restore_state(self, state_id: int) -> None:
         """Restore a simulation state.
@@ -72,7 +72,7 @@ class PyBullet:
         Args:
             state_id: The simulation state id returned by save_state().
         """
-        p.restoreState(state_id)
+        self.physics_client.restoreState(state_id)
 
     def remove_state(self, state_id: int) -> None:
         """Remove a simulation state. This will make this state_id available again
@@ -81,7 +81,7 @@ class PyBullet:
         Args:
             state_id: The simulation state id returned by save_state().
         """
-        p.removeState(state_id)
+        self.physics_client.removeState(state_id)
 
     def render(
         self,
