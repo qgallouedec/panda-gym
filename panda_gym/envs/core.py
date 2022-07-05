@@ -227,6 +227,7 @@ class RobotTaskEnv(gym_robotics.GoalEnv):
         )
         self.action_space = self.robot.action_space
         self.compute_reward = self.task.compute_reward
+        self._saved_goal = dict()
 
     def _get_obs(self) -> Dict[str, np.ndarray]:
         robot_obs = self.robot.get_obs()  # robot state
@@ -245,6 +246,19 @@ class RobotTaskEnv(gym_robotics.GoalEnv):
             self.robot.reset()
             self.task.reset()
         return self._get_obs()
+
+    def save_state(self) -> int:
+        state_id = self.sim.save_state()
+        self._saved_goal[state_id] = self.task.goal
+        return state_id
+
+    def restore_state(self, state_id: int) -> None:
+        self.sim.restore_state(state_id)
+        self.task.goal = self._saved_goal[state_id]
+
+    def remove_state(self, state_id: int) -> None:
+        self._saved_goal.pop(state_id)
+        self.sim.remove_state(state_id)
 
     def step(self, action: np.ndarray) -> Tuple[Dict[str, np.ndarray], float, bool, Dict[str, Any]]:
         self.robot.set_action(action)
