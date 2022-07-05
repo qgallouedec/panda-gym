@@ -22,10 +22,11 @@ def test_save_and_restore_state():
     next_obs2, reward, done, info = env.step(action)
 
     # The observations in both cases should be equals
-    assert(np.all(next_obs1["achieved_goal"] == next_obs2["achieved_goal"]))
-    assert(np.all(next_obs1["observation"] == next_obs2["observation"]))
-    assert(np.all(next_obs1["desired_goal"] == next_obs2["desired_goal"]))
-   
+    assert np.all(next_obs1["achieved_goal"] == next_obs2["achieved_goal"])
+    assert np.all(next_obs1["observation"] == next_obs2["observation"])
+    assert np.all(next_obs1["desired_goal"] == next_obs2["desired_goal"])
+
+
 def test_remove_state():
     env = gym.make("PandaReach-v2")
     env.reset()
