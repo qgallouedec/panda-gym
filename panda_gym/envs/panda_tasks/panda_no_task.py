@@ -3,6 +3,7 @@ from typing import Any, Dict, Tuple
 import gym
 import numpy as np
 from gym import spaces
+
 from panda_gym.envs.robots.panda import Panda
 from panda_gym.pybullet import PyBullet
 
@@ -85,7 +86,7 @@ class PandaNoTaskEnv(gym.Env):
         self.robot.reset()
         for i in range(self.nb_objects):
             self.sim.set_base_pose(
-                "object" + str(i), # add 0.1 : trick not to be between two cells
+                "object" + str(i),  # add 0.1 : trick not to be between two cells
                 np.array([self.object_size * i + 0.1, 0.1, self.object_size / 2]),
                 np.array([0.0, 0.0, 0.0, 1.0]),
             )
