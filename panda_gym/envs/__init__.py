@@ -1,5 +1,4 @@
 from panda_gym.envs.panda_tasks.panda_flip import PandaFlipEnv
-from panda_gym.envs.panda_tasks.panda_no_task import PandaNoTaskEnv
 from panda_gym.envs.panda_tasks.panda_pick_and_place import PandaPickAndPlaceEnv
 from panda_gym.envs.panda_tasks.panda_push import PandaPushEnv
 from panda_gym.envs.panda_tasks.panda_reach import PandaReachEnv
