@@ -4,7 +4,6 @@ from typing import Any, Dict, Optional, Tuple, Union
 import gym
 import gym.spaces
 import gym.utils.seeding
-import gym_robotics
 import numpy as np
 
 from panda_gym.pybullet import PyBullet
@@ -199,7 +198,7 @@ class Task(ABC):
         """Compute reward associated to the achieved and the desired goal."""
 
 
-class RobotTaskEnv(gym_robotics.GoalEnv):
+class RobotTaskEnv(gym.GoalEnv):
     """Robotic task goal env, as the junction of a task and a robot.
 
     Args:

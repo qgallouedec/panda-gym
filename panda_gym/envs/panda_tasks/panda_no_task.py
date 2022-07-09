@@ -1,4 +1,4 @@
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import gym
 import numpy as np
@@ -94,3 +94,46 @@ class PandaNoTaskEnv(gym.Env):
         if self.nb_objects > 0:
             obs = np.concatenate((obs, self.get_objects_pos()))
         return obs
+
+    def render(
+        self,
+        mode: str,
+        width: int = 720,
+        height: int = 480,
+        target_position: Optional[np.ndarray] = None,
+        distance: float = 1.4,
+        yaw: float = 45,
+        pitch: float = -30,
+        roll: float = 0,
+    ) -> Optional[np.ndarray]:
+        """Render.
+
+        If mode is "human", make the rendering real-time. All other arguments are
+        unused. If mode is "rgb_array", return an RGB array of the scene.
+
+        Args:
+            mode (str): "human" of "rgb_array". If "human", this method waits for the time necessary to have
+                a realistic temporal rendering and all other args are ignored. Else, return an RGB array.
+            width (int, optional): Image width. Defaults to 720.
+            height (int, optional): Image height. Defaults to 480.
+            target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
+                Defaults to [0., 0., 0.].
+            distance (float, optional): Distance of the camera. Defaults to 1.4.
+            yaw (float, optional): Yaw of the camera. Defaults to 45.
+            pitch (float, optional): Pitch of the camera. Defaults to -30.
+            roll (int, optional): Rool of the camera. Defaults to 0.
+
+        Returns:
+            RGB np.ndarray or None: An RGB array if mode is 'rgb_array', else None.
+        """
+        target_position = target_position if target_position is not None else np.zeros(3)
+        return self.sim.render(
+            mode,
+            width=width,
+            height=height,
+            target_position=target_position,
+            distance=distance,
+            yaw=yaw,
+            pitch=pitch,
+            roll=roll,
+        )
