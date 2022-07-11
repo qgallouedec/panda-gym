@@ -44,6 +44,39 @@ class PandaNoTaskEnv(gym.Env):
         """Create the scene."""
         self.sim.create_plane(z_offset=-0.4)
         self.sim.create_table(length=1.1, width=0.7, height=0.4, x_offset=-0.3)
+        border_size = 0.05
+        self.sim.create_box(
+            body_name="border0",
+            half_extents=np.array([1.1, border_size, border_size]) / 2,
+            mass=0.0,
+            position=np.array([-0.3, 0.325, border_size/2]),
+            specular_color=np.zeros(3),
+            rgba_color=np.array([0.95, 0.95, 0.95, 1]),
+        )
+        self.sim.create_box(
+            body_name="border1",
+            half_extents=np.array([1.1, border_size, border_size]) / 2,
+            mass=0.0,
+            position=np.array([-0.3, -0.325, border_size/2]),
+            specular_color=np.zeros(3),
+            rgba_color=np.array([0.95, 0.95, 0.95, 1]),
+        )
+        self.sim.create_box(
+            body_name="border2",
+            half_extents=np.array([border_size, 0.6, border_size]) / 2,
+            mass=0.0,
+            position=np.array([0.225, 0.0, border_size/2]),
+            specular_color=np.zeros(3),
+            rgba_color=np.array([0.95, 0.95, 0.95, 1]),
+        )
+        self.sim.create_box(
+            body_name="border3",
+            half_extents=np.array([border_size, 0.6, border_size]) / 2,
+            mass=0.0,
+            position=np.array([-0.225, 0.0, border_size/2]),
+            specular_color=np.zeros(3),
+            rgba_color=np.array([0.95, 0.95, 0.95, 1]),
+        )
         for i in range(self.nb_objects):
             self.sim.create_box(
                 body_name="object" + str(i),
@@ -86,8 +119,8 @@ class PandaNoTaskEnv(gym.Env):
         self.robot.reset()
         for i in range(self.nb_objects):
             self.sim.set_base_pose(
-                "object" + str(i),  # add 0.1 : trick not to be between two cells
-                np.array([self.object_size * i + 0.1, 0.1, self.object_size / 2]),
+                "object" + str(i),
+                np.array([self.object_size * i, 0.0, self.object_size / 2]),
                 np.array([0.0, 0.0, 0.0, 1.0]),
             )
         obs = self.robot.get_obs()
