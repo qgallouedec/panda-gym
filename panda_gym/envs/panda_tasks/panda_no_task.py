@@ -49,7 +49,7 @@ class PandaNoTaskEnv(gym.Env):
             body_name="border0",
             half_extents=np.array([1.1, border_size, border_size]) / 2,
             mass=0.0,
-            position=np.array([-0.3, 0.325, border_size/2]),
+            position=np.array([-0.3, 0.325, border_size / 2]),
             specular_color=np.zeros(3),
             rgba_color=np.array([0.95, 0.95, 0.95, 1]),
         )
@@ -57,7 +57,7 @@ class PandaNoTaskEnv(gym.Env):
             body_name="border1",
             half_extents=np.array([1.1, border_size, border_size]) / 2,
             mass=0.0,
-            position=np.array([-0.3, -0.325, border_size/2]),
+            position=np.array([-0.3, -0.325, border_size / 2]),
             specular_color=np.zeros(3),
             rgba_color=np.array([0.95, 0.95, 0.95, 1]),
         )
@@ -65,7 +65,7 @@ class PandaNoTaskEnv(gym.Env):
             body_name="border2",
             half_extents=np.array([border_size, 0.6, border_size]) / 2,
             mass=0.0,
-            position=np.array([0.225, 0.0, border_size/2]),
+            position=np.array([0.225, 0.0, border_size / 2]),
             specular_color=np.zeros(3),
             rgba_color=np.array([0.95, 0.95, 0.95, 1]),
         )
@@ -73,7 +73,7 @@ class PandaNoTaskEnv(gym.Env):
             body_name="border3",
             half_extents=np.array([border_size, 0.6, border_size]) / 2,
             mass=0.0,
-            position=np.array([-0.225, 0.0, border_size/2]),
+            position=np.array([-0.225, 0.0, border_size / 2]),
             specular_color=np.zeros(3),
             rgba_color=np.array([0.95, 0.95, 0.95, 1]),
         )
@@ -90,26 +90,14 @@ class PandaNoTaskEnv(gym.Env):
         observation = []
         for i in range(self.nb_objects):
             object_position = np.array(self.sim.get_base_position("object" + str(i)))
-            object_rotation = np.array(self.sim.get_base_rotation("object" + str(i)))
-            object_velocity = np.array(self.sim.get_base_velocity("object" + str(i)))
-            object_angular_velocity = np.array(self.sim.get_base_angular_velocity("object" + str(i)))
-            observation.append(
-                np.concatenate(
-                    (
-                        object_position,
-                        object_rotation,
-                        object_velocity,
-                        object_angular_velocity,
-                    )
-                )
-            )
+            observation.append(np.concatenate((object_position,)))
         observation = np.concatenate(observation)
         return observation
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, Dict[str, Any]]:
         self.robot.set_action(action)
         self.sim.step()
-        obs = self.robot.get_obs()
+        obs = self.robot.get_obs()[[0, 1, 2, 6]]
         if self.nb_objects > 0:
             obs = np.concatenate((obs, self.get_objects_pos()))
         reward, done, info = 0.0, False, {}
@@ -123,7 +111,7 @@ class PandaNoTaskEnv(gym.Env):
                 np.array([self.object_size * i, 0.0, self.object_size / 2]),
                 np.array([0.0, 0.0, 0.0, 1.0]),
             )
-        obs = self.robot.get_obs()
+        obs = self.robot.get_obs()[[0, 1, 2, 6]]
         if self.nb_objects > 0:
             obs = np.concatenate((obs, self.get_objects_pos()))
         return obs
