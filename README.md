@@ -1,6 +1,6 @@
 # panda-gym
 
-Set of OpenAI/gym robotic environments based on PyBullet physics engine.
+Set of robotic environments based on PyBullet physics engine and gymnasium.
 
 [![PyPI version](https://img.shields.io/pypi/v/panda-gym.svg?logo=pypi&logoColor=FFE873)](https://pypi.org/project/panda-gym/)
 [![Downloads](https://pepy.tech/badge/panda-gym)](https://pepy.tech/project/panda-gym)
@@ -32,16 +32,19 @@ pip install -e panda-gym
 ## Usage
 
 ```python
-import gym
+import gymnasium as gym
 import panda_gym
 
-env = gym.make('PandaReach-v2', render=True)
+env = gym.make('PandaReach-v3', render=True)
 
-obs = env.reset()
-done = False
-while not done:
+observation, info = env.reset()
+
+for _ in range(1000):
     action = env.action_space.sample() # random action
-    obs, reward, done, info = env.step(action)
+    observation, reward, terminated, truncated, info = env.step(action)
+
+    if terminated or truncated:
+        observation, info = env.reset()
 
 env.close()
 ```
@@ -52,12 +55,12 @@ You can also [![Open in Colab](https://colab.research.google.com/assets/colab-ba
 
 |                                  |                                                |
 | :------------------------------: | :--------------------------------------------: |
-|         `PandaReach-v2`          |                 `PandaPush-v2`                 |
-| ![PandaReach-v2](docs/_static/img/reach.png) |         ![PandaPush-v2](docs/_static/img/push.png)         |
-|         `PandaSlide-v2`          |             `PandaPickAndPlace-v2`             |
-| ![PandaSlide-v2](docs/_static/img/slide.png) | ![PandaPickAndPlace-v2](docs/_static/img/pickandplace.png) |
-|         `PandaStack-v2`          |              `PandaFlip-v2`                    |
-| ![PandaStack-v2](docs/_static/img/stack.png) | ![PandaFlip-v2](docs/_static/img/flip.png) |
+|         `PandaReach-v3`          |                 `PandaPush-v3`                 |
+| ![PandaReach-v3](docs/_static/img/reach.png) |         ![PandaPush-v3](docs/_static/img/push.png)         |
+|         `PandaSlide-v3`          |             `PandaPickAndPlace-v3`             |
+| ![PandaSlide-v3](docs/_static/img/slide.png) | ![PandaPickAndPlace-v3](docs/_static/img/pickandplace.png) |
+|         `PandaStack-v3`          |              `PandaFlip-v3`                    |
+| ![PandaStack-v3](docs/_static/img/stack.png) | ![PandaFlip-v3](docs/_static/img/flip.png) |
 
 ## Baselines results
 

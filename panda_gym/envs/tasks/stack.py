@@ -1,4 +1,4 @@
-from typing import Any, Dict, Tuple, Union
+from typing import Any, Dict, Tuple
 
 import numpy as np
 
@@ -118,14 +118,14 @@ class Stack(Task):
         # if distance(object1_position, object2_position) > 0.1:
         return object1_position, object2_position
 
-    def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> Union[np.ndarray, float]:
+    def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> np.ndarray:
         # must be vectorized !!
         d = distance(achieved_goal, desired_goal)
-        return np.array((d < self.distance_threshold), dtype=np.float64)
+        return np.array((d < self.distance_threshold), dtype=np.bool8)
 
-    def compute_reward(self, achieved_goal, desired_goal, info: Dict[str, Any]) -> Union[np.ndarray, float]:
+    def compute_reward(self, achieved_goal, desired_goal, info: Dict[str, Any]) -> np.ndarray:
         d = distance(achieved_goal, desired_goal)
         if self.reward_type == "sparse":
-            return -np.array((d > self.distance_threshold), dtype=np.float64)
+            return -np.array((d > self.distance_threshold), dtype=np.float32)
         else:
-            return -d
+            return -d.astype(np.float32)

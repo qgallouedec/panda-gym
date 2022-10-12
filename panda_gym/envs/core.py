@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple
 
-import gym
-import gym.spaces
-import gym.utils.seeding
-import gym_robotics
+import gymnasium as gym
 import numpy as np
+from gymnasium import spaces
+from gymnasium.utils import seeding
 
 from panda_gym.pybullet import PyBullet
 
@@ -26,7 +25,7 @@ class PyBulletRobot(ABC):
         body_name: str,
         file_name: str,
         base_position: np.ndarray,
-        action_space: gym.spaces.Space,
+        action_space: spaces.Space,
         joint_indices: np.ndarray,
         joint_forces: np.ndarray,
     ) -> None:
@@ -187,19 +186,15 @@ class Task(ABC):
             return self.goal.copy()
 
     @abstractmethod
-    def is_success(
-        self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}
-    ) -> Union[np.ndarray, float]:
+    def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}) -> np.ndarray:
         """Returns whether the achieved goal match the desired goal."""
 
     @abstractmethod
-    def compute_reward(
-        self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}
-    ) -> Union[np.ndarray, float]:
+    def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}) -> np.ndarray:
         """Compute reward associated to the achieved and the desired goal."""
 
 
-class RobotTaskEnv(gym_robotics.GoalEnv):
+class RobotTaskEnv(gym.Env):
     """Robotic task goal env, as the junction of a task and a robot.
 
     Args:
@@ -207,75 +202,96 @@ class RobotTaskEnv(gym_robotics.GoalEnv):
         task (Task): The task.
     """
 
-    metadata = {"render.modes": ["human", "rgb_array"]}
+    metadata = {"render_modes": ["human", "rgb_array"]}
 
     def __init__(self, robot: PyBulletRobot, task: Task) -> None:
         assert robot.sim == task.sim, "The robot and the task must belong to the same simulation."
         self.sim = robot.sim
         self.robot = robot
         self.task = task
-        obs = self.reset()  # required for init; seed can be changed later
-        observation_shape = obs["observation"].shape
-        achieved_goal_shape = obs["achieved_goal"].shape
-        desired_goal_shape = obs["achieved_goal"].shape
-        self.observation_space = gym.spaces.Dict(
+        observation, _ = self.reset()  # required for init; seed can be changed later
+        observation_shape = observation["observation"].shape
+        achieved_goal_shape = observation["achieved_goal"].shape
+        desired_goal_shape = observation["achieved_goal"].shape
+        self.observation_space = spaces.Dict(
             dict(
-                observation=gym.spaces.Box(-10.0, 10.0, shape=observation_shape, dtype=np.float32),
-                desired_goal=gym.spaces.Box(-10.0, 10.0, shape=achieved_goal_shape, dtype=np.float32),
-                achieved_goal=gym.spaces.Box(-10.0, 10.0, shape=desired_goal_shape, dtype=np.float32),
+                observation=spaces.Box(-10.0, 10.0, shape=observation_shape, dtype=np.float32),
+                desired_goal=spaces.Box(-10.0, 10.0, shape=achieved_goal_shape, dtype=np.float32),
+                achieved_goal=spaces.Box(-10.0, 10.0, shape=desired_goal_shape, dtype=np.float32),
             )
         )
         self.action_space = self.robot.action_space
         self.compute_reward = self.task.compute_reward
-        self._saved_goal = dict()
+        self._saved_goal = dict()  # For state saving and restoring
 
     def _get_obs(self) -> Dict[str, np.ndarray]:
-        robot_obs = self.robot.get_obs()  # robot state
-        task_obs = self.task.get_obs()  # object position, velococity, etc...
+        robot_obs = self.robot.get_obs().astype(np.float32)  # robot state
+        task_obs = self.task.get_obs().astype(np.float32)  # object position, velococity, etc...
         observation = np.concatenate([robot_obs, task_obs])
-        achieved_goal = self.task.get_achieved_goal()
+        achieved_goal = self.task.get_achieved_goal().astype(np.float32)
         return {
             "observation": observation,
             "achieved_goal": achieved_goal,
-            "desired_goal": self.task.get_goal(),
+            "desired_goal": self.task.get_goal().astype(np.float32),
         }
 
-    def reset(self, seed: Optional[int] = None) -> Dict[str, np.ndarray]:
-        self.task.np_random, seed = gym.utils.seeding.np_random(seed)
+    def reset(
+        self, seed: Optional[int] = None, options: Optional[dict] = None
+    ) -> Tuple[Dict[str, np.ndarray], Dict[str, Any]]:
+        super().reset(seed=seed, options=options)
+        self.task.np_random, seed = seeding.np_random(seed)
         with self.sim.no_rendering():
             self.robot.reset()
             self.task.reset()
-        return self._get_obs()
+        observation = self._get_obs()
+        info = {"is_success": self.task.is_success(observation["achieved_goal"], self.task.get_goal())}
+        return observation, info
 
     def save_state(self) -> int:
+        """Save the current state of the envrionment. Restore with `restore_state`.
+
+        Returns:
+            int: State unique identifier.
+        """
         state_id = self.sim.save_state()
         self._saved_goal[state_id] = self.task.goal
         return state_id
 
     def restore_state(self, state_id: int) -> None:
+        """Resotre the state associated with the unique identifier.
+
+        Args:
+            state_id (int): State unique identifier.
+        """
         self.sim.restore_state(state_id)
         self.task.goal = self._saved_goal[state_id]
 
     def remove_state(self, state_id: int) -> None:
+        """Remove a saved state.
+
+        Args:
+            state_id (int): State unique identifier.
+        """
         self._saved_goal.pop(state_id)
         self.sim.remove_state(state_id)
 
-    def step(self, action: np.ndarray) -> Tuple[Dict[str, np.ndarray], float, bool, Dict[str, Any]]:
+    def step(self, action: np.ndarray) -> Tuple[Dict[str, np.ndarray], float, bool, bool, Dict[str, Any]]:
         self.robot.set_action(action)
         self.sim.step()
-        obs = self._get_obs()
-        done = False
-        info = {"is_success": self.task.is_success(obs["achieved_goal"], self.task.get_goal())}
-        reward = self.task.compute_reward(obs["achieved_goal"], self.task.get_goal(), info)
-        assert isinstance(reward, float)  # needed for pytype cheking
-        return obs, reward, done, info
+        observation = self._get_obs()
+        # An episode is terminated iff the agent has reached the target
+        terminated = bool(self.task.is_success(observation["achieved_goal"], self.task.get_goal()))
+        truncated = False
+        info = {"is_success": terminated}
+        reward = float(self.task.compute_reward(observation["achieved_goal"], self.task.get_goal(), info))
+        return observation, reward, terminated, truncated, info
 
     def close(self) -> None:
         self.sim.close()
 
     def render(
         self,
-        mode: str,
+        mode: str = "human",
         width: int = 720,
         height: int = 480,
         target_position: Optional[np.ndarray] = None,

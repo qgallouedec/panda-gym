@@ -87,7 +87,7 @@ You now have everything you need to define your custom robot. You only have to i
 .. code-block:: python
 
     import numpy as np
-    from gym import spaces
+    from gymnasium import spaces
 
     from panda_gym.envs.core import PyBulletRobot
 

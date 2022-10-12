@@ -24,7 +24,7 @@ class PyBullet:
 
     def __init__(self, render: bool = False, n_substeps: int = 20, background_color: Optional[np.ndarray] = None) -> None:
         background_color = background_color if background_color is not None else np.array([223.0, 54.0, 45.0])
-        self.background_color = background_color.astype(np.float64) / 255
+        self.background_color = background_color.astype(np.float32) / 255
         options = "--background_color_red={} \
                     --background_color_green={} \
                     --background_color_blue={}".format(
@@ -123,7 +123,7 @@ class PyBullet:
                     "The use of the render method is not recommended when the environment "
                     "has not been created with render=True. The rendering will probably be weird. "
                     "Prefer making the environment with option `render=True`. For example: "
-                    "`env = gym.make('PandaReach-v2', render=True)`.",
+                    "`env = gym.make('PandaReach-v3', render=True)`.",
                     UserWarning,
                 )
             view_matrix = self.physics_client.computeViewMatrixFromYawPitchRoll(

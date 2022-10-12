@@ -1,12 +1,12 @@
-import gym
+import gymnasium as gym
 import numpy as np
 
 import panda_gym
 
 
 def test_seed_reach():
-    final_states = []
-    env = gym.make("PandaReach-v2")
+    final_observations = []
+    env = gym.make("PandaReach-v3")
     actions = [
         np.array([-0.931, 0.979, -0.385]),
         np.array([-0.562, 0.391, -0.532]),
@@ -18,17 +18,19 @@ def test_seed_reach():
     for _ in range(2):
         env.reset(seed=12345)
         for action in actions:
-            state, _, _, _ = env.step(action)
-        final_states.append(state)
+            observation, _, terminated, truncated, _ = env.step(action)
+            if terminated or truncated:
+                observation, _ = env.reset()
+        final_observations.append(observation)
 
-    assert np.allclose(final_states[0]["observation"], final_states[1]["observation"])
-    assert np.allclose(final_states[0]["achieved_goal"], final_states[1]["achieved_goal"])
-    assert np.allclose(final_states[0]["desired_goal"], final_states[1]["desired_goal"])
+    assert np.allclose(final_observations[0]["observation"], final_observations[1]["observation"])
+    assert np.allclose(final_observations[0]["achieved_goal"], final_observations[1]["achieved_goal"])
+    assert np.allclose(final_observations[0]["desired_goal"], final_observations[1]["desired_goal"])
 
 
 def test_seed_push():
-    final_states = []
-    env = gym.make("PandaPush-v2")
+    final_observations = []
+    env = gym.make("PandaPush-v3")
     actions = [
         np.array([0.925, 0.352, -0.014]),
         np.array([0.400, -0.018, -0.042]),
@@ -40,17 +42,19 @@ def test_seed_push():
     for _ in range(2):
         env.reset(seed=6789)
         for action in actions:
-            state, _, _, _ = env.step(action)
-        final_states.append(state)
+            observation, _, terminated, truncated, _ = env.step(action)
+            if terminated or truncated:
+                observation, _ = env.reset()
+        final_observations.append(observation)
 
-    assert np.allclose(final_states[0]["observation"], final_states[1]["observation"])
-    assert np.allclose(final_states[0]["achieved_goal"], final_states[1]["achieved_goal"])
-    assert np.allclose(final_states[0]["desired_goal"], final_states[1]["desired_goal"])
+    assert np.allclose(final_observations[0]["observation"], final_observations[1]["observation"])
+    assert np.allclose(final_observations[0]["achieved_goal"], final_observations[1]["achieved_goal"])
+    assert np.allclose(final_observations[0]["desired_goal"], final_observations[1]["desired_goal"])
 
 
 def test_seed_slide():
-    final_states = []
-    env = gym.make("PandaSlide-v2")
+    final_observations = []
+    env = gym.make("PandaSlide-v3")
     actions = [
         np.array([0.245, 0.786, 0.329]),
         np.array([-0.414, 0.343, -0.839]),
@@ -62,16 +66,18 @@ def test_seed_slide():
     for _ in range(2):
         env.reset(seed=13795)
         for action in actions:
-            state, _, _, _ = env.step(action)
-        final_states.append(state)
-    assert np.allclose(final_states[0]["observation"], final_states[1]["observation"])
-    assert np.allclose(final_states[0]["achieved_goal"], final_states[1]["achieved_goal"])
-    assert np.allclose(final_states[0]["desired_goal"], final_states[1]["desired_goal"])
+            observation, _, terminated, truncated, _ = env.step(action)
+            if terminated or truncated:
+                observation, _ = env.reset()
+        final_observations.append(observation)
+    assert np.allclose(final_observations[0]["observation"], final_observations[1]["observation"])
+    assert np.allclose(final_observations[0]["achieved_goal"], final_observations[1]["achieved_goal"])
+    assert np.allclose(final_observations[0]["desired_goal"], final_observations[1]["desired_goal"])
 
 
 def test_seed_pick_and_place():
-    final_states = []
-    env = gym.make("PandaPickAndPlace-v2")
+    final_observations = []
+    env = gym.make("PandaPickAndPlace-v3")
     actions = [
         np.array([0.429, -0.287, 0.804, -0.592]),
         np.array([0.351, -0.136, 0.296, -0.223]),
@@ -83,16 +89,19 @@ def test_seed_pick_and_place():
     for _ in range(2):
         env.reset(seed=794512)
         for action in actions:
-            state, _, _, _ = env.step(action)
-        final_states.append(state)
-    assert np.allclose(final_states[0]["observation"], final_states[1]["observation"])
-    assert np.allclose(final_states[0]["achieved_goal"], final_states[1]["achieved_goal"])
-    assert np.allclose(final_states[0]["desired_goal"], final_states[1]["desired_goal"])
+            observation, _, terminated, truncated, _ = env.step(action)
+            if terminated or truncated:
+                observation, _ = env.reset()
+        final_observations.append(observation)
+
+    assert np.allclose(final_observations[0]["observation"], final_observations[1]["observation"])
+    assert np.allclose(final_observations[0]["achieved_goal"], final_observations[1]["achieved_goal"])
+    assert np.allclose(final_observations[0]["desired_goal"], final_observations[1]["desired_goal"])
 
 
 def test_seed_stack():
-    final_states = []
-    env = gym.make("PandaStack-v2")
+    final_observations = []
+    env = gym.make("PandaStack-v3")
     actions = [
         np.array([-0.609, 0.73, -0.433, 0.76]),
         np.array([0.414, 0.327, 0.275, -0.196]),
@@ -104,8 +113,10 @@ def test_seed_stack():
     for _ in range(2):
         env.reset(seed=657894)
         for action in actions:
-            state, _, _, _ = env.step(action)
-        final_states.append(state)
-    assert np.allclose(final_states[0]["observation"], final_states[1]["observation"])
-    assert np.allclose(final_states[0]["achieved_goal"], final_states[1]["achieved_goal"])
-    assert np.allclose(final_states[0]["desired_goal"], final_states[1]["desired_goal"])
+            observation, _, terminated, truncated, _ = env.step(action)
+            if terminated or truncated:
+                observation, _ = env.reset()
+        final_observations.append(observation)
+    assert np.allclose(final_observations[0]["observation"], final_observations[1]["observation"])
+    assert np.allclose(final_observations[0]["achieved_goal"], final_observations[1]["achieved_goal"])
+    assert np.allclose(final_observations[0]["desired_goal"], final_observations[1]["desired_goal"])

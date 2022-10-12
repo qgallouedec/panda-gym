@@ -3,7 +3,7 @@
 Installation
 ============
 
-``panda-gym`` is at least compatible with Windows, MacOS and Ubuntu, and python 3.7, 3.8 and 3.9.
+``panda-gym`` is at least compatible with Windows, MacOS and Ubuntu, and python 3.7, 3.8, 3.9 and 3.10.
 
 With pip
 --------

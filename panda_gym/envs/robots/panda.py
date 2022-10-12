@@ -1,7 +1,7 @@
 from typing import Optional
 
 import numpy as np
-from gym import spaces
+from gymnasium import spaces
 
 from panda_gym.envs.core import PyBulletRobot
 from panda_gym.pybullet import PyBullet
@@ -113,10 +113,10 @@ class Panda(PyBulletRobot):
         # fingers opening
         if not self.block_gripper:
             fingers_width = self.get_fingers_width()
-            obs = np.concatenate((ee_position, ee_velocity, [fingers_width]))
+            observation = np.concatenate((ee_position, ee_velocity, [fingers_width]))
         else:
-            obs = np.concatenate((ee_position, ee_velocity))
-        return obs
+            observation = np.concatenate((ee_position, ee_velocity))
+        return observation
 
     def reset(self) -> None:
         self.set_joint_neutral()
