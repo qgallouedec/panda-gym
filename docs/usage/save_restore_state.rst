@@ -1,7 +1,7 @@
 .. _save_restore_states:
 
 Save and Restore States
-==============
+=======================
 
 It is possible to save a state of the entire simulation environment. This is useful if your application requires lookahead search. Below is an example of a greedy random search.
 
