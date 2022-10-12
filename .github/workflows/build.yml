@@ -46,7 +46,7 @@ jobs:
     - name: Check codestyle
       run: |
         black -l 127 --check panda_gym test
-        isort -l 127 --check panda_gym test
+        isort -l 127 -profile black --check panda_gym test
     - name: Make docs
       run: |
         make html
