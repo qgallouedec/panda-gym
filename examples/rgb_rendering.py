@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 import panda_gym
 from numpngw import write_apng  # pip install numpngw or pip install panda-gym[extra]
 

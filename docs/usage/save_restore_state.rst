@@ -7,7 +7,7 @@ It is possible to save a state of the entire simulation environment. This is use
 
 .. code-block:: python
 
-    import gym
+    import gymnasium as gym
     import panda_gym
 
     env = gym.make("PandaReachDense-v2", render=True)

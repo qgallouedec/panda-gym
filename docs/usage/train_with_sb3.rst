@@ -27,7 +27,7 @@ Now that SB3 is installed, you can run the following code to train an agent. You
 
 .. code-block:: python
 
-    import gym
+    import gymnasium as gym
     import panda_gym
     from stable_baselines3 import DDPG
 

@@ -32,7 +32,7 @@ pip install -e panda-gym
 ## Usage
 
 ```python
-import gym
+import gymnasium as gym
 import panda_gym
 
 env = gym.make('PandaReach-v2', render=True)

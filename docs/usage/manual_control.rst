@@ -7,7 +7,7 @@ It is possible to manually control the robot, giving it deterministic actions, d
 
 .. code-block:: python
 
-    import gym
+    import gymnasium as gym
     import panda_gym
 
     env = gym.make("PandaReach-v2", render=True)

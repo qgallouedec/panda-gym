@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional, Tuple, Union
 
-import gym
-import gym.spaces
-import gym.utils.seeding
+import gymnasium as gym
 import numpy as np
+from gymnasium import spaces
+from gymnasium.utils import seeding
 
 from panda_gym.pybullet import PyBullet
 
@@ -25,7 +25,7 @@ class PyBulletRobot(ABC):
         body_name: str,
         file_name: str,
         base_position: np.ndarray,
-        action_space: gym.spaces.Space,
+        action_space: spaces.Space,
         joint_indices: np.ndarray,
         joint_forces: np.ndarray,
     ) -> None:
@@ -217,11 +217,11 @@ class RobotTaskEnv(gym.Env):
         observation_shape = obs["observation"].shape
         achieved_goal_shape = obs["achieved_goal"].shape
         desired_goal_shape = obs["achieved_goal"].shape
-        self.observation_space = gym.spaces.Dict(
+        self.observation_space = spaces.Dict(
             dict(
-                observation=gym.spaces.Box(-10.0, 10.0, shape=observation_shape, dtype=np.float32),
-                desired_goal=gym.spaces.Box(-10.0, 10.0, shape=achieved_goal_shape, dtype=np.float32),
-                achieved_goal=gym.spaces.Box(-10.0, 10.0, shape=desired_goal_shape, dtype=np.float32),
+                observation=spaces.Box(-10.0, 10.0, shape=observation_shape, dtype=np.float32),
+                desired_goal=spaces.Box(-10.0, 10.0, shape=achieved_goal_shape, dtype=np.float32),
+                achieved_goal=spaces.Box(-10.0, 10.0, shape=desired_goal_shape, dtype=np.float32),
             )
         )
         self.action_space = self.robot.action_space
@@ -240,7 +240,7 @@ class RobotTaskEnv(gym.Env):
         }
 
     def reset(self, seed: Optional[int] = None) -> Dict[str, np.ndarray]:
-        self.task.np_random, seed = gym.utils.seeding.np_random(seed)
+        self.task.np_random, seed = seeding.np_random(seed)
         with self.sim.no_rendering():
             self.robot.reset()
             self.task.reset()
