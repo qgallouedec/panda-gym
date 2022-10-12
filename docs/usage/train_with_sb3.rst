@@ -10,16 +10,6 @@ Install SB3
 
 To install SB3, follow the instructions from its documentation `Install stable-baselines3 <https://stable-baselines3.readthedocs.io/en/master/guide/install.html>`_.
 
-
-Alternatively, you can install ``panda-gym`` and SB3 directly with a single command: 
-
-.. code-block:: bash
-
-    pip install panda-gym[extra]
-
-.. warning::
-    If you use `zsh` terminal, the syntax is ``pip install 'panda-gym[extra]'``
-
 Train
 -----
 
