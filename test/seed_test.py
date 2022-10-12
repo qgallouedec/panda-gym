@@ -93,7 +93,7 @@ def test_seed_pick_and_place():
             if terminated or truncated:
                 observation, _ = env.reset()
         final_observations.append(observation)
-        
+
     assert np.allclose(final_observations[0]["observation"], final_observations[1]["observation"])
     assert np.allclose(final_observations[0]["achieved_goal"], final_observations[1]["achieved_goal"])
     assert np.allclose(final_observations[0]["desired_goal"], final_observations[1]["desired_goal"])
