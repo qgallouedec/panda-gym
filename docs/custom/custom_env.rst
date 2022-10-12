@@ -34,10 +34,10 @@ You can now test your environment by running the following code.
 
     env = MyRobotTaskEnv(render=True)
 
-    obs, info = env.reset()
+    observation, info = env.reset()
     done = False
     while not done:
         action = env.action_space.sample() # random action
-        obs, reward, done, info = env.step(action)
+        observation, reward, done, info = env.step(action)
         env.render() # wait a bit to give a realistic temporal rendering
 

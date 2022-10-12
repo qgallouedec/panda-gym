@@ -11,14 +11,14 @@ It is possible to manually control the robot, giving it deterministic actions, d
     import panda_gym
 
     env = gym.make("PandaReach-v2", render=True)
-    obs, info = env.reset()
+    observation, info = env.reset()
     done = False
 
     while not done:
-        current_position = obs["observation"][0:3]
-        desired_position = obs["desired_goal"][0:3]
+        current_position = observation["observation"][0:3]
+        desired_position = observation["desired_goal"][0:3]
         action = 5.0 * (desired_position - current_position)
-        obs, reward, done, info = env.step(action)
+        observation, reward, done, info = env.step(action)
         env.render()
 
     env.close()

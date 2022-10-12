@@ -7,13 +7,13 @@ env = gym.make("PandaStack-v2", render=True)
 images = []
 
 
-obs, info = env.reset()
+observation, info = env.reset()
 done = False
 images.append(env.render("rgb_array"))
 
 while not done:
     action = env.action_space.sample()
-    obs, reward, done, info = env.step(action)
+    observation, reward, done, info = env.step(action)
     images.append(env.render("rgb_array"))
 
 env.close()

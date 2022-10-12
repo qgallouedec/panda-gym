@@ -11,13 +11,13 @@ It is possible to save a state of the entire simulation environment. This is use
     import panda_gym
 
     env = gym.make("PandaReachDense-v2", render=True)
-    obs, info = env.reset()
+    observation, info = env.reset()
 
     while True:
         state_id = env.save_state()
         best_action = None
         rew = best_rew = env.task.compute_reward(
-            obs["achieved_goal"], obs["desired_goal"], None) 
+            observation["achieved_goal"], observation["desired_goal"], None) 
 
         while rew <= best_rew:
             env.restore_state(state_id)
@@ -25,7 +25,7 @@ It is possible to save a state of the entire simulation environment. This is use
             _, rew, _, _ = env.step(a)
 
         env.restore_state(state_id)
-        obs, _, _, _ = env.step(a)
+        observation, _, _, _ = env.step(a)
         env.remove_state(state_id)
 
     env.close()

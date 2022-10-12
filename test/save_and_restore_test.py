@@ -14,17 +14,17 @@ def test_save_and_restore_state():
 
     # Perform the action
     action = env.action_space.sample()
-    next_obs1, reward, done, info = env.step(action)
+    next_observation1, reward, done, info = env.step(action)
 
     # Restore and perform the same action
     env.reset()
     env.restore_state(state_id)
-    next_obs2, reward, done, info = env.step(action)
+    next_observation2, reward, done, info = env.step(action)
 
     # The observations in both cases should be equals
-    assert np.all(next_obs1["achieved_goal"] == next_obs2["achieved_goal"])
-    assert np.all(next_obs1["observation"] == next_obs2["observation"])
-    assert np.all(next_obs1["desired_goal"] == next_obs2["desired_goal"])
+    assert np.all(next_observation1["achieved_goal"] == next_observation2["achieved_goal"])
+    assert np.all(next_observation1["observation"] == next_observation2["observation"])
+    assert np.all(next_observation1["desired_goal"] == next_observation2["desired_goal"])
 
 
 def test_remove_state():

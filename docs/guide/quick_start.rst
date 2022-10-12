@@ -12,11 +12,11 @@ Once ``panda-gym`` installed, you can start the "Reach" task by executing the fo
 
     env = gym.make('PandaReach-v2', render=True)
 
-    obs, info = env.reset()
+    observation, info = env.reset()
     done = False
     while not done:
         action = env.action_space.sample() # random action
-        obs, reward, done, info = env.step(action)
+        observation, reward, done, info = env.step(action)
         env.render() # wait the right amount of time to make the rendering real-time
     
 
