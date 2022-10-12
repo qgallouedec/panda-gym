@@ -188,13 +188,13 @@ class Task(ABC):
     @abstractmethod
     def is_success(
         self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}
-    ) -> Union[np.ndarray, float]:
+    ) -> np.ndarray:
         """Returns whether the achieved goal match the desired goal."""
 
     @abstractmethod
     def compute_reward(
         self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}
-    ) -> Union[np.ndarray, float]:
+    ) -> np.ndarray:
         """Compute reward associated to the achieved and the desired goal."""
 
 

@@ -79,13 +79,13 @@ class Flip(Task):
         object_rotation = np.zeros(3)
         return object_position, object_rotation
 
-    def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> Union[np.ndarray, float]:
+    def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> np.ndarray:
         d = angle_distance(achieved_goal, desired_goal)
-        return np.array(d < self.distance_threshold, dtype=np.float64)
+        return np.array(d < self.distance_threshold, dtype=np.bool8)
 
-    def compute_reward(self, achieved_goal, desired_goal, info: Dict[str, Any]) -> Union[np.ndarray, float]:
+    def compute_reward(self, achieved_goal, desired_goal, info: Dict[str, Any]) -> np.ndarray:
         d = angle_distance(achieved_goal, desired_goal)
         if self.reward_type == "sparse":
-            return -np.array(d > self.distance_threshold, dtype=np.float64)
+            return -np.array(d > self.distance_threshold, dtype=np.float32)
         else:
             return -d
