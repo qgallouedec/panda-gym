@@ -1,6 +1,7 @@
 import gymnasium as gym
-import panda_gym
 from numpngw import write_apng  # pip install numpngw or pip install panda-gym[extra]
+
+import panda_gym
 
 env = gym.make("PandaStack-v2", render=True)
 images = []
