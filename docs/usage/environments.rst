@@ -27,39 +27,39 @@ The complete set of environments present in the package is presented in the foll
 Sparce reward, end-effector control (default setting)
 -----------------------------------------------------
 
-* ``PandaReach-v2``
-* ``PandaPush-v2``
-* ``PandaSlide-v2``
-* ``PandaPickAndPlace-v2``
-* ``PandaStack-v2``
-* ``PandaFlip-v2``
+* ``PandaReach-v3``
+* ``PandaPush-v3``
+* ``PandaSlide-v3``
+* ``PandaPickAndPlace-v3``
+* ``PandaStack-v3``
+* ``PandaFlip-v3``
 
 Dense reward, end-effector control
 ----------------------------------
 
-* ``PandaReachDense-v2``
-* ``PandaPushDense-v2``
-* ``PandaSlideDense-v2``
-* ``PandaPickAndPlaceDense-v2``
-* ``PandaStackDense-v2``
-* ``PandaFlipDense-v2``
+* ``PandaReachDense-v3``
+* ``PandaPushDense-v3``
+* ``PandaSlideDense-v3``
+* ``PandaPickAndPlaceDense-v3``
+* ``PandaStackDense-v3``
+* ``PandaFlipDense-v3``
 
 Sparce reward, joints control
 -----------------------------
 
-* ``PandaReachJoints-v2``
-* ``PandaPushJoints-v2``
-* ``PandaSlideJoints-v2``
-* ``PandaPickAndPlaceJoints-v2``
-* ``PandaStackJoints-v2``
-* ``PandaFlipJoints-v2``
+* ``PandaReachJoints-v3``
+* ``PandaPushJoints-v3``
+* ``PandaSlideJoints-v3``
+* ``PandaPickAndPlaceJoints-v3``
+* ``PandaStackJoints-v3``
+* ``PandaFlipJoints-v3``
 
 Dense reward, joints control
 ----------------------------
 
-* ``PandaReachJointsDense-v2``
-* ``PandaPushJointsDense-v2``
-* ``PandaSlideJointsDense-v2``
-* ``PandaPickAndPlaceJointsDense-v2``
-* ``PandaStackJointsDense-v2``
-* ``PandaFlipJointsDense-v2``
+* ``PandaReachJointsDense-v3``
+* ``PandaPushJointsDense-v3``
+* ``PandaSlideJointsDense-v3``
+* ``PandaPickAndPlaceJointsDense-v3``
+* ``PandaStackJointsDense-v3``
+* ``PandaFlipJointsDense-v3``

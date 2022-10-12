@@ -123,7 +123,7 @@ class PyBullet:
                     "The use of the render method is not recommended when the environment "
                     "has not been created with render=True. The rendering will probably be weird. "
                     "Prefer making the environment with option `render=True`. For example: "
-                    "`env = gym.make('PandaReach-v2', render=True)`.",
+                    "`env = gym.make('PandaReach-v3', render=True)`.",
                     UserWarning,
                 )
             view_matrix = self.physics_client.computeViewMatrixFromYawPitchRoll(

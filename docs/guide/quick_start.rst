@@ -10,7 +10,7 @@ Once ``panda-gym`` installed, you can start the "Reach" task by executing the fo
     import gymnasium as gym
     import panda_gym
 
-    env = gym.make('PandaReach-v2', render=True)
+    env = gym.make('PandaReach-v3', render=True)
 
     observation, info = env.reset()
 

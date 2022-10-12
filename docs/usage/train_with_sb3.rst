@@ -3,7 +3,10 @@
 Train with stable-baselines3
 ============================
 
-You can train the environments with any OpenAI/gym compatible library. In this documentation we explain how to use one of them: `stable-baselines3 (SB3) <https://stable-baselines3.readthedocs.io/en/master/index.html>`_.
+.. warning::
+    SB3 is not compatible with ``panda-gym`` v3  for the moment. (See `SB3/PR#780 <https://github.com/DLR-RM/stable-baselines3/pull/780>`_). The following documentation is therefore not yet valid. To use ``panda-gym`` with SB3, you will have to use ``panda-gym==2.0.0``.
+
+You can train the environments with any gymnasium compatible library. In this documentation we explain how to use one of them: `stable-baselines3 (SB3) <https://stable-baselines3.readthedocs.io/en/master/index.html>`_.
 
 Install SB3
 -----------
@@ -21,7 +24,7 @@ Now that SB3 is installed, you can run the following code to train an agent. You
     import panda_gym
     from stable_baselines3 import DDPG
 
-    env = gym.make("PandaReach-v2")
+    env = gym.make("PandaReach-v3")
     model = DDPG(policy="MultiInputPolicy", env=env)
     model.train(30000)
 
@@ -48,11 +51,11 @@ To use it, follow the `instructions for its installation <https://stable-baselin
 
     python train.py --algo <ALGO> --env <ENV>
 
-For example, to train an agent with TQC on ``PandaPickAndPlace-v2``:
+For example, to train an agent with TQC on ``PandaPickAndPlace-v3``:
 
 .. code-block:: bash
 
-    python train.py --algo tqc --env PandaPickAndPlace-v2
+    python train.py --algo tqc --env PandaPickAndPlace-v3
 
 Enjoy
 ~~~~~

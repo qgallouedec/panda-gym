@@ -3,7 +3,7 @@ from numpngw import write_apng  # pip install numpngw
 
 import panda_gym
 
-env = gym.make("PandaStack-v2", render=True)
+env = gym.make("PandaStack-v3", render=True)
 images = []
 
 

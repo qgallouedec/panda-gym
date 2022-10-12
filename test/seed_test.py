@@ -6,7 +6,7 @@ import panda_gym
 
 def test_seed_reach():
     final_observations = []
-    env = gym.make("PandaReach-v2")
+    env = gym.make("PandaReach-v3")
     actions = [
         np.array([-0.931, 0.979, -0.385]),
         np.array([-0.562, 0.391, -0.532]),
@@ -30,7 +30,7 @@ def test_seed_reach():
 
 def test_seed_push():
     final_observations = []
-    env = gym.make("PandaPush-v2")
+    env = gym.make("PandaPush-v3")
     actions = [
         np.array([0.925, 0.352, -0.014]),
         np.array([0.400, -0.018, -0.042]),
@@ -54,7 +54,7 @@ def test_seed_push():
 
 def test_seed_slide():
     final_observations = []
-    env = gym.make("PandaSlide-v2")
+    env = gym.make("PandaSlide-v3")
     actions = [
         np.array([0.245, 0.786, 0.329]),
         np.array([-0.414, 0.343, -0.839]),
@@ -77,7 +77,7 @@ def test_seed_slide():
 
 def test_seed_pick_and_place():
     final_observations = []
-    env = gym.make("PandaPickAndPlace-v2")
+    env = gym.make("PandaPickAndPlace-v3")
     actions = [
         np.array([0.429, -0.287, 0.804, -0.592]),
         np.array([0.351, -0.136, 0.296, -0.223]),
@@ -101,7 +101,7 @@ def test_seed_pick_and_place():
 
 def test_seed_stack():
     final_observations = []
-    env = gym.make("PandaStack-v2")
+    env = gym.make("PandaStack-v3")
     actions = [
         np.array([-0.609, 0.73, -0.433, 0.76]),
         np.array([0.414, 0.327, 0.275, -0.196]),

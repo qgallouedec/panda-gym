@@ -7,7 +7,7 @@ import panda_gym
 
 
 def test_save_and_restore_state():
-    env = gym.make("PandaReach-v2")
+    env = gym.make("PandaReach-v3")
     env.reset()
 
     state_id = env.save_state()
@@ -28,7 +28,7 @@ def test_save_and_restore_state():
 
 
 def test_remove_state():
-    env = gym.make("PandaReach-v2")
+    env = gym.make("PandaReach-v3")
     env.reset()
     state_id = env.save_state()
     env.remove_state(state_id)
