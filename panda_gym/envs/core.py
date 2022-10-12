@@ -186,15 +186,11 @@ class Task(ABC):
             return self.goal.copy()
 
     @abstractmethod
-    def is_success(
-        self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}
-    ) -> np.ndarray:
+    def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}) -> np.ndarray:
         """Returns whether the achieved goal match the desired goal."""
 
     @abstractmethod
-    def compute_reward(
-        self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}
-    ) -> np.ndarray:
+    def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}) -> np.ndarray:
         """Compute reward associated to the achieved and the desired goal."""
 
 
