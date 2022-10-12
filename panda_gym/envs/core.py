@@ -239,12 +239,15 @@ class RobotTaskEnv(gym.Env):
             "desired_goal": self.task.get_goal(),
         }
 
-    def reset(self, seed: Optional[int] = None) -> Dict[str, np.ndarray]:
+    def reset(self, seed: Optional[int] = None) -> Tuple[Dict[str, np.ndarray], Dict[str, Any]]:
+        super().reset(seed=seed)
         self.task.np_random, seed = seeding.np_random(seed)
         with self.sim.no_rendering():
             self.robot.reset()
             self.task.reset()
-        return self._get_obs()
+        obs = self._get_obs()
+        info = {"is_success": self.task.is_success(obs["achieved_goal"], self.task.get_goal())}
+        return obs, info
 
     def save_state(self) -> int:
         state_id = self.sim.save_state()

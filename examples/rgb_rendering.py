@@ -6,7 +6,7 @@ env = gym.make("PandaStack-v2", render=True)
 images = []
 
 
-obs = env.reset()
+obs, info = env.reset()
 done = False
 images.append(env.render("rgb_array"))
 

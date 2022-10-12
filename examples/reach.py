@@ -3,7 +3,7 @@ import panda_gym
 
 env = gym.make("PandaReach-v2", render=True)
 
-obs = env.reset()
+obs, info = env.reset()
 done = False
 
 while not done:

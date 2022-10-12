@@ -11,7 +11,7 @@ It is possible to save a state of the entire simulation environment. This is use
     import panda_gym
 
     env = gym.make("PandaReachDense-v2", render=True)
-    obs = env.reset()
+    obs, info = env.reset()
 
     while True:
         state_id = env.save_state()
