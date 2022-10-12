@@ -22,10 +22,7 @@ setup(
     version=__version__,
     install_requires=["gym>=0.22, <=0.23", "gym-robotics", "pybullet", "numpy", "scipy"],
     extras_require={
-        "tests": ["pytest-cov"],
-        "codestyle": ["black", "isort", "pytype"],
-        "docs": ["sphinx", "sphinx-rtd-theme"],
-        "extra": ["numpngw", "stable-baselines3"],
+        "develop": ["pytest-cov", "black", "isort", "pytype", "sphinx", "sphinx-rtd-theme"],
     },
     classifiers=[
         "License :: OSI Approved :: MIT License",
