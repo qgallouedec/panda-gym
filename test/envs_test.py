@@ -5,11 +5,12 @@ import panda_gym
 
 def run_env(env):
     """Tests running panda gym envs."""
-    done = False
     env.reset()
-    while not done:
+    for _ in range(1000):
         action = env.action_space.sample()
-        _, _, done, _ = env.step(action)
+        _, _, terminated, truncated, _ = env.step(action)
+        if terminated or truncated:
+            env.reset()
     env.close()
 
 

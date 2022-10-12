@@ -8,13 +8,16 @@ images = []
 
 
 observation, info = env.reset()
-done = False
 images.append(env.render("rgb_array"))
 
-while not done:
+for _ in range(1000):
     action = env.action_space.sample()
-    observation, reward, done, info = env.step(action)
+    observation, reward, terminated, truncated, info = env.step(action)
     images.append(env.render("rgb_array"))
+
+    if terminated or truncated:
+        observation, info = env.reset()
+        images.append(env.render("rgb_array"))
 
 env.close()
 

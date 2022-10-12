@@ -18,7 +18,9 @@ def test_seed_reach():
     for _ in range(2):
         env.reset(seed=12345)
         for action in actions:
-            observation, _, _, _ = env.step(action)
+            observation, _, terminated, truncated, _ = env.step(action)
+            if terminated or truncated:
+                observation, _ = env.reset()
         final_observations.append(observation)
 
     assert np.allclose(final_observations[0]["observation"], final_observations[1]["observation"])
@@ -40,7 +42,9 @@ def test_seed_push():
     for _ in range(2):
         env.reset(seed=6789)
         for action in actions:
-            observation, _, _, _ = env.step(action)
+            observation, _, terminated, truncated, _ = env.step(action)
+            if terminated or truncated:
+                observation, _ = env.reset()
         final_observations.append(observation)
 
     assert np.allclose(final_observations[0]["observation"], final_observations[1]["observation"])
@@ -62,7 +66,9 @@ def test_seed_slide():
     for _ in range(2):
         env.reset(seed=13795)
         for action in actions:
-            observation, _, _, _ = env.step(action)
+            observation, _, terminated, truncated, _ = env.step(action)
+            if terminated or truncated:
+                observation, _ = env.reset()
         final_observations.append(observation)
     assert np.allclose(final_observations[0]["observation"], final_observations[1]["observation"])
     assert np.allclose(final_observations[0]["achieved_goal"], final_observations[1]["achieved_goal"])
@@ -83,8 +89,11 @@ def test_seed_pick_and_place():
     for _ in range(2):
         env.reset(seed=794512)
         for action in actions:
-            observation, _, _, _ = env.step(action)
+            observation, _, terminated, truncated, _ = env.step(action)
+            if terminated or truncated:
+                observation, _ = env.reset()
         final_observations.append(observation)
+        
     assert np.allclose(final_observations[0]["observation"], final_observations[1]["observation"])
     assert np.allclose(final_observations[0]["achieved_goal"], final_observations[1]["achieved_goal"])
     assert np.allclose(final_observations[0]["desired_goal"], final_observations[1]["desired_goal"])
@@ -104,7 +113,9 @@ def test_seed_stack():
     for _ in range(2):
         env.reset(seed=657894)
         for action in actions:
-            observation, _, _, _ = env.step(action)
+            observation, _, terminated, truncated, _ = env.step(action)
+            if terminated or truncated:
+                observation, _ = env.reset()
         final_observations.append(observation)
     assert np.allclose(final_observations[0]["observation"], final_observations[1]["observation"])
     assert np.allclose(final_observations[0]["achieved_goal"], final_observations[1]["achieved_goal"])

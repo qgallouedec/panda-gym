@@ -38,10 +38,13 @@ import panda_gym
 env = gym.make('PandaReach-v2', render=True)
 
 observation, info = env.reset()
-done = False
-while not done:
+
+for _ in range(1000):
     action = env.action_space.sample() # random action
-    observation, reward, done, info = env.step(action)
+    observation, reward, terminated, truncated, info = env.step(action)
+
+    if terminated or truncated:
+        observation, info = env.reset()
 
 env.close()
 ```
