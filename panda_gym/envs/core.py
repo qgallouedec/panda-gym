@@ -222,7 +222,7 @@ class RobotTaskEnv(gym.Env):
         )
         self.action_space = self.robot.action_space
         self.compute_reward = self.task.compute_reward
-        self._saved_goal = dict()
+        self._saved_goal = dict()  # For state saving and restoring
 
     def _get_obs(self) -> Dict[str, np.ndarray]:
         robot_obs = self.robot.get_obs()  # robot state
@@ -246,15 +246,30 @@ class RobotTaskEnv(gym.Env):
         return observation, info
 
     def save_state(self) -> int:
+        """Save the current state of the envrionment. Restore with `restore_state`.
+
+        Returns:
+            int: State unique identifier.
+        """
         state_id = self.sim.save_state()
         self._saved_goal[state_id] = self.task.goal
         return state_id
 
     def restore_state(self, state_id: int) -> None:
+        """Resotre the state associated with the unique identifier.
+
+        Args:
+            state_id (int): State unique identifier.
+        """
         self.sim.restore_state(state_id)
         self.task.goal = self._saved_goal[state_id]
 
     def remove_state(self, state_id: int) -> None:
+        """Remove a saved state.
+
+        Args:
+            state_id (int): State unique identifier.
+        """
         self._saved_goal.pop(state_id)
         self.sim.remove_state(state_id)
 
@@ -274,7 +289,7 @@ class RobotTaskEnv(gym.Env):
 
     def render(
         self,
-        mode: str,
+        mode: str = "human",
         width: int = 720,
         height: int = 480,
         target_position: Optional[np.ndarray] = None,
