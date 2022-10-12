@@ -99,4 +99,4 @@ class Slide(Task):
         if self.reward_type == "sparse":
             return -np.array(d > self.distance_threshold, dtype=np.float32)
         else:
-            return -d
+            return -d.astype(np.float32)
