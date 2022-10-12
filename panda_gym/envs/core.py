@@ -262,15 +262,16 @@ class RobotTaskEnv(gym.Env):
         self._saved_goal.pop(state_id)
         self.sim.remove_state(state_id)
 
-    def step(self, action: np.ndarray) -> Tuple[Dict[str, np.ndarray], float, bool, Dict[str, Any]]:
+    def step(self, action: np.ndarray) -> Tuple[Dict[str, np.ndarray], float, bool, bool, Dict[str, Any]]:
         self.robot.set_action(action)
         self.sim.step()
         observation = self._get_obs()
-        done = False
-        info = {"is_success": self.task.is_success(observation["achieved_goal"], self.task.get_goal())}
-        reward = self.task.compute_reward(observation["achieved_goal"], self.task.get_goal(), info)
-        assert isinstance(reward, float)  # needed for pytype cheking
-        return observation, reward, done, info
+        # An episode is terminated iff the agent has reached the target
+        terminated = self.task.is_success(observation["achieved_goal"], self.task.get_goal())
+        truncated = False
+        info = {"is_success": terminated}
+        reward = float(self.task.compute_reward(observation["achieved_goal"], self.task.get_goal(), info))
+        return observation, reward, terminated, truncated, info
 
     def close(self) -> None:
         self.sim.close()
