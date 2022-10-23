@@ -1,3 +1,5 @@
+# WARNING, This file will not be functional until stable-baselines3 is compatible
+# with gymnasium. See https://github.com/DLR-RM/stable-baselines3/pull/780 for more information.
 import gymnasium as gym
 from stable_baselines3 import DDPG, HerReplayBuffer
 
