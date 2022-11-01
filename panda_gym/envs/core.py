@@ -165,10 +165,19 @@ class Task(ABC):
     def __init__(self, sim: PyBullet) -> None:
         self.sim = sim
         self.goal = None
+        self.np_random = Any
 
     @abstractmethod
     def reset(self) -> None:
         """Reset the task: sample a new goal."""
+        
+    def _set_random_seed(self, seed : Optional[int] = None) -> None:
+        """Set a random number generator from the seed.
+
+        Args:
+            seed (int): The seed used to create the generator
+        """
+        self.np_random, seed = seeding.np_random(seed)
 
     @abstractmethod
     def get_obs(self) -> np.ndarray:
@@ -239,7 +248,7 @@ class RobotTaskEnv(gym.Env):
         self, seed: Optional[int] = None, options: Optional[dict] = None
     ) -> Tuple[Dict[str, np.ndarray], Dict[str, Any]]:
         super().reset(seed=seed, options=options)
-        self.task.np_random, seed = seeding.np_random(seed)
+        self.task._set_random_seed(seed)
         with self.sim.no_rendering():
             self.robot.reset()
             self.task.reset()
