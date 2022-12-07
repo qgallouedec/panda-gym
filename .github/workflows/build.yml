@@ -24,11 +24,14 @@ jobs:
       run: |
         pytest --cov=./ --cov-report=xml
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v3
       with:
-        name: codecov-umbrella # optional
-        fail_ci_if_error: true # optional (default = false)
-        verbose: true # optional (default = false)
+        directory: ./coverage/reports/
+        env_vars: ${{ matrix.os }}, ${{ matrix.python-version }}
+        fail_ci_if_error: true
+        files: ./coverage.xml
+        name: codecov-umbrella
+        verbose: true
   codestyle_type_and_doc:
     runs-on: ubuntu-latest
     steps:
