@@ -35,7 +35,7 @@ pip install -e panda-gym
 import gymnasium as gym
 import panda_gym
 
-env = gym.make('PandaReach-v3', render=True)
+env = gym.make('PandaReach-v3', render_mode="human")
 
 observation, info = env.reset()
 
