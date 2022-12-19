@@ -132,12 +132,11 @@ The robot is ready. To see it move, execute the following code.
 
     from panda_gym.pybullet import PyBullet
 
-    sim = PyBullet(render=True)
+    sim = PyBullet(render_mode="human")
     robot = MyRobot(sim)
 
     for _ in range(50):
         robot.set_action(np.array([1.0]))
         sim.step()
-        sim.render()
 
 To see how to use this robot to define a new environment, see the :ref:`custom environment<custom_env>` section. 

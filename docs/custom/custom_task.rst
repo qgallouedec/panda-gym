@@ -74,7 +74,7 @@ The task is ready. To test it, execute the following code.
 
     from panda_gym.pybullet import PyBullet
 
-    sim = PyBullet(render=True)
+    sim = PyBullet(render_mode="human")
     task = MyTask(sim)
 
     task.reset()
