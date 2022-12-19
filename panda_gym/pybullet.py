@@ -1,5 +1,4 @@
 import os
-import time
 import warnings
 from contextlib import contextmanager
 from typing import Any, Dict, Iterator, Optional
@@ -16,19 +15,39 @@ class PyBullet:
     """Convenient class to use PyBullet physics engine.
 
     Args:
-        render (bool, optional): Enable rendering. Defaults to False.
+        render_mode (str, optional): Render mode. Defaults to "rgb_array".
         n_substeps (int, optional): Number of sim substep when step() is called. Defaults to 20.
         background_color (np.ndarray, optional): The background color as (red, green, blue).
             Defaults to np.array([223, 54, 45]).
+        render (bool, optional): Deprecated: This argument is deprecated and will be removed in a future
+            version. Use the render_mode argument instead.
     """
 
-    def __init__(self, render: bool = False, n_substeps: int = 20, background_color: Optional[np.ndarray] = None) -> None:
+    def __init__(
+        self,
+        render_mode: str = "rgb_array",
+        n_substeps: int = 20,
+        background_color: Optional[np.ndarray] = None,
+        render: Optional[bool] = None,
+    ) -> None:
+        self.render_mode = render_mode
+        if render is not None:
+            warnings.warn(
+                "The 'render' argument is deprecated and will be removed in "
+                "a future version. Use the 'render_mode' argument instead.",
+                DeprecationWarning,
+            )
         background_color = background_color if background_color is not None else np.array([223.0, 54.0, 45.0])
         self.background_color = background_color.astype(np.float32) / 255
         options = "--background_color_red={} --background_color_green={} --background_color_blue={}".format(
             *self.background_color
         )
-        self.connection_mode = p.GUI if render else p.DIRECT
+        if self.render_mode == "human":
+            self.connection_mode = p.GUI
+        elif self.render_mode == "rgb_array":
+            self.connection_mode = p.DIRECT
+        else:
+            raise ValueError("The 'render' argument is must be in {'rgb_array', 'human'}")
         self.physics_client = bc.BulletClient(connection_mode=self.connection_mode, options=options)
         self.physics_client.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
         self.physics_client.configureDebugVisualizer(p.COV_ENABLE_MOUSE_PICKING, 0)
@@ -82,7 +101,6 @@ class PyBullet:
 
     def render(
         self,
-        mode: str = "human",
         width: int = 720,
         height: int = 480,
         target_position: Optional[np.ndarray] = None,
@@ -90,15 +108,13 @@ class PyBullet:
         yaw: float = 45,
         pitch: float = -30,
         roll: float = 0,
+        mode: Optional[str] = None,
     ) -> Optional[np.ndarray]:
         """Render.
 
-        If mode is "human", make the rendering real-time. All other arguments are
-        unused. If mode is "rgb_array", return an RGB array of the scene.
+        If render mode is "rgb_array", return an RGB array of the scene. Else, do nothing.
 
         Args:
-            mode (str): "human" of "rgb_array". If "human", this method waits for the time necessary to have
-                a realistic temporal rendering and all other args are ignored. Else, return an RGB array.
             width (int, optional): Image width. Defaults to 720.
             height (int, optional): Image height. Defaults to 480.
             target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
@@ -107,21 +123,26 @@ class PyBullet:
             yaw (float, optional): Yaw of the camera. Defaults to 45.
             pitch (float, optional): Pitch of the camera. Defaults to -30.
             roll (int, optional): Rool of the camera. Defaults to 0.
+            mode (str, optional): Deprecated: This argument is deprecated and will be removed in a future
+                version. Use the render_mode argument of the constructor instead.
 
         Returns:
             RGB np.ndarray or None: An RGB array if mode is 'rgb_array', else None.
         """
+        if mode is not None:
+            warnings.warn(
+                "The 'mode' argument is deprecated and will be removed in "
+                "a future version. Use the 'render_mode' argument of the constructor instead.",
+                DeprecationWarning,
+            )
         target_position = target_position if target_position is not None else np.zeros(3)
-        if mode == "human":
-            self.physics_client.configureDebugVisualizer(self.physics_client.COV_ENABLE_SINGLE_STEP_RENDERING)
-            time.sleep(self.dt)  # wait to seems like real speed
-        if mode == "rgb_array":
+        if self.render_mode == "rgb_array":
             if self.connection_mode == p.DIRECT:
                 warnings.warn(
                     "The use of the render method is not recommended when the environment "
-                    "has not been created with render=True. The rendering will probably be weird. "
-                    "Prefer making the environment with option `render=True`. For example: "
-                    "`env = gym.make('PandaReach-v3', render=True)`.",
+                    "has not been created with render_mode='human'. The rendering will probably be weird. "
+                    "Prefer making the environment with option `render_mode='rgb_array'. For example: "
+                    "`env = gym.make('PandaReach-v3', render_mode='rgb_array')`.",
                     UserWarning,
                 )
             view_matrix = self.physics_client.computeViewMatrixFromYawPitchRoll(
