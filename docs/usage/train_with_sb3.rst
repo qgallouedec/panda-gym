@@ -60,8 +60,8 @@ For example, to train an agent with TQC on ``PandaPickAndPlace-v3``:
 Enjoy
 ~~~~~
 
-To visualize the trained agent, follow the `instructions <https://stable-baselines3.readthedocs.io/en/master/guide/rl_zoo.html#enjoy-a-trained-agent>`_ in the SB3 documentation. It is necessary to add ``--env-kwargs render:True`` when running the enjoy script.
+To visualize the trained agent, follow the `instructions <https://stable-baselines3.readthedocs.io/en/master/guide/rl_zoo.html#enjoy-a-trained-agent>`_ in the SB3 documentation. It is necessary to add ``--env-kwargs render_mode:human`` when running the enjoy script.
 
 .. code-block:: bash 
 
-    python enjoy.py --algo <ALGO> --env <ENV> --folder <TRAIN_AGENT_FOLDER> --env-kwargs render:True
+    python enjoy.py --algo <ALGO> --env <ENV> --folder <TRAIN_AGENT_FOLDER> --env-kwargs render_mode:human
