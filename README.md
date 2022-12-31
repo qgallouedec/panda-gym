@@ -49,7 +49,7 @@ for _ in range(1000):
 env.close()
 ```
 
-You can also [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/qgallouedec/panda-gym/blob/master/examples/PickAndPlace.ipynb)
+You can also [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/qgallouedec/panda-gym/blob/master/docs/notebook/PickAndPlace.ipynb)
 
 ## Environments
 
@@ -64,7 +64,7 @@ You can also [![Open in Colab](https://colab.research.google.com/assets/colab-ba
 
 ## Baselines results
 
-Baselines results and pre-trained agents available in [rl-baselines3-zoo](https://github.com/DLR-RM/rl-baselines3-zoo).
+Baselines results are available in [rl-baselines3-zoo](https://github.com/DLR-RM/rl-baselines3-zoo) and the pre-trained agents in the [Hugging Face Hub](https://huggingface.co/sb3).
 
 ## Citation
 

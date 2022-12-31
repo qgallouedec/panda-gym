@@ -24,13 +24,13 @@ Now that SB3 is installed, you can run the following code to train an agent. You
     import panda_gym
     from stable_baselines3 import DDPG
 
-    env = gym.make("PandaReach-v3")
+    env = gym.make("PandaReach-v2")
     model = DDPG(policy="MultiInputPolicy", env=env)
     model.train(30000)
 
 .. note::
 
-    Here we provide the canonical code for training with SB3. For any information on the setting of hyperparameters, verbosity, saving the model, ... please read the `SB3 documentation <https://stable-baselines3.readthedocs.io/en/master/index.html>`_. 
+    Here we provide the canonical code for training with SB3. For any information on the setting of hyperparameters, verbosity, saving the model and more please read the `SB3 documentation <https://stable-baselines3.readthedocs.io/en/master/index.html>`_. 
  
 
 Bonus: Train with RL Baselines3 Zoo
