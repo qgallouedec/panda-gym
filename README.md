@@ -49,7 +49,7 @@ for _ in range(1000):
 env.close()
 ```
 
-You can also [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/qgallouedec/panda-gym/blob/master/docs/notebook/PickAndPlace.ipynb)
+You can also [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/qgallouedec/panda-gym/blob/master/examples/PickAndPlace.ipynb)
 
 ## Environments
 
