@@ -55,7 +55,7 @@ For the purpose of the example, let's consider here a very simple task, consisti
             # compute the distance between the goal position and the current object position
             d = distance(achieved_goal, desired_goal)
             # return True if the distance is < 1.0, and False otherwise
-            return np.array(d < 1.0, dtype=np.bool8)
+            return np.array(d < 1.0, dtype=bool)
 
         def compute_reward(self, achieved_goal, desired_goal, info={}):  # info is here for consistancy
             # for this example, reward = 1.0 if the task is successfull, 0.0 otherwise

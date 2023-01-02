@@ -121,7 +121,7 @@ class Stack(Task):
     def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> np.ndarray:
         # must be vectorized !!
         d = distance(achieved_goal, desired_goal)
-        return np.array((d < self.distance_threshold), dtype=np.bool8)
+        return np.array((d < self.distance_threshold), dtype=bool)
 
     def compute_reward(self, achieved_goal, desired_goal, info: Dict[str, Any]) -> np.ndarray:
         d = distance(achieved_goal, desired_goal)
