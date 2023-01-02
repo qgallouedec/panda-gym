@@ -139,10 +139,12 @@ class PyBullet:
         if self.render_mode == "rgb_array":
             if self.connection_mode == p.DIRECT:
                 warnings.warn(
-                    "The use of the render method is not recommended when the environment "
-                    "has not been created with render_mode='human'. The rendering will probably be weird. "
-                    "Prefer making the environment with option `render_mode='rgb_array'. For example: "
-                    "`env = gym.make('PandaReach-v3', render_mode='rgb_array')`.",
+                    "You have set 'render_mode' to be 'rgb_array'. This is correct if you want to render the "
+                    "environment without an OpenGL engine. However, this option does not support transparency "
+                    "or background rendering and may result in lower quality rendering. To improve the rendering "
+                    "quality, we recommend that you use render_mode='human' instead. The render() method will "
+                    "return a more qualitative rendering of the environment. "
+                    "For example: env = gym.make('PandaReach-v3', render_mode='human').",
                     UserWarning,
                 )
             view_matrix = self.physics_client.computeViewMatrixFromYawPitchRoll(
