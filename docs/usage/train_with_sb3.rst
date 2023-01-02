@@ -20,13 +20,13 @@ Now that SB3 is installed, you can run the following code to train an agent. You
 
 .. code-block:: python
 
-    import gymnasium as gym
+    import gym
     import panda_gym
     from stable_baselines3 import DDPG
 
     env = gym.make("PandaReach-v2")
     model = DDPG(policy="MultiInputPolicy", env=env)
-    model.train(30000)
+    model.train(30_000)
 
 .. note::
 
