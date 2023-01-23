@@ -18,7 +18,8 @@ class PyBullet:
         n_substeps (int, optional): Number of sim substep when step() is called. Defaults to 20.
         background_color (np.ndarray, optional): The background color as (red, green, blue).
             Defaults to np.array([223, 54, 45]).
-        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Defaults to "Tiny".
+        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Defaults to "Tiny" if render mode is "human"
+            and "OpenGL" if render mode is "rgb_array". Only "OpenGL" is available for human render mode.
     """
 
     def __init__(
