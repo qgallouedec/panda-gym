@@ -21,7 +21,7 @@ class PandaFlipEnv(RobotTaskEnv):
         reward_type (str, optional): "sparse" or "dense". Defaults to "sparse".
         control_type (str, optional): "ee" to control end-effector position or "joints" to control joint values.
             Defaults to "ee".
-        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Default to "Tiny".
+        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Defaults to "Tiny".
         render_width (int, optional): Image width. Defaults to 720.
         render_height (int, optional): Image height. Defaults to 480.
         render_target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
@@ -71,7 +71,7 @@ class PandaPickAndPlaceEnv(RobotTaskEnv):
         reward_type (str, optional): "sparse" or "dense". Defaults to "sparse".
         control_type (str, optional): "ee" to control end-effector position or "joints" to control joint values.
             Defaults to "ee".
-        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Default to "Tiny".
+        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Defaults to "Tiny".
         render_width (int, optional): Image width. Defaults to 720.
         render_height (int, optional): Image height. Defaults to 480.
         render_target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
@@ -120,7 +120,7 @@ class PandaPushEnv(RobotTaskEnv):
         reward_type (str, optional): "sparse" or "dense". Defaults to "sparse".
         control_type (str, optional): "ee" to control end-effector position or "joints" to control joint values.
             Defaults to "ee".
-        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Default to "Tiny".
+        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Defaults to "Tiny".
         render_width (int, optional): Image width. Defaults to 720.
         render_height (int, optional): Image height. Defaults to 480.
         render_target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
@@ -169,7 +169,7 @@ class PandaReachEnv(RobotTaskEnv):
         reward_type (str, optional): "sparse" or "dense". Defaults to "sparse".
         control_type (str, optional): "ee" to control end-effector position or "joints" to control joint values.
             Defaults to "ee".
-        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Default to "Tiny".
+        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Defaults to "Tiny".
         render_width (int, optional): Image width. Defaults to 720.
         render_height (int, optional): Image height. Defaults to 480.
         render_target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
@@ -218,7 +218,7 @@ class PandaSlideEnv(RobotTaskEnv):
         reward_type (str, optional): "sparse" or "dense". Defaults to "sparse".
         control_type (str, optional): "ee" to control end-effector position or "joints" to control joint values.
             Defaults to "ee".
-        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Default to "Tiny".
+        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Defaults to "Tiny".
         render_width (int, optional): Image width. Defaults to 720.
         render_height (int, optional): Image height. Defaults to 480.
         render_target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
@@ -267,7 +267,7 @@ class PandaStackEnv(RobotTaskEnv):
         reward_type (str, optional): "sparse" or "dense". Defaults to "sparse".
         control_type (str, optional): "ee" to control end-effector position or "joints" to control joint values.
             Defaults to "ee".
-        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Default to "Tiny".
+        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Defaults to "Tiny".
         render_width (int, optional): Image width. Defaults to 720.
         render_height (int, optional): Image height. Defaults to 480.
         render_target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
