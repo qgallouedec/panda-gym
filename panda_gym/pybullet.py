@@ -166,6 +166,8 @@ class PyBullet:
             shadow=True,
             renderer=p.ER_BULLET_HARDWARE_OPENGL,
         )
+        # With Python3.10, pybullet return flat tuple instead of array. So we need to build create the array.
+        rgba = np.array(rgba, dtype=np.uint8).reshape((height, width, 4)) 
         return rgba[..., :3]
 
     def get_base_position(self, body: str) -> np.ndarray:
