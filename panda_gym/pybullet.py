@@ -1,5 +1,4 @@
 import os
-import warnings
 from contextlib import contextmanager
 from typing import Any, Dict, Iterator, Optional
 
@@ -19,8 +18,7 @@ class PyBullet:
         n_substeps (int, optional): Number of sim substep when step() is called. Defaults to 20.
         background_color (np.ndarray, optional): The background color as (red, green, blue).
             Defaults to np.array([223, 54, 45]).
-        render (bool, optional): Deprecated: This argument is deprecated and will be removed in a future
-            version. Use the render_mode argument instead.
+        renderer (str, optional): Renderer, either "Tiny" or OpenGL". Default to "Tiny".
     """
 
     def __init__(
@@ -28,15 +26,9 @@ class PyBullet:
         render_mode: str = "rgb_array",
         n_substeps: int = 20,
         background_color: Optional[np.ndarray] = None,
-        render: Optional[bool] = None,
+        renderer: str = "Tiny",
     ) -> None:
         self.render_mode = render_mode
-        if render is not None:
-            warnings.warn(
-                "The 'render' argument is deprecated and will be removed in "
-                "a future version. Use the 'render_mode' argument instead.",
-                DeprecationWarning,
-            )
         background_color = background_color if background_color is not None else np.array([223.0, 54.0, 45.0])
         self.background_color = background_color.astype(np.float32) / 255
         options = "--background_color_red={} --background_color_green={} --background_color_blue={}".format(
@@ -45,7 +37,12 @@ class PyBullet:
         if self.render_mode == "human":
             self.connection_mode = p.GUI
         elif self.render_mode == "rgb_array":
-            self.connection_mode = p.DIRECT
+            if renderer == "OpenGL":
+                self.connection_mode = p.GUI
+            elif renderer == "Tiny":
+                self.connection_mode = p.DIRECT
+            else:
+                raise ValueError("The 'renderer' argument is must be in {'Tiny', 'OpenGL'}")
         else:
             raise ValueError("The 'render' argument is must be in {'rgb_array', 'human'}")
         self.physics_client = bc.BulletClient(connection_mode=self.connection_mode, options=options)
@@ -108,8 +105,7 @@ class PyBullet:
         yaw: float = 45,
         pitch: float = -30,
         roll: float = 0,
-        mode: Optional[str] = None,
-    ) -> np.ndarray:
+    ) -> Optional[np.ndarray]:
         """Render.
 
         Return an RGB array of the scene.
@@ -129,46 +125,29 @@ class PyBullet:
         Returns:
             RGB np.ndarray or None: An RGB array if mode is 'rgb_array', else None.
         """
-        if mode is not None:
-            warnings.warn(
-                "The 'mode' argument is deprecated and will be removed in "
-                "a future version. Use the 'render_mode' argument of the constructor instead.",
-                DeprecationWarning,
-            )
-        target_position = target_position if target_position is not None else np.zeros(3)
         if self.render_mode == "rgb_array":
-            if self.connection_mode == p.DIRECT:
-                warnings.warn(
-                    "You have set 'render_mode' to be 'rgb_array'. This is correct if you want to render the "
-                    "environment without an OpenGL engine. However, this option does not support transparency "
-                    "or background rendering and may result in lower quality rendering. To improve the rendering "
-                    "quality, we recommend that you use render_mode='human' instead. The render() method will "
-                    "return a more qualitative rendering of the environment. "
-                    "For example: env = gym.make('PandaReach-v3', render_mode='human').",
-                    UserWarning,
-                )
-        view_matrix = self.physics_client.computeViewMatrixFromYawPitchRoll(
-            cameraTargetPosition=target_position,
-            distance=distance,
-            yaw=yaw,
-            pitch=pitch,
-            roll=roll,
-            upAxisIndex=2,
-        )
-        proj_matrix = self.physics_client.computeProjectionMatrixFOV(
-            fov=60, aspect=float(width) / height, nearVal=0.1, farVal=100.0
-        )
-        (_, _, rgba, _, _) = self.physics_client.getCameraImage(
-            width=width,
-            height=height,
-            viewMatrix=view_matrix,
-            projectionMatrix=proj_matrix,
-            shadow=True,
-            renderer=p.ER_BULLET_HARDWARE_OPENGL,
-        )
-        # With Python3.10, pybullet return flat tuple instead of array. So we need to build create the array.
-        rgba = np.array(rgba, dtype=np.uint8).reshape((height, width, 4)) 
-        return rgba[..., :3]
+            view_matrix = self.physics_client.computeViewMatrixFromYawPitchRoll(
+                cameraTargetPosition=target_position,
+                distance=distance,
+                yaw=yaw,
+                pitch=pitch,
+                roll=roll,
+                upAxisIndex=2,
+            )
+            proj_matrix = self.physics_client.computeProjectionMatrixFOV(
+                fov=60, aspect=float(width) / height, nearVal=0.1, farVal=100.0
+            )
+            (_, _, rgba, _, _) = self.physics_client.getCameraImage(
+                width=width,
+                height=height,
+                viewMatrix=view_matrix,
+                projectionMatrix=proj_matrix,
+                shadow=True,
+                renderer=p.ER_BULLET_HARDWARE_OPENGL,
+            )
+            # With Python3.10, pybullet return flat tuple instead of array. So we need to build create the array.
+            rgba = np.array(rgba, dtype=np.uint8).reshape((height, width, 4))
+            return rgba[..., :3]
 
     def get_base_position(self, body: str) -> np.ndarray:
         """Get the position of the body.
