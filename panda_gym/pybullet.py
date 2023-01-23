@@ -112,7 +112,7 @@ class PyBullet:
     ) -> np.ndarray:
         """Render.
 
-        Return an RGBA array of the scene.
+        Return an RGB array of the scene.
 
         Args:
             width (int, optional): Image width. Defaults to 720.
@@ -158,15 +158,15 @@ class PyBullet:
         proj_matrix = self.physics_client.computeProjectionMatrixFOV(
             fov=60, aspect=float(width) / height, nearVal=0.1, farVal=100.0
         )
-        (_, _, px, depth, _) = self.physics_client.getCameraImage(
+        (_, _, rgba, _, _) = self.physics_client.getCameraImage(
             width=width,
             height=height,
             viewMatrix=view_matrix,
             projectionMatrix=proj_matrix,
+            shadow=True,
             renderer=p.ER_BULLET_HARDWARE_OPENGL,
         )
-
-        return px
+        return rgba[..., :3]
 
     def get_base_position(self, body: str) -> np.ndarray:
         """Get the position of the body.

@@ -9,12 +9,12 @@ def test_pixel_observation_wrapper():
     env = PixelObservationWrapper(env)
 
     observation, _ = env.reset()
-    assert observation["pixels"].shape == (480, 720, 4)
+    assert observation["pixels"].shape == (480, 720, 3)
 
     for _ in range(100):
         action = env.action_space.sample()  # random action
         observation, _, terminated, truncated, _ = env.step(action)
-        assert observation["pixels"].shape == (480, 720, 4)
+        assert observation["pixels"].shape == (480, 720, 3)
         if terminated or truncated:
             observation, _ = env.reset()
 

@@ -305,7 +305,7 @@ class RobotTaskEnv(gym.Env):
     ) -> np.ndarray:
         """Render.
 
-        Return an RGBA array of the scene.
+        Return an RGB array of the scene.
 
         Args:
             width (int, optional): Image width. Defaults to 720.
