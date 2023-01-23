@@ -208,6 +208,7 @@ class RobotTaskEnv(gym.Env):
     def __init__(self, robot: PyBulletRobot, task: Task) -> None:
         assert robot.sim == task.sim, "The robot and the task must belong to the same simulation."
         self.sim = robot.sim
+        self.render_mode = self.sim.render_mode
         self.metadata["render_fps"] = 1 / self.sim.dt
         self.robot = robot
         self.task = task
