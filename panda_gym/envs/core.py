@@ -247,7 +247,7 @@ class RobotTaskEnv(gym.Env):
 
         self.render_width = render_width
         self.render_height = render_height
-        self.render_target_position = render_target_position if render_target_position is not None else np.zeros(3)
+        self.render_target_position = render_target_position
         self.render_distance = render_distance
         self.render_yaw = render_yaw
         self.render_pitch = render_pitch

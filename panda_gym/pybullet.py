@@ -126,6 +126,7 @@ class PyBullet:
             RGB np.ndarray or None: An RGB array if mode is 'rgb_array', else None.
         """
         if self.render_mode == "rgb_array":
+            target_position = target_position if target_position is not None else np.zeros(3)
             view_matrix = self.physics_client.computeViewMatrixFromYawPitchRoll(
                 cameraTargetPosition=target_position,
                 distance=distance,
