@@ -108,7 +108,7 @@ class PyBullet:
     ) -> Optional[np.ndarray]:
         """Render.
 
-        Return an RGB array of the scene.
+        If render mode is "rgb_array", return an RGB array of the scene. Else, do nothing and return None.
 
         Args:
             width (int, optional): Image width. Defaults to 720.

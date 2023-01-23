@@ -319,8 +319,9 @@ class RobotTaskEnv(gym.Env):
         self.sim.close()
 
     def render(self) -> Optional[np.ndarray]:
-        """Return an RGB array of the scene.
+        """Render.
 
+        If render mode is "rgb_array", return an RGB array of the scene. Else, do nothing and return None.
 
         Returns:
             RGB np.ndarray or None: An RGB array if mode is 'rgb_array', else None.
