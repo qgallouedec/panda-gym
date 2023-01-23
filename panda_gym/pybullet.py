@@ -109,10 +109,10 @@ class PyBullet:
         pitch: float = -30,
         roll: float = 0,
         mode: Optional[str] = None,
-    ) -> Optional[np.ndarray]:
+    ) -> np.ndarray:
         """Render.
 
-        If render mode is "rgb_array", return an RGB array of the scene. Else, do nothing.
+        Return an RGBA array of the scene.
 
         Args:
             width (int, optional): Image width. Defaults to 720.
@@ -147,26 +147,26 @@ class PyBullet:
                     "For example: env = gym.make('PandaReach-v3', render_mode='human').",
                     UserWarning,
                 )
-            view_matrix = self.physics_client.computeViewMatrixFromYawPitchRoll(
-                cameraTargetPosition=target_position,
-                distance=distance,
-                yaw=yaw,
-                pitch=pitch,
-                roll=roll,
-                upAxisIndex=2,
-            )
-            proj_matrix = self.physics_client.computeProjectionMatrixFOV(
-                fov=60, aspect=float(width) / height, nearVal=0.1, farVal=100.0
-            )
-            (_, _, px, depth, _) = self.physics_client.getCameraImage(
-                width=width,
-                height=height,
-                viewMatrix=view_matrix,
-                projectionMatrix=proj_matrix,
-                renderer=p.ER_BULLET_HARDWARE_OPENGL,
-            )
+        view_matrix = self.physics_client.computeViewMatrixFromYawPitchRoll(
+            cameraTargetPosition=target_position,
+            distance=distance,
+            yaw=yaw,
+            pitch=pitch,
+            roll=roll,
+            upAxisIndex=2,
+        )
+        proj_matrix = self.physics_client.computeProjectionMatrixFOV(
+            fov=60, aspect=float(width) / height, nearVal=0.1, farVal=100.0
+        )
+        (_, _, px, depth, _) = self.physics_client.getCameraImage(
+            width=width,
+            height=height,
+            viewMatrix=view_matrix,
+            projectionMatrix=proj_matrix,
+            renderer=p.ER_BULLET_HARDWARE_OPENGL,
+        )
 
-            return px
+        return px
 
     def get_base_position(self, body: str) -> np.ndarray:
         """Get the position of the body.

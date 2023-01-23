@@ -301,10 +301,10 @@ class RobotTaskEnv(gym.Env):
         pitch: float = -30,
         roll: float = 0,
         mode: Optional[str] = None,
-    ) -> Optional[np.ndarray]:
+    ) -> np.ndarray:
         """Render.
 
-        If render mode is "rgb_array", return an RGB array of the scene. Else, do nothing.
+        Return an RGBA array of the scene.
 
         Args:
             width (int, optional): Image width. Defaults to 720.
