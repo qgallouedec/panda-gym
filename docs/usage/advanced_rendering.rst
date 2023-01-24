@@ -8,7 +8,7 @@ Renderer
 
 There are two render modes available - ``"human"`` and ``"rgb_array"``. The ``"human"`` mode opens a window to display the live scene, while the ``"rgb_array"`` mode renders the scene as an RGB array.
 
-When it comes to renderers, there are two options: OpenGL and Tiny Renderer. The OpenGL engine is used when the render mode is set to "human." However, when the render mode is set to "rgb_array," you have the choice between using either the OpenGL or Tiny Renderer engine. The Tiny Renderer can work in headless mode, but it may not produce as high-quality results as the OpenGL engine, particularly in regards to transparency and background shadows. If headless mode is not a requirement, it is recommended to use the OpenGL engine. To do this, pass ``renderer="OpenGL"`` to the ``make`` function:
+When it comes to renderers, there are two options: OpenGL and Tiny Renderer. The OpenGL engine is used when the render mode is set to ``"human"``. However, when the render mode is set to ``"rgb_array"`` you have the choice between using either the OpenGL or Tiny Renderer engine. The Tiny Renderer can work in headless mode, but it may not produce as high-quality results as the OpenGL engine, particularly in regards to transparency, background and shadows. If headless mode is not a requirement, it is recommended to use the OpenGL engine. To do this, pass ``renderer="OpenGL"`` to the ``gymnasium.make`` function:
 
 .. code-block:: python
 
@@ -69,7 +69,7 @@ Example
         render_roll=0,
     )
     env.reset()
-    image = env.render()  # RGB rendering of shape (480, 720, 3)
+    image = env.render()  # RGB rendering of shape (480, 480, 3)
     env.close()
 
 .. figure:: ../_static/img/top_view.png
