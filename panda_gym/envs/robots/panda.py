@@ -132,7 +132,7 @@ class Panda(PyBulletRobot):
         return finger1 + finger2
 
     def get_ee_position(self) -> np.ndarray:
-        """Returns the position of the ned-effector as (x, y, z)"""
+        """Returns the position of the end-effector as (x, y, z)"""
         return self.get_link_position(self.ee_link)
 
     def get_ee_velocity(self) -> np.ndarray:
