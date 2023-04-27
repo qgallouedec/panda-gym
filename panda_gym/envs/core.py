@@ -247,11 +247,20 @@ class RobotTaskEnv(gym.Env):
 
         self.render_width = render_width
         self.render_height = render_height
-        self.render_target_position = render_target_position
+        self.render_target_position = (
+            render_target_position if render_target_position is not None else np.array([0.0, 0.0, 0.0])
+        )
         self.render_distance = render_distance
         self.render_yaw = render_yaw
         self.render_pitch = render_pitch
         self.render_roll = render_roll
+        with self.sim.no_rendering():
+            self.sim.place_visualizer(
+                target_position=self.render_target_position,
+                distance=self.render_distance,
+                yaw=self.render_yaw,
+                pitch=self.render_pitch,
+            )
 
     def _get_obs(self) -> Dict[str, np.ndarray]:
         robot_obs = self.robot.get_obs().astype(np.float32)  # robot state
