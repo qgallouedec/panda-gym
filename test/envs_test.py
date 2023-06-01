@@ -22,6 +22,3 @@ def test_env(env_id):
     """Tests running panda gym envs."""
     env = gym.make(env_id)
     run_env(env)
-
-
-test_env("PandaReachDense-v3")
