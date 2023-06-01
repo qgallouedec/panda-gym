@@ -1,7 +1,7 @@
 import gymnasium as gym
+import pytest
 
 import panda_gym
-import pytest
 
 
 def run_env(env):
