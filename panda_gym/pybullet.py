@@ -70,7 +70,8 @@ class PyBullet:
 
     def close(self) -> None:
         """Close the simulation."""
-        self.physics_client.disconnect()
+        if self.physics_client.isConnected():
+            self.physics_client.disconnect()
 
     def save_state(self) -> int:
         """Save the current simulation state.
