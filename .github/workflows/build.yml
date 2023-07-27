@@ -23,11 +23,26 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --cov=./ --cov-report=xml
+    - name: Save coverage report
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage-report
+        path: ./coverage.xml
+
+  upload-coverage:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Download coverage reports
+      uses: actions/download-artifact@v2
+      with:
+        name: coverage-report
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
         directory: ./coverage/reports/
-        env_vars: ${{ matrix.os }}, ${{ matrix.python-version }}
         fail_ci_if_error: true
         files: ./coverage.xml
         name: codecov-umbrella
