@@ -3,7 +3,7 @@
 Set of robotic environments based on PyBullet physics engine and gymnasium.
 
 [![PyPI version](https://img.shields.io/pypi/v/panda-gym.svg?logo=pypi&logoColor=FFE873)](https://pypi.org/project/panda-gym/)
-[![Downloads](https://pepy.tech/badge/panda-gym)](https://pepy.tech/project/panda-gym)
+[![Downloads](https://static.pepy.tech/badge/panda-gym)](https://pepy.tech/project/panda-gym)
 [![GitHub](https://img.shields.io/github/license/qgallouedec/panda-gym.svg)](LICENSE.txt)
 [![build](https://github.com/qgallouedec/panda-gym/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/qgallouedec/panda-gym/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/qgallouedec/panda-gym/branch/master/graph/badge.svg?token=pv0VdsXByP)](https://codecov.io/gh/qgallouedec/panda-gym)
