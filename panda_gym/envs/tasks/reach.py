@@ -37,7 +37,7 @@ class Reach(Task):
         )
 
     def get_obs(self) -> np.ndarray:
-        return np.array([])  # no tasak-specific observation
+        return np.array([])  # no task-specific observation
 
     def get_achieved_goal(self) -> np.ndarray:
         ee_position = np.array(self.get_ee_position())
