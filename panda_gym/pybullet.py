@@ -115,12 +115,12 @@ class PyBullet:
         Args:
             width (int, optional): Image width. Defaults to 720.
             height (int, optional): Image height. Defaults to 480.
-            target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
+            target_position (np.ndarray, optional): Camera targeting this position, as (x, y, z).
                 Defaults to [0., 0., 0.].
             distance (float, optional): Distance of the camera. Defaults to 1.4.
             yaw (float, optional): Yaw of the camera. Defaults to 45.
             pitch (float, optional): Pitch of the camera. Defaults to -30.
-            roll (int, optional): Rool of the camera. Defaults to 0.
+            roll (int, optional): Roll of the camera. Defaults to 0.
             mode (str, optional): Deprecated: This argument is deprecated and will be removed in a future
                 version. Use the render_mode argument of the constructor instead.
 
@@ -623,7 +623,7 @@ class PyBullet:
             length (float): The length of the table (x direction).
             width (float): The width of the table (y direction)
             height (float): The height of the table.
-            x_offset (float, optional): The offet in the x direction.
+            x_offset (float, optional): The offset in the x direction.
             lateral_friction (float or None, optional): Lateral friction. If None, use the default pybullet
                 value. Defaults to None.
             spinning_friction (float or None, optional): Spinning friction. If None, use the default pybullet

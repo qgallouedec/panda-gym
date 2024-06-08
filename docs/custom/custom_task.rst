@@ -16,7 +16,7 @@ To define your own task, you need to inherit from :py:class:`Task<panda_gym.envs
 - ``reset()``: how the task is reset; you must define `self.goal` in this function
 - ``get_obs()``: returns the observation
 - ``get_achieved_goal()``: returns the achieved goal
-- ``is_success(achieved_goal, desired_goal, info)``: returns whether the task is successfull
+- ``is_success(achieved_goal, desired_goal, info)``: returns whether the task is successful
 - ``compute_reward(achieved_goal, desired_goal, info)``: returns the reward
 
 For the purpose of the example, let's consider here a very simple task, consisting in moving a cube toward a target position. The goal position is sampled within a volume of 10 m x 10 m x 10 m. 
@@ -51,14 +51,14 @@ For the purpose of the example, let's consider here a very simple task, consisti
             achieved_goal = self.sim.get_base_position("object")
             return achieved_goal
 
-        def is_success(self, achieved_goal, desired_goal, info={}):  # info is here for consistancy
+        def is_success(self, achieved_goal, desired_goal, info={}):  # info is here for consistency 
             # compute the distance between the goal position and the current object position
             d = distance(achieved_goal, desired_goal)
             # return True if the distance is < 1.0, and False otherwise
             return np.array(d < 1.0, dtype=bool)
 
-        def compute_reward(self, achieved_goal, desired_goal, info={}):  # info is here for consistancy
-            # for this example, reward = 1.0 if the task is successfull, 0.0 otherwise
+        def compute_reward(self, achieved_goal, desired_goal, info={}):  # info is here for consistency
+            # for this example, reward = 1.0 if the task is successful, 0.0 otherwise
             return self.is_success(achieved_goal, desired_goal, info).astype(np.float32)
             
 

@@ -202,12 +202,12 @@ class RobotTaskEnv(gym.Env):
         task (Task): The task.
         render_width (int, optional): Image width. Defaults to 720.
         render_height (int, optional): Image height. Defaults to 480.
-        render_target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
+        render_target_position (np.ndarray, optional): Camera targeting this position, as (x, y, z).
             Defaults to [0., 0., 0.].
         render_distance (float, optional): Distance of the camera. Defaults to 1.4.
         render_yaw (float, optional): Yaw of the camera. Defaults to 45.
         render_pitch (float, optional): Pitch of the camera. Defaults to -30.
-        render_roll (int, optional): Rool of the camera. Defaults to 0.
+        render_roll (int, optional): Roll of the camera. Defaults to 0.
     """
 
     metadata = {"render_modes": ["human", "rgb_array"]}
@@ -286,7 +286,7 @@ class RobotTaskEnv(gym.Env):
         return observation, info
 
     def save_state(self) -> int:
-        """Save the current state of the envrionment. Restore with `restore_state`.
+        """Save the current state of the environment. Restore with `restore_state`.
 
         Returns:
             int: State unique identifier.
@@ -296,7 +296,7 @@ class RobotTaskEnv(gym.Env):
         return state_id
 
     def restore_state(self, state_id: int) -> None:
-        """Resotre the state associated with the unique identifier.
+        """Restore the state associated with the unique identifier.
 
         Args:
             state_id (int): State unique identifier.
