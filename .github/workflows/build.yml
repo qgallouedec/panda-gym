@@ -14,62 +14,66 @@ jobs:
           - os: macos-latest
             python-version: '3.7'
     steps:
+    # Check out the repository code
     - uses: actions/checkout@v4
+    
+    # Set up the specified Python version
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+    
+    # Install dependencies
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -e .
         pip install pytest-cov
+    
+    # Run tests with pytest and generate coverage report
     - name: Test with pytest
       run: |
         pytest --cov=./ --cov-report=xml
+    
+    # Upload the coverage report as an artifact
     - name: Save coverage report
       uses: actions/upload-artifact@v2
       with:
         name: coverage-report
         path: ./coverage.xml
-
-  upload-coverage:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    - name: Download coverage reports
-      uses: actions/download-artifact@v4
-      with:
-        name: coverage-report
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
-      with:
-        directory: ./coverage/reports/
-        fail_ci_if_error: true
-        files: ./coverage.xml
-        name: codecov-umbrella
-        verbose: true
-  codestyle_type_and_doc:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.8
-    - name: Install dependencies
+    
+    # Additional steps only for ubuntu-latest and Python 3.10
+    # Install development dependencies
+    - name: Install dev dependencies
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
       run: |
-        python -m pip install --upgrade pip
         pip install -e .[develop]
+    
+    # Run Pytype for type checking
     - name: Pytype
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
       run: |
         pytype panda_gym
+    
+    # Check code style with black and isort
     - name: Check codestyle
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
       run: |
         black -l 127 --check panda_gym test
         isort -l 127 --profile black --check panda_gym test
+    
+    # Build documentation
     - name: Make docs
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
       run: |
         make html
+    
+    # Upload coverage to Codecov
+    - name: Upload coverage to Codecov
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
+      uses: codecov/codecov-action@v4
+      with:
+        files: ./coverage.xml
+        fail_ci_if_error: true
+        name: codecov-umbrella
+        verbose: true
