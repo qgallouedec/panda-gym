@@ -41,11 +41,11 @@ You can render from a different point of view than the default. For this, the fo
 
 - ``render_width`` (int, optional): Image width. Defaults to 720.
 - ``render_height`` (int, optional): Image height. Defaults to 480.
-- ``render_target_position`` (np.ndarray, optional): Camera targetting this postion, as (x, y, z). Defaults to [0., 0., 0.].
+- ``render_target_position`` (np.ndarray, optional): Camera targeting this position, as (x, y, z). Defaults to [0., 0., 0.].
 - ``render_distance`` (float, optional): Distance of the camera. Defaults to 1.4.
 - ``render_yaw`` (float, optional): Yaw of the camera. Defaults to 45.
 - ``render_pitch`` (float, optional): Pitch of the camera. Defaults to -30.
-- ``render_roll`` (int, optional): Rool of the camera. Defaults to 0.
+- ``render_roll`` (int, optional): Roll of the camera. Defaults to 0.
 
 Example
 ~~~~~~~

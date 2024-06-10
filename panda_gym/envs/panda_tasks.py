@@ -25,12 +25,12 @@ class PandaFlipEnv(RobotTaskEnv):
             and "OpenGL" if render mode is "rgb_array". Only "OpenGL" is available for human render mode.
         render_width (int, optional): Image width. Defaults to 720.
         render_height (int, optional): Image height. Defaults to 480.
-        render_target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
+        render_target_position (np.ndarray, optional): Camera targeting this position, as (x, y, z).
             Defaults to [0., 0., 0.].
         render_distance (float, optional): Distance of the camera. Defaults to 1.4.
         render_yaw (float, optional): Yaw of the camera. Defaults to 45.
         render_pitch (float, optional): Pitch of the camera. Defaults to -30.
-        render_roll (int, optional): Rool of the camera. Defaults to 0.
+        render_roll (int, optional): Roll of the camera. Defaults to 0.
 
     """
 
@@ -76,12 +76,12 @@ class PandaPickAndPlaceEnv(RobotTaskEnv):
             and "OpenGL" if render mode is "rgb_array". Only "OpenGL" is available for human render mode.
         render_width (int, optional): Image width. Defaults to 720.
         render_height (int, optional): Image height. Defaults to 480.
-        render_target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
+        render_target_position (np.ndarray, optional): Camera targeting this position, as (x, y, z).
             Defaults to [0., 0., 0.].
         render_distance (float, optional): Distance of the camera. Defaults to 1.4.
         render_yaw (float, optional): Yaw of the camera. Defaults to 45.
         render_pitch (float, optional): Pitch of the camera. Defaults to -30.
-        render_roll (int, optional): Rool of the camera. Defaults to 0.
+        render_roll (int, optional): Roll of the camera. Defaults to 0.
     """
 
     def __init__(
@@ -126,12 +126,12 @@ class PandaPushEnv(RobotTaskEnv):
             and "OpenGL" if render mode is "rgb_array". Only "OpenGL" is available for human render mode.
         render_width (int, optional): Image width. Defaults to 720.
         render_height (int, optional): Image height. Defaults to 480.
-        render_target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
+        render_target_position (np.ndarray, optional): Camera targeting this position, as (x, y, z).
             Defaults to [0., 0., 0.].
         render_distance (float, optional): Distance of the camera. Defaults to 1.4.
         render_yaw (float, optional): Yaw of the camera. Defaults to 45.
         render_pitch (float, optional): Pitch of the camera. Defaults to -30.
-        render_roll (int, optional): Rool of the camera. Defaults to 0.
+        render_roll (int, optional): Roll of the camera. Defaults to 0.
     """
 
     def __init__(
@@ -176,12 +176,12 @@ class PandaReachEnv(RobotTaskEnv):
             and "OpenGL" if render mode is "rgb_array". Only "OpenGL" is available for human render mode.
         render_width (int, optional): Image width. Defaults to 720.
         render_height (int, optional): Image height. Defaults to 480.
-        render_target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
+        render_target_position (np.ndarray, optional): Camera targeting this position, as (x, y, z).
             Defaults to [0., 0., 0.].
         render_distance (float, optional): Distance of the camera. Defaults to 1.4.
         render_yaw (float, optional): Yaw of the camera. Defaults to 45.
         render_pitch (float, optional): Pitch of the camera. Defaults to -30.
-        render_roll (int, optional): Rool of the camera. Defaults to 0.
+        render_roll (int, optional): Roll of the camera. Defaults to 0.
     """
 
     def __init__(
@@ -226,12 +226,12 @@ class PandaSlideEnv(RobotTaskEnv):
             and "OpenGL" if render mode is "rgb_array". Only "OpenGL" is available for human render mode.
         render_width (int, optional): Image width. Defaults to 720.
         render_height (int, optional): Image height. Defaults to 480.
-        render_target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
+        render_target_position (np.ndarray, optional): Camera targeting this position, as (x, y, z).
             Defaults to [0., 0., 0.].
         render_distance (float, optional): Distance of the camera. Defaults to 1.4.
         render_yaw (float, optional): Yaw of the camera. Defaults to 45.
         render_pitch (float, optional): Pitch of the camera. Defaults to -30.
-        render_roll (int, optional): Rool of the camera. Defaults to 0.
+        render_roll (int, optional): Roll of the camera. Defaults to 0.
     """
 
     def __init__(
@@ -276,12 +276,12 @@ class PandaStackEnv(RobotTaskEnv):
             and "OpenGL" if render mode is "rgb_array". Only "OpenGL" is available for human render mode.
         render_width (int, optional): Image width. Defaults to 720.
         render_height (int, optional): Image height. Defaults to 480.
-        render_target_position (np.ndarray, optional): Camera targetting this postion, as (x, y, z).
+        render_target_position (np.ndarray, optional): Camera targeting this position, as (x, y, z).
             Defaults to [0., 0., 0.].
         render_distance (float, optional): Distance of the camera. Defaults to 1.4.
         render_yaw (float, optional): Yaw of the camera. Defaults to 45.
         render_pitch (float, optional): Pitch of the camera. Defaults to -30.
-        render_roll (int, optional): Rool of the camera. Defaults to 0.
+        render_roll (int, optional): Roll of the camera. Defaults to 0.
     """
 
     def __init__(

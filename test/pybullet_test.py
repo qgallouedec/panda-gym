@@ -266,7 +266,7 @@ def test_inverse_kinematics():
     pybullet.close()
 
 
-def test_place_visalizer():
+def test_place_visualizer():
     from panda_gym.pybullet import PyBullet
 
     pybullet = PyBullet()

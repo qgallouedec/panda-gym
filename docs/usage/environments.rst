@@ -24,7 +24,7 @@ Environments
 By default, the reward is sparse and the control mode is the end-effector displacement.
 The complete set of environments present in the package is presented in the following list.
 
-Sparce reward, end-effector control (default setting)
+Sparse reward, end-effector control (default setting)
 -----------------------------------------------------
 
 * ``PandaReach-v3``
@@ -44,7 +44,7 @@ Dense reward, end-effector control
 * ``PandaStackDense-v3``
 * ``PandaFlipDense-v3``
 
-Sparce reward, joints control
+Sparse reward, joints control
 -----------------------------
 
 * ``PandaReachJoints-v3``
