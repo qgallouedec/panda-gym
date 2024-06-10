@@ -78,7 +78,7 @@ class Flip(Task):
         object_rotation = np.zeros(3)
         return object_position, object_rotation
 
-    def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> np.ndarray:
+    def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}) -> np.ndarray:
         d = angle_distance(achieved_goal, desired_goal)
         return np.array(d < self.distance_threshold, dtype=bool)
 

@@ -117,7 +117,7 @@ class Stack(Task):
         # if distance(object1_position, object2_position) > 0.1:
         return object1_position, object2_position
 
-    def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray) -> np.ndarray:
+    def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}) -> np.ndarray:
         # must be vectorized !!
         d = distance(achieved_goal, desired_goal)
         return np.array((d < self.distance_threshold), dtype=bool)
