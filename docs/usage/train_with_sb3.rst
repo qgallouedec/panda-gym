@@ -37,7 +37,7 @@ Bonus: Train with RL Baselines3 Zoo
 -----------------------------------
 
 `RL Baselines3 Zoo <https://stable-baselines3.readthedocs.io/en/master/guide/rl_zoo.html>`_ is the training framework associated with SB3.
-It provides scripts for training, evaluating agents, setting hyperparameters, plotting results and recording video. It also contains already optimized hypermeters, including for some ``panda-gym`` environments.
+It provides scripts for training, evaluating agents, setting hyperparameters, plotting results and recording video. It also contains already optimized hyperparameters, including for some ``panda-gym`` environments.
 
 .. warning::
     The current version of RL Baselines3 Zoo provides hyperparameters for version 1 of ``panda-gym``, but not for version 2. Before training with RL Baselines3 Zoo, you will have to set your own hyperparameters by editing ``hyperparameters/<ALGO>.yml``. For more information, please read the `README of RL Baselines3 Zoo <https://github.com/DLR-RM/rl-baselines3-zoo#readme>`_.
