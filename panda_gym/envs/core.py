@@ -277,7 +277,7 @@ class RobotTaskEnv(gym.Env):
         self, seed: Optional[int] = None, options: Optional[dict] = None
     ) -> Tuple[Dict[str, np.ndarray], Dict[str, Any]]:
         super().reset(seed=seed, options=options)
-        self.task.np_random, seed = seeding.np_random(seed)
+        self.task.np_random = self.np_random
         with self.sim.no_rendering():
             self.robot.reset()
             self.task.reset()

@@ -67,7 +67,7 @@ class Flip(Task):
 
     def _sample_goal(self) -> np.ndarray:
         """Randomize goal."""
-        goal = R.random().as_quat()
+        goal = R.random(random_state=self.np_random).as_quat()
         return goal
 
     def _sample_object(self) -> Tuple[np.ndarray, np.ndarray]:
