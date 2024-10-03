@@ -14,22 +14,29 @@ class Slide(Task):
         distance_threshold=0.05,
         goal_xy_range=0.3,
         goal_x_offset=0.4,
+        goal_y_offset=0.0,
         obj_xy_range=0.3,
+        obj_y_offset=0.0,
+        mobile=False,
     ) -> None:
         super().__init__(sim)
         self.reward_type = reward_type
         self.distance_threshold = distance_threshold
         self.object_size = 0.06
-        self.goal_range_low = np.array([-goal_xy_range / 2 + goal_x_offset, -goal_xy_range / 2, 0])
-        self.goal_range_high = np.array([goal_xy_range / 2 + goal_x_offset, goal_xy_range / 2, 0])
-        self.obj_range_low = np.array([-obj_xy_range / 2, -obj_xy_range / 2, 0])
-        self.obj_range_high = np.array([obj_xy_range / 2, obj_xy_range / 2, 0])
+        self.goal_range_low = np.array([-goal_xy_range / 2 + goal_x_offset, -goal_xy_range / 2 + goal_y_offset, 0])
+        self.goal_range_high = np.array([goal_xy_range / 2 + goal_x_offset, goal_xy_range / 2 + goal_y_offset, 0 ])
+        self.obj_range_low = np.array([-obj_xy_range / 2, -obj_xy_range / 2 - obj_y_offset, 0])
+        self.obj_range_high = np.array([obj_xy_range / 2, obj_xy_range / 2 - obj_y_offset, 0])
+        self.mobile = mobile
         with self.sim.no_rendering():
             self._create_scene()
 
     def _create_scene(self) -> None:
-        self.sim.create_plane(z_offset=-0.4)
-        self.sim.create_table(length=1.4, width=0.7, height=0.4, x_offset=-0.1)
+        self.sim.create_plane(z_offset=-0.4,size=100)
+        if self.mobile:
+            self.sim.create_table(length=0.5, width=1.4, height=0.4, x_offset=-0.1)
+        else:
+            self.sim.create_table(length=1.4, width=0.7, height=0.4, x_offset=-0.1)
         self.sim.create_cylinder(
             body_name="object",
             mass=1.0,
@@ -47,6 +54,15 @@ class Slide(Task):
             height=self.object_size / 2,
             position=np.array([0.0, 0.0, self.object_size / 2]),
             rgba_color=np.array([0.1, 0.9, 0.1, 0.3]),
+        )
+        self.sim.create_cylinder(
+            body_name="hindsight_target",
+            mass=0.0,
+            ghost=True,
+            radius=self.object_size / 2,
+            height=self.object_size / 2,
+            position=np.array([0.0, 0.0, -99]),
+            rgba_color=np.array([0.9, 0.1, 0.1, 0.3]),
         )
 
     def get_obs(self) -> np.ndarray:
@@ -68,8 +84,15 @@ class Slide(Task):
     def get_achieved_goal(self) -> np.ndarray:
         object_position = np.array(self.sim.get_base_position("object"))
         return object_position.copy()
+    
+    def show_hindsight_goal(self):
+        self.sim.set_base_pose("hindsight_target", self.goal, np.array([0.0, 0.0, 0.0, 1.0]))
+
+    def hide_hindsight_goal(self):
+        self.sim.set_base_pose("hindsight_target", np.array([0.0, 0.0, -99]), np.array([0.0, 0.0, 0.0, 1.0]))
 
     def reset(self) -> None:
+        self.hide_hindsight_goal()
         self.goal = self._sample_goal()
         object_position = self._sample_object()
         self.sim.set_base_pose("target", self.goal, np.array([0.0, 0.0, 0.0, 1.0]))
@@ -99,3 +122,6 @@ class Slide(Task):
             return -np.array(d > self.distance_threshold, dtype=np.float32)
         else:
             return -d.astype(np.float32)
+        
+    def compute_distance(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}):
+            return distance(achieved_goal, desired_goal)

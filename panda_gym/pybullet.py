@@ -240,7 +240,7 @@ class PyBullet:
             link (int): Link index in the body.
 
         Returns:
-            np.ndarray: The rotation, as (rx, ry, rz).
+            np.ndarray: The rotation, as (x, y, z, w).
         """
         orientation = self.physics_client.getLinkState(self._bodies_idx[body], link)[1]
         return np.array(orientation)
@@ -344,6 +344,23 @@ class PyBullet:
             jointIndices=joints,
             controlMode=self.physics_client.POSITION_CONTROL,
             targetPositions=target_angles,
+            forces=forces,
+        )
+
+    def control_velocities(self, body: str, joints: np.ndarray, target_velocities: np.ndarray, forces: np.ndarray) -> None:
+        """Control the joints motor.
+
+        Args:
+            body (str): Body unique name.
+            joints (np.ndarray): List of joint indices, as a list of ints.
+            target_angles (np.ndarray): List of target angles, as a list of floats.
+            forces (np.ndarray): Forces to apply, as a list of floats.
+        """
+        self.physics_client.setJointMotorControlArray(
+            self._bodies_idx[body],
+            jointIndices=joints,
+            controlMode=self.physics_client.VELOCITY_CONTROL,
+            targetVelocities = target_velocities,
             forces=forces,
         )
 
@@ -593,7 +610,7 @@ class PyBullet:
         if spinning_friction is not None:
             self.set_spinning_friction(body=body_name, link=-1, spinning_friction=spinning_friction)
 
-    def create_plane(self, z_offset: float) -> None:
+    def create_plane(self, z_offset: float, size=3.0) -> None:
         """Create a plane. (Actually, it is a thin box.)
 
         Args:
@@ -601,7 +618,7 @@ class PyBullet:
         """
         self.create_box(
             body_name="plane",
-            half_extents=np.array([3.0, 3.0, 0.01]),
+            half_extents=np.array([size, size, 0.01]),
             mass=0.0,
             position=np.array([0.0, 0.0, z_offset - 0.01]),
             specular_color=np.zeros(3),
@@ -614,6 +631,7 @@ class PyBullet:
         width: float,
         height: float,
         x_offset: float = 0.0,
+        y_offset: float = 0.0,
         lateral_friction: Optional[float] = None,
         spinning_friction: Optional[float] = None,
     ) -> None:
@@ -629,16 +647,73 @@ class PyBullet:
             spinning_friction (float or None, optional): Spinning friction. If None, use the default pybullet
                 value. Defaults to None.
         """
+        # Create the table
         self.create_box(
             body_name="table",
             half_extents=np.array([length, width, height]) / 2,
             mass=0.0,
-            position=np.array([x_offset, 0.0, -height / 2]),
+            position=np.array([x_offset, y_offset, -height / 2]),
             specular_color=np.zeros(3),
             rgba_color=np.array([0.95, 0.95, 0.95, 1]),
             lateral_friction=lateral_friction,
             spinning_friction=spinning_friction,
         )
+
+        # Edge parameters
+        edge_height = 0.05  # Height of the edges above the table surface
+        edge_thickness = 0.02  # Thickness of the edge (width)
+        edge_length = length + edge_thickness * 2  # Extend slightly beyond the table
+        edge_width = width + edge_thickness * 2  # Extend slightly beyond the table
+
+        # Create the edges (four boxes around the table)
+        # Front edge
+        self.create_box(
+            body_name="edge_front",
+            half_extents=np.array([edge_length / 2, edge_thickness / 2, edge_height / 2]),
+            mass=0.0,
+            position=np.array([x_offset, y_offset - width / 2 - edge_thickness / 2, edge_height / 2]),
+            specular_color=np.zeros(3),
+            rgba_color=np.array([0.8, 0.8, 0.8, 1]),
+            lateral_friction=lateral_friction,
+            spinning_friction=spinning_friction,
+        )
+
+        # Back edge
+        self.create_box(
+            body_name="edge_back",
+            half_extents=np.array([edge_length / 2, edge_thickness / 2, edge_height / 2]),
+            mass=0.0,
+            position=np.array([x_offset, y_offset + width / 2 + edge_thickness / 2, edge_height / 2]),
+            specular_color=np.zeros(3),
+            rgba_color=np.array([0.8, 0.8, 0.8, 1]),
+            lateral_friction=lateral_friction,
+            spinning_friction=spinning_friction,
+        )
+
+        # Left edge
+        self.create_box(
+            body_name="edge_left",
+            half_extents=np.array([edge_thickness / 2, edge_width / 2, edge_height / 2]),
+            mass=0.0,
+            position=np.array([x_offset - length / 2 - edge_thickness / 2, y_offset, edge_height / 2]),
+            specular_color=np.zeros(3),
+            rgba_color=np.array([0.8, 0.8, 0.8, 1]),
+            lateral_friction=lateral_friction,
+            spinning_friction=spinning_friction,
+        )
+
+        # Right edge
+        self.create_box(
+            body_name="edge_right",
+            half_extents=np.array([edge_thickness / 2, edge_width / 2, edge_height / 2]),
+            mass=0.0,
+            position=np.array([x_offset + length / 2 + edge_thickness / 2, y_offset, edge_height / 2]),
+            specular_color=np.zeros(3),
+            rgba_color=np.array([0.8, 0.8, 0.8, 1]),
+            lateral_friction=lateral_friction,
+            spinning_friction=spinning_friction,
+        )
+
 
     def set_lateral_friction(self, body: str, link: int, lateral_friction: float) -> None:
         """Set the lateral friction of a link.

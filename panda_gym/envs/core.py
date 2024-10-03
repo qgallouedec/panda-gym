@@ -28,17 +28,18 @@ class PyBulletRobot(ABC):
         action_space: spaces.Space,
         joint_indices: np.ndarray,
         joint_forces: np.ndarray,
+        fixed_base = True,
     ) -> None:
         self.sim = sim
         self.body_name = body_name
         with self.sim.no_rendering():
-            self._load_robot(file_name, base_position)
+            self._load_robot(file_name, base_position,fixed_base=fixed_base)
             self.setup()
         self.action_space = action_space
         self.joint_indices = joint_indices
         self.joint_forces = joint_forces
 
-    def _load_robot(self, file_name: str, base_position: np.ndarray) -> None:
+    def _load_robot(self, file_name: str, base_position: np.ndarray, fixed_base=True) -> None:
         """Load the robot.
 
         Args:
@@ -49,7 +50,7 @@ class PyBulletRobot(ABC):
             body_name=self.body_name,
             fileName=file_name,
             basePosition=base_position,
-            useFixedBase=True,
+            useFixedBase=fixed_base,
         )
 
     def setup(self) -> None:
@@ -86,6 +87,17 @@ class PyBulletRobot(ABC):
             np.ndarray: Position as (x, y, z)
         """
         return self.sim.get_link_position(self.body_name, link)
+    
+    def get_link_orientation(self, link: int) -> np.ndarray:
+        """Returns the orientation of a link as (x, y, z)
+
+        Args:
+            link (int): The link index.
+
+        Returns:
+            np.ndarray: Orientation as (x, y, z, w)
+        """
+        return self.sim.get_link_orientation(self.body_name, link)
 
     def get_link_velocity(self, link: int) -> np.ndarray:
         """Returns the velocity of a link as (vx, vy, vz)
@@ -184,6 +196,16 @@ class Task(ABC):
             raise RuntimeError("No goal yet, call reset() first")
         else:
             return self.goal.copy()
+        
+    #@abstractmethod
+    def show_hindsight_goal(self) -> None:
+        """Shows hindsight goal"""
+        pass
+
+    #@abstractmethod
+    def hide_hindsight_goal(self) -> None:
+        """Hides hindsight goal"""
+        pass
 
     @abstractmethod
     def is_success(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}) -> np.ndarray:
@@ -191,6 +213,9 @@ class Task(ABC):
 
     @abstractmethod
     def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}) -> np.ndarray:
+        """Compute reward associated to the achieved and the desired goal."""
+    @abstractmethod
+    def compute_distance(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info: Dict[str, Any] = {}) -> np.ndarray:
         """Compute reward associated to the achieved and the desired goal."""
 
 
@@ -243,6 +268,7 @@ class RobotTaskEnv(gym.Env):
         )
         self.action_space = self.robot.action_space
         self.compute_reward = self.task.compute_reward
+        self.compute_distance = self.task.compute_distance
         self._saved_goal = dict()  # For state saving and restoring
 
         self.render_width = render_width
@@ -261,9 +287,19 @@ class RobotTaskEnv(gym.Env):
                 yaw=self.render_yaw,
                 pitch=self.render_pitch,
             )
+        self.has_object = True
+        self.distance_threshold = task.distance_threshold
+        self.obj_range = None # task.obj_range
+        self.target_range =None # task.target_range
+        self.target_offset =None # task.target_offset
+        self.target_in_the_air =None # task.target_in_the_air
+        self.height_offset =None # task.height_offset
+        self._initial_state =None # task.initial_state
+        self.initial_gripper_xpos =None # robot.initial_gripper_xpos
 
     def _get_obs(self) -> Dict[str, np.ndarray]:
         robot_obs = self.robot.get_obs().astype(np.float32)  # robot state
+        self.robot_obs_dim = len(robot_obs)
         task_obs = self.task.get_obs().astype(np.float32)  # object position, velocity, etc...
         observation = np.concatenate([robot_obs, task_obs])
         achieved_goal = self.task.get_achieved_goal().astype(np.float32)
@@ -272,6 +308,9 @@ class RobotTaskEnv(gym.Env):
             "achieved_goal": achieved_goal,
             "desired_goal": self.task.get_goal().astype(np.float32),
         }
+    
+    def get_obs(self):
+        return self._get_obs()
 
     def reset(
         self, seed: Optional[int] = None, options: Optional[dict] = None
@@ -282,6 +321,7 @@ class RobotTaskEnv(gym.Env):
             self.robot.reset()
             self.task.reset()
         observation = self._get_obs()
+        self._initial_state = observation["observation"]
         info = {"is_success": self.task.is_success(observation["achieved_goal"], self.task.get_goal())}
         return observation, info
 
@@ -312,6 +352,22 @@ class RobotTaskEnv(gym.Env):
         """
         self._saved_goal.pop(state_id)
         self.sim.remove_state(state_id)
+
+    def get_goal(self):
+        return self.task.goal
+    
+    def set_goal(self,value):
+        self.task.goal = value
+        with self.sim.no_rendering():
+            self.task.show_hindsight_goal()
+
+    def get_initial_state(self):
+        return self._initial_state.copy()
+    
+    def set_initial_state(self,value):
+        self._initial_state = value.copy()
+        with self.sim.no_rendering():
+            self.robot.set_obs(value[:self.robot_obs_dim].copy())
 
     def step(self, action: np.ndarray) -> Tuple[Dict[str, np.ndarray], float, bool, bool, Dict[str, Any]]:
         self.robot.set_action(action)
